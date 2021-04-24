@@ -1,9 +1,9 @@
 #include "server.hpp"
 
-void run_server(){
+void run_server(SDL_Renderer *renderer,TTF_Font *font ){
     //cout<<"hello\n";
     int sockfd, newsockfd, port_no, bindfd, listenfd, bytes_sent, bytes_recvd;
-    char sbuffer[512], cli_ip[16], sname[64], cname[64];
+    char sbuffer[512], cli_ip[16], cname[64],sname[64];
     char *ptr_buff, *ptr_port;
     const char *ptr_cli_ip;
     struct sockaddr_in serv_addr, cli_addr;
@@ -22,6 +22,7 @@ void run_server(){
     if (sockfd == -1)
     {
         perror("Server side listening Socket could not be created!");
+        return;
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -36,17 +37,23 @@ void run_server(){
     if (bindfd == -1)
     {
         perror("Failed to bind!");
+        return;
     }
     
     //listening for incoming connections
-    std::cout<<"Enter your Name : ";
-    std::cin>>sname;
-    std::cout<<"Server created!"<<std::endl<<"Waiting for a Player..."<<std::endl;
+    //char *sname = NULL;
+    //sname = static_cast<char *>(malloc(16 * sizeof(char)));
+    ask_for_name(renderer, font, sname);
 
+    SDL_RenderClear(renderer);
+    char ci[] = "Waiting for a Client to connect to the server";
+    disp_text(renderer, ci , font, 200, 200);
+    SDL_RenderPresent(renderer);
     listenfd = listen(sockfd, 5);
     if (listenfd == -1)
     {
         perror("Failed to listen!");
+        return;
     }
 
     serv_size = sizeof(serv_addr);
@@ -60,7 +67,7 @@ void run_server(){
         
     ptr_cli_ip = inet_ntop(AF_INET, &cli_addr.sin_addr, cli_ip, cli_size);
     std::cout<<"Server received connections from "<<cli_ip<<std::endl;
-
+    SDL_RenderClear(renderer);
     memset(&cname, 0, sizeof(cname));
     do
     {
@@ -78,16 +85,39 @@ void run_server(){
             bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
             if (bytes_sent == -1)
                 std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
-            else
-                std::cout<<cname<<" has joined the game."<<std::endl;
+            else{
+
+                    const char* c = "You have joined  ";
+                    const char* last = " for a game ";
+                    char* full_text;
+                    full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(cname)));
+                    strcpy(full_text,c);
+                    strcat(full_text,cname);
+                    strcat(full_text,last);
+                    SDL_RenderClear(renderer);
+                    disp_text(renderer, full_text , font, 200, 200);
+                    SDL_RenderPresent(renderer);
+                
+                }
         }
     }while(bytes_recvd == -1 || bytes_sent == -1);
-
-    std::cout<<"Creating Game. Please wait..."<<std::endl;
+    
     sleep(2);
-    std::cout<<std::endl<<"Game created!"<<std::endl<<std::endl<<"Doing a toss...";
-        
-    std::cout<<std::endl<<"Thank You for playing "<<std::endl;
+    
+        char* c = "Creating Game Please wait ";
+        SDL_RenderClear(renderer);
+        disp_text(renderer, c , font, 200, 200);
+        SDL_RenderPresent(renderer);
+    
+    sleep(2);
+    
+        c = "Thank You for playing";
+        SDL_RenderClear(renderer);
+        disp_text(renderer, c , font, 200, 200);
+        SDL_RenderPresent(renderer);
+
+        sleep(2);
+    
     close(newsockfd);
     close(sockfd);
 }

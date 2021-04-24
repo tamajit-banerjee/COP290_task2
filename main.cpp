@@ -38,13 +38,10 @@ int main(){
     
     server_or_client(renderer, &menu, font);
     if (menu == 'c') {
-        char *server_ip_addr = NULL;
-        server_ip_addr = static_cast<char *>(malloc(16 * sizeof(char)));
-        ask_for_ip(renderer, font, server_ip_addr);
-        run_client(server_ip_addr);
+        run_client(renderer,font);
     }
     if(menu == 's') {
-        run_server();
+        run_server(renderer,font);
     }
     
     SDL_DestroyRenderer(renderer);

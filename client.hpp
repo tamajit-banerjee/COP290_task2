@@ -7,6 +7,6 @@
 #include "menu.hpp"
 #define  PORT "9987";
 
-void run_client(char *ip);
+void run_client(SDL_Renderer *renderer,TTF_Font *font );
 
 #endif

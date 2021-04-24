@@ -1,8 +1,8 @@
 #include "client.hpp"
 
-void run_client(char *ip){
+void run_client(SDL_Renderer *renderer, TTF_Font *font ){
     int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
-    char cbuffer[512], sname[64], cname[64];
+    char cbuffer[512], sname[64],cname[64];
     char *ptr = &cbuffer[0];
     char *ptr_port = (char *)&PORT;
     struct sockaddr_in serv_addr;
@@ -13,18 +13,21 @@ void run_client(char *ip){
     char choice_buffer[2], co_ordinates_buffer[2], toss_buffer;
 
     port_no = atoi(ptr_port);
-    he = gethostbyname(ip);
+    char *server_ip_addr = NULL;
+    server_ip_addr = static_cast<char *>(malloc(16 * sizeof(char)));
+    ask_for_ip(renderer, font, server_ip_addr);
+    he = gethostbyname(server_ip_addr);
     if (he == NULL)
     {
         perror("No Such Host!");
-    
+        return;
     }
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd == -1)
     {
         perror("Sorry. Socket could not be created!");
-       
+        return;
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -33,14 +36,22 @@ void run_client(char *ip){
     serv_addr.sin_addr = *((struct in_addr *)he->h_addr);
 
     connectfd = connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+    
     if (connectfd == -1)
     {
-        perror("Sorry. Could not connect to server.");
-        
+            char c[] = "Sorry. Could not connect to server.";
+            SDL_RenderClear(renderer);
+            disp_text(renderer, c , font, 200, 200);
+            SDL_RenderPresent(renderer);
+            sleep(3);
+        close(sockfd);
+        return;
     }
         
-    std::cout<<"Enter your name : ";
-    std::cin>>cname;
+    //char *cname = NULL;
+    //cname = static_cast<char *>(malloc(16 * sizeof(char)));
+    ask_for_name(renderer, font, cname);
+    
     do
     {
         static int flag = 0;
@@ -58,22 +69,37 @@ void run_client(char *ip){
             bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
             if (bytes_recvd == -1)
                 std::cout<<"COULD NOT ACQUIRE PLAYER INFORMATION!"<<std::endl<<"Trying Again..."<<std::endl;
-            else
-                std::cout<<"You have joined "<<sname<<" for a game of Tic-Tac-Toe."<<std::endl;
+            else{
+                    const char* c = "You have joined  ";
+                    const char* last = " for a game ";
+                    char* full_text;
+                    full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(sname)));
+                    strcpy(full_text,c);
+                    strcat(full_text,sname);
+                    strcat(full_text,last);
+                    SDL_RenderClear(renderer);
+                    disp_text(renderer, full_text , font, 200, 200);
+                    SDL_RenderPresent(renderer);
+            }
         }
     }while(bytes_sent == -1 || bytes_recvd == -1);
     
-    std::cout<<"Creating game. Please wait..."<<std::endl;
     sleep(2);
-    std::cout<<std::endl<<"Game created!"<<std::endl<<std::endl<<"Doing a toss...";
     
-    bytes_recvd = recv(sockfd, &toss_buffer, sizeof(toss_buffer), 0);
-    if (bytes_recvd == -1)
-    {
-        perror("TOSS BUFFER not received");
-    }
+        char* c = "Creating Game Please wait ";
+        SDL_RenderClear(renderer);
+        disp_text(renderer, c , font, 200, 200);
+        SDL_RenderPresent(renderer);
 
-    std::cout<<std::endl<<"Thank You for playing"<<std::endl;
+    
+    sleep(2);
+        
+        c = "Thank You for playing";
+        SDL_RenderClear(renderer);
+        disp_text(renderer, c , font, 200, 200);
+        SDL_RenderPresent(renderer);
+    
+    sleep(2);
     
     close(sockfd);
 }

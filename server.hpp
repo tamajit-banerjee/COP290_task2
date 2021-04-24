@@ -13,6 +13,6 @@
 #include "font.hpp"
 #include "menu.hpp"
 #define  PORT "9987";
-void run_server();
+void run_server(SDL_Renderer *renderer,TTF_Font *font );
 
 #endif /* server_hpp */
