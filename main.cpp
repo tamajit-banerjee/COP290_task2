@@ -1,4 +1,6 @@
 #include "Header.h"
+#include "client.hpp"
+#include "server.hpp"
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
@@ -39,10 +41,10 @@ int main(){
         char *server_ip_addr = NULL;
         server_ip_addr = static_cast<char *>(malloc(16 * sizeof(char)));
         ask_for_ip(renderer, font, server_ip_addr);
-        
+        run_client(server_ip_addr);
     }
     if(menu == 's') {
-        
+        run_server();
     }
     
     SDL_DestroyRenderer(renderer);
