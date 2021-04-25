@@ -101,8 +101,18 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
+    game->isServer = false;
+    Player sPlayer;
     for (int level = 1; level<2; level++){
-        game->play(level);
+        while (game->running()) {
+            // bytes_recvd = recv(newsockfd, &sPlayer, sizeof(sPlayer), 0);
+            // bytes_sent = send(newsockfd, &game->cPlayer, sizeof(game->cPlayer), 0);
+            // game->sPlayer = sPlayer;
+            game->handleEvents();
+            game->update();
+            game->render();
+        }
+        game->clean();
     }
     
     close(sockfd);

@@ -43,15 +43,52 @@ void Game::handleEvents()
 	case SDL_QUIT :
 		isRunning = false;
 		break;
+    case SDL_KEYDOWN:
+        if(isServer){
+            switch (event.key.keysym.sym){
+                case SDLK_LEFT:
+                    sPlayer.xpos -= speed;
+                    break;
+                case SDLK_RIGHT:
+                    sPlayer.xpos += speed;
+                    break;
+                case SDLK_UP:
+                    sPlayer.ypos -= speed;
+                    break;
+                case SDLK_DOWN:
+                    sPlayer.ypos += speed;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            switch (event.key.keysym.sym){
+                case SDLK_LEFT:
+                    cPlayer.xpos -= 1;
+                    break;
+                case SDLK_RIGHT:
+                    cPlayer.xpos += 1;
+                    break;
+                case SDLK_UP:
+                    cPlayer.ypos -= 1;
+                    break;
+                case SDLK_DOWN:
+                    cPlayer.ypos += 1;
+                    break;
+                default:
+                    break;
+            }
+        }
 	default:
 		break;
 	}
 }
 
 void Game::update(){
-    
-    sPlayer.xpos++;
+
     cnt++;
+    
     if(cnt<mazeRows*mazeCols){
         if(maze[int(cnt/mazeRows)][cnt%mazeRows].id == 0 && maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].id == 0){
             maze[int(cnt/mazeRows)][cnt%mazeRows].update(13);
@@ -59,7 +96,7 @@ void Game::update(){
         }
         
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
     
 }
 
@@ -68,12 +105,26 @@ void Game::render(){
 
     renderMaze();
 
+    SDL_Rect sdestR, cdestR;
+    sdestR.h = 25;
+    sdestR.w = 25;
+    sdestR.x = sPlayer.xpos;
+    sdestR.y = sPlayer.ypos;
+    SDL_RenderCopy(renderer, sPlayer.Tex,  NULL, &sdestR);
+    cdestR.h = 25;
+    cdestR.w = 25;
+    cdestR.x = cPlayer.xpos;
+    cdestR.y = cPlayer.ypos;
+    SDL_RenderCopy(renderer, cPlayer.Tex,  NULL, &cdestR);
+
     char* s = "Sever Player: ";
     disp_text(renderer, s , font, 100, 200);
     disp_text(renderer, sPlayer.name , font, 250, 200);
     char* c = "client Player: ";
     disp_text(renderer, c , font, 100, 250);
     disp_text(renderer, cPlayer.name , font, 250, 250);
+
+
 
     SDL_RenderPresent(renderer);
 }
@@ -83,16 +134,6 @@ void Game::clean()
 	// SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
-}
-
-
-void Game::play(int level){
-    while (running()) {
-        handleEvents();
-        update();
-        render();
-    }
-    clean();
 }
 
 void Game::renderMaze(){

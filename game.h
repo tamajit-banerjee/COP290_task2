@@ -2,6 +2,7 @@
 
 #define mazeCols 8
 #define mazeRows 10
+#define speed 2
 
 #include "Header.h"
 #include "constans.h"
@@ -21,6 +22,14 @@ public:
 		name = "Not Entered yet!";
 		xpos = 0;
 		ypos = 0;
+	}
+
+	Player(const Player &p){
+		name = p.name;
+		xpos = p.xpos;
+		ypos = p.ypos;
+		score = p.score;
+		time = p.time;
 	}
 };
 
@@ -68,6 +77,7 @@ public:
 	int level;
 
 	Player sPlayer, cPlayer;
+	bool isServer;
 
 	void renderMaze();
 	MazeCell maze[mazeRows][mazeCols];
