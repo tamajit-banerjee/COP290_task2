@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-void run_server(SDL_Renderer *renderer,TTF_Font *font ){
+void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     //cout<<"hello\n";
     int sockfd, newsockfd, port_no, bindfd, listenfd, bytes_sent, bytes_recvd;
     char sbuffer[512], cli_ip[16], cname[64],sname[64];
@@ -69,15 +69,15 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font ){
     std::cout<<"Server received connections from "<<cli_ip<<std::endl;
     SDL_RenderClear(renderer);
     memset(&cname, 0, sizeof(cname));
-    do
-    {
+    
+    // {
         static int flag = 0;
         bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
         if (bytes_recvd == -1 && flag == 0)
         {
             memset(&cname, 0, sizeof(cname));
             std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-            continue;
+            // continue;
         }
         else
         {
@@ -100,7 +100,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font ){
                 
                 }
         }
-    }while(bytes_recvd == -1 || bytes_sent == -1);
+    // }while(bytes_recvd == -1 || bytes_sent == -1);
     
     sleep(2);
     
@@ -108,7 +108,9 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font ){
         SDL_RenderClear(renderer);
         disp_text(renderer, c , font, 200, 200);
         SDL_RenderPresent(renderer);
+
     
+
     sleep(2);
     
         c = "Thank You for playing";
@@ -116,8 +118,17 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font ){
         disp_text(renderer, c , font, 200, 200);
         SDL_RenderPresent(renderer);
 
-        sleep(2);
-    
+    sleep(2);
+
+    game->cPlayer.name = cname;
+    game->sPlayer.name = sname;
+    for (int level = 1; level<2; level++){
+        game->play(level);
+    }
+
     close(newsockfd);
     close(sockfd);
+
+    
+
 }

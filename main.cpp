@@ -4,6 +4,7 @@
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
+#include "game.h"
 
 int main(){
     char menu = 's';
@@ -36,14 +37,17 @@ int main(){
         return 1;
     }
     
+    Game *game = new Game();
+    game->init(renderer, font);
+
     server_or_client(renderer, &menu, font);
     if (menu == 'c') {
-        run_client(renderer,font);
+        run_client(renderer,font, game);
     }
     if(menu == 's') {
-        run_server(renderer,font);
+        run_server(renderer,font, game);
     }
-    
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

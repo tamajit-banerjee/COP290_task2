@@ -1,10 +1,3 @@
-//
-//  menu.hpp
-//  Mustam-Game
-//
-//  Created by Tamajit Banerjee on 25/04/21.
-//
-
 #ifndef menu_hpp
 #define menu_hpp
 

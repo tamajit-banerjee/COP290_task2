@@ -5,8 +5,9 @@
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
+#include "game.h"
 #define  PORT "9987";
 
-void run_client(SDL_Renderer *renderer,TTF_Font *font );
+void run_client(SDL_Renderer *renderer,TTF_Font *font , Game *game);
 
 #endif

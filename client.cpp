@@ -1,6 +1,6 @@
 #include "client.hpp"
 
-void run_client(SDL_Renderer *renderer, TTF_Font *font ){
+void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
     char cbuffer[512], sname[64],cname[64];
     char *ptr = &cbuffer[0];
@@ -52,37 +52,34 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font ){
     //cname = static_cast<char *>(malloc(16 * sizeof(char)));
     ask_for_name(renderer, font, cname);
     
-    do
+    static int flag = 0;
+    bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
+    if (bytes_sent == -1 && flag == 0)
     {
-        static int flag = 0;
-        bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
-        if (bytes_sent == -1 && flag == 0)
-        {
-            std::cout<<"PLAYER DATA NOT SENT!"<<std::endl<<"Trying Again...";
-            continue;
+        std::cout<<"PLAYER DATA NOT SENT!"<<std::endl<<"Trying Again...";
+    }
+    else
+    {        cli_choice = 'X';
+        
+        flag = 1;
+        memset(&sname, 0, sizeof(sname));
+        bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
+        if (bytes_recvd == -1)
+            std::cout<<"COULD NOT ACQUIRE PLAYER INFORMATION!"<<std::endl<<"Trying Again..."<<std::endl;
+        else{
+                const char* c = "You have joined  ";
+                const char* last = " for a game ";
+                char* full_text;
+                full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(sname)));
+                strcpy(full_text,c);
+                strcat(full_text,sname);
+                strcat(full_text,last);
+                SDL_RenderClear(renderer);
+                disp_text(renderer, full_text , font, 200, 200);
+                SDL_RenderPresent(renderer);
         }
-        else
-        {        cli_choice = 'X';
-            
-            flag = 1;
-            memset(&sname, 0, sizeof(sname));
-            bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
-            if (bytes_recvd == -1)
-                std::cout<<"COULD NOT ACQUIRE PLAYER INFORMATION!"<<std::endl<<"Trying Again..."<<std::endl;
-            else{
-                    const char* c = "You have joined  ";
-                    const char* last = " for a game ";
-                    char* full_text;
-                    full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(sname)));
-                    strcpy(full_text,c);
-                    strcat(full_text,sname);
-                    strcat(full_text,last);
-                    SDL_RenderClear(renderer);
-                    disp_text(renderer, full_text , font, 200, 200);
-                    SDL_RenderPresent(renderer);
-            }
-        }
-    }while(bytes_sent == -1 || bytes_recvd == -1);
+    }
+
     
     sleep(2);
     
@@ -92,6 +89,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font ){
         SDL_RenderPresent(renderer);
 
     
+    
     sleep(2);
         
         c = "Thank You for playing";
@@ -100,6 +98,12 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font ){
         SDL_RenderPresent(renderer);
     
     sleep(2);
+
+    game->cPlayer.name = cname;
+    game->sPlayer.name = sname;
+    for (int level = 1; level<2; level++){
+        game->play(level);
+    }
     
     close(sockfd);
 }

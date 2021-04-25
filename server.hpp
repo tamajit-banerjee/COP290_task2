@@ -1,10 +1,3 @@
-//
-//  server.hpp
-//  Mustam-Game
-//
-//  Created by Tamajit Banerjee on 25/04/21.
-//
-
 #ifndef server_hpp
 #define server_hpp
 
@@ -12,7 +5,8 @@
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
+#include "game.h"
 #define  PORT "9987";
-void run_server(SDL_Renderer *renderer,TTF_Font *font );
+void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game);
 
 #endif /* server_hpp */
