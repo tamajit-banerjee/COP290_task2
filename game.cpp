@@ -5,12 +5,6 @@
 
 #include "Game.h"
 
-Game::Game()
-{}
-
-Game::~Game()
-{}
-
 void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 {
 
@@ -28,6 +22,11 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     cPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     sPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     SDL_FreeSurface(tmpSurface);
+
+    SDL_Surface* mazeTmpSurface = SDL_LoadBMP("resources/maze.bmp");
+    mazeTex = SDL_CreateTextureFromSurface(renderer, mazeTmpSurface);
+    SDL_FreeSurface(mazeTmpSurface);
+    mazeInit();
 }
 
 void Game::handleEvents()
@@ -48,23 +47,22 @@ void Game::handleEvents()
 void Game::update(){
     
     sPlayer.xpos++;
+    cnt++;
+    
+    
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
+
+    renderMaze();
+
     char* s = "Sever Player: ";
     disp_text(renderer, s , font, 100, 200);
     disp_text(renderer, sPlayer.name , font, 250, 200);
     char* c = "client Player: ";
     disp_text(renderer, c , font, 100, 250);
     disp_text(renderer, cPlayer.name , font, 250, 250);
-
-    SDL_Rect destR;
-    destR.h = 128;
-    destR.w = 128;
-    destR.x = sPlayer.xpos;
-    destR.y = sPlayer.ypos;
-    SDL_RenderCopy(renderer, sPlayer.Tex,  NULL, &destR);
 
     SDL_RenderPresent(renderer);
 }
@@ -86,3 +84,29 @@ void Game::play(int level){
     clean();
 }
 
+void Game::renderMaze(){
+    int cell_width = 64;
+    int cell_height = 64;
+    for(int i =0; i<mazeRows; i++){
+        for(int j = 0; j<mazeCols; j++){
+            SDL_Rect dstR;
+            dstR.w = cell_width;
+            dstR.h = cell_height;
+            dstR.x = dstR.w * i;
+            dstR.y = dstR.h * j;
+            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                std::cout<<"Maze not rendered properly\n";
+                std::cout<<SDL_GetError()<<"\n";
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
+}
+
+void Game::mazeInit(){
+    for(int i =0; i<mazeRows; i++){
+        for(int j = 0; j<mazeCols; j++){
+            maze[i][j].update((i+j)%15);
+        }
+    }
+}
