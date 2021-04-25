@@ -123,12 +123,28 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
     game->isServer = true;
-    Player cPlayer;
     for (int level = 1; level<2; level++){
         while (game->running()) {
-            // bytes_sent = send(newsockfd, &game->sPlayer, sizeof(game->sPlayer), 0);
-            // bytes_recvd = recv(newsockfd, &cPlayer, sizeof(cPlayer), 0);
-            // game->cPlayer = cPlayer;
+            char splayerInfo[100];
+            char cplayerInfo[100];
+
+            game->sPlayer.encode(splayerInfo);
+
+            do{
+                bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+                if (bytes_recvd == -1 && flag == 0)
+                {
+                    memset(&cname, 0, sizeof(cname));
+                    std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
+                }
+                bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+                {
+                    std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
+                }
+            }while(bytes_recvd == -1 || bytes_sent == -1);
+
+            game->cPlayer.decode(cplayerInfo);
+
             game->handleEvents();
             game->update();
             game->render();

@@ -6,7 +6,7 @@
 #include <chrono>
 #include <thread>
 
-#include "Game.h"
+#include "game.h"
 
 void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 {
@@ -65,16 +65,16 @@ void Game::handleEvents()
         else{
             switch (event.key.keysym.sym){
                 case SDLK_LEFT:
-                    cPlayer.xpos -= 1;
+                    cPlayer.xpos -= speed;
                     break;
                 case SDLK_RIGHT:
-                    cPlayer.xpos += 1;
+                    cPlayer.xpos += speed;
                     break;
                 case SDLK_UP:
-                    cPlayer.ypos -= 1;
+                    cPlayer.ypos -= speed;
                     break;
                 case SDLK_DOWN:
-                    cPlayer.ypos += 1;
+                    cPlayer.ypos += speed;
                     break;
                 default:
                     break;
@@ -96,7 +96,7 @@ void Game::update(){
         }
         
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(20));
     
 }
 

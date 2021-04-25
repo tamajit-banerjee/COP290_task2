@@ -1,5 +1,6 @@
 #include "client.hpp"
 
+
 void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
     char cbuffer[512], sname[64],cname[64];
@@ -102,12 +103,29 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
     game->isServer = false;
-    Player sPlayer;
+
     for (int level = 1; level<2; level++){
         while (game->running()) {
-            // bytes_recvd = recv(newsockfd, &sPlayer, sizeof(sPlayer), 0);
-            // bytes_sent = send(newsockfd, &game->cPlayer, sizeof(game->cPlayer), 0);
-            // game->sPlayer = sPlayer;
+            char splayerInfo[100];
+            char cplayerInfo[100];
+            
+            game->cPlayer.encode(cplayerInfo);
+            
+            do{
+                bytes_sent = send(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+                {
+                    std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
+                }
+                bytes_recvd = recv(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+                if (bytes_recvd == -1)
+                {
+                    memset(&sname, 0, sizeof(sname));
+                    std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
+                }
+            }while(bytes_recvd == -1 || bytes_sent == -1);
+
+            game->sPlayer.decode(splayerInfo);
+
             game->handleEvents();
             game->update();
             game->render();
