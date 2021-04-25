@@ -3,6 +3,9 @@
 #include "font.hpp"
 #include "menu.hpp"
 
+#include <chrono>
+#include <thread>
+
 #include "Game.h"
 
 void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
@@ -27,6 +30,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     mazeTex = SDL_CreateTextureFromSurface(renderer, mazeTmpSurface);
     SDL_FreeSurface(mazeTmpSurface);
     mazeInit();
+    cnt = 0;
 }
 
 void Game::handleEvents()
@@ -48,7 +52,14 @@ void Game::update(){
     
     sPlayer.xpos++;
     cnt++;
-    
+    if(cnt<mazeRows*mazeCols){
+        if(maze[int(cnt/mazeRows)][cnt%mazeRows].id == 0 && maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].id == 0){
+            maze[int(cnt/mazeRows)][cnt%mazeRows].update(13);
+            maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].update(11);
+        }
+        
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     
 }
 
@@ -106,7 +117,7 @@ void Game::renderMaze(){
 void Game::mazeInit(){
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
-            maze[i][j].update((i+j)%15);
+            maze[i][j].update(0);
         }
     }
 }
