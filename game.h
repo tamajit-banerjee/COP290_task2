@@ -256,6 +256,7 @@ public:
 	TTF_Font *font;
 	SDL_Event event;
 	bool isRunning;
+	bool isLevelRunning;
 	int level;
 
 	Player sPlayer, cPlayer;

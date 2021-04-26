@@ -134,8 +134,27 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     Player *p = new Player;
     p->decode(splayerInfo);
     std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
-    for (int level = 1; level<2; level++){
-        while (game->running()) {
+    for (int level = 1; level<3; level++){
+
+        if(!game->running()){
+            break;
+        }
+        game->cPlayer.time = 1000;
+        game->sPlayer.time = 1200;
+
+        game->isLevelRunning = true;
+        
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        disp_text(renderer, "Level: ", font, 290, 220);
+        std::string temp_str = std::to_string(level);
+        char* char_type = (char*) temp_str.c_str();
+        disp_text(renderer, char_type, font, 340, 220);
+        SDL_RenderPresent(renderer);
+
+        sleep(2);
+
+        while (game->running() && game->isLevelRunning) {
             // char splayerInfo[100];
             // char cplayerInfo[100];
 
@@ -161,10 +180,11 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
             game->render();
 
             if(game->sPlayer.time<=0){
-                game->isRunning = false;
+                game->isLevelRunning = false;
             }
         }
         game->clean();
+        sleep(2);
     }
     close(newsockfd);
     close(sockfd);

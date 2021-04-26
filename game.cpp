@@ -20,6 +20,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     }
 
     isRunning = true;
+    isLevelRunning = true;
 
     SDL_Surface* tmpSurface = SDL_LoadBMP("resources/player.bmp");
     cPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
@@ -152,9 +153,24 @@ void Game::render(){
 
 void Game::clean()
 {
-	// SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
-	SDL_Quit();
+	SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    disp_text(renderer, "Results", font, 300, 140);
+    
+    disp_text(renderer, sPlayer.name, font, 250, 200);
+    disp_text(renderer, "score: ", font, 350, 200);
+    std::string temp_str = std::to_string(sPlayer.score);
+    char* char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 410, 200);
+
+    disp_text(renderer, cPlayer.name, font, 250, 250);
+    disp_text(renderer, "score: ", font, 350, 250);
+    temp_str = std::to_string(cPlayer.score);
+    char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 410, 250);
+
+    SDL_RenderPresent(renderer);
 }
 
 void Game::renderMaze(){
