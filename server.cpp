@@ -123,31 +123,46 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
     game->isServer = true;
+    char splayerInfo[100];
+    char cplayerInfo[100];
+
+    game->sPlayer.encode(splayerInfo, 100);
+    for( int i = 0; i<100; i++){
+        std::cout<<splayerInfo[i];
+    }
+    std::cout<<'\n';
+    Player *p = new Player;
+    p->decode(splayerInfo);
+    std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
     for (int level = 1; level<2; level++){
         while (game->running()) {
-            char splayerInfo[100];
-            char cplayerInfo[100];
+            // char splayerInfo[100];
+            // char cplayerInfo[100];
 
-            game->sPlayer.encode(splayerInfo);
+            // game->sPlayer.encode(splayerInfo, 100);
 
-            do{
-                bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
-                if (bytes_recvd == -1 && flag == 0)
-                {
-                    memset(&cname, 0, sizeof(cname));
-                    std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-                }
-                bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-                {
-                    std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
-                }
-            }while(bytes_recvd == -1 || bytes_sent == -1);
+            // do{
+            //     bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+            //     if (bytes_recvd == -1 && flag == 0)
+            //     {
+            //         memset(&cname, 0, sizeof(cname));
+            //         std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
+            //     }
+            //     bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+            //     {
+            //         std::cout<<"Could not SEND Player Data! "<<"Trying Again..."<<std::endl;
+            //     }
+            // }while(bytes_recvd == -1 || bytes_sent == -1);
 
-            game->cPlayer.decode(cplayerInfo);
+            // game->cPlayer.decode(cplayerInfo);
 
             game->handleEvents();
             game->update();
             game->render();
+
+            if(game->sPlayer.time<=0){
+                game->isRunning = false;
+            }
         }
         game->clean();
     }

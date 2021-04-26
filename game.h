@@ -35,7 +35,7 @@ public:
 		time = p.time;
 	}
 
-	void encode(char * s){
+	void encode(char * s, int size){
 		int i = 0;
 		while(i<sizeof(name)/sizeof(name[0])){
 			s[i] = name[i];
@@ -64,6 +64,10 @@ public:
 		while(j<(std::to_string(time).length())){
 			s[i] = std::to_string(time)[j];
 			i++; j++;
+		}
+		while(i<size){
+			s[i] = ' ';
+			i++;
 		}
 	}
 
@@ -158,6 +162,11 @@ public:
 	void mazeInit();
 
 	Game(){
+		sPlayer.xpos = 80;
+		sPlayer.ypos = 240;
+
+		cPlayer.xpos = 500;
+		cPlayer.ypos = 240;
 	}
 
 	~Game(){

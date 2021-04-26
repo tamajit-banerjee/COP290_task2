@@ -106,29 +106,33 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
     for (int level = 1; level<2; level++){
         while (game->running()) {
-            char splayerInfo[100];
-            char cplayerInfo[100];
+            // char splayerInfo[100];
+            // char cplayerInfo[100];
             
-            game->cPlayer.encode(cplayerInfo);
+            // game->cPlayer.encode(cplayerInfo, 100);
             
-            do{
-                bytes_sent = send(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
-                {
-                    std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
-                }
-                bytes_recvd = recv(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-                if (bytes_recvd == -1)
-                {
-                    memset(&sname, 0, sizeof(sname));
-                    std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-                }
-            }while(bytes_recvd == -1 || bytes_sent == -1);
+            // do{
+            //     bytes_sent = send(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+            //     {
+            //         std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
+            //     }
+            //     bytes_recvd = recv(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+            //     if (bytes_recvd == -1)
+            //     {
+            //         memset(&sname, 0, sizeof(sname));
+            //         std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
+            //     }
+            // }while(bytes_recvd == -1 || bytes_sent == -1);
 
-            game->sPlayer.decode(splayerInfo);
+            // game->sPlayer.decode(splayerInfo);
 
             game->handleEvents();
             game->update();
             game->render();
+
+            if(game->cPlayer.time<=0){
+                game->isRunning = false;
+            }
         }
         game->clean();
     }

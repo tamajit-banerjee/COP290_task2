@@ -31,6 +31,8 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     SDL_FreeSurface(mazeTmpSurface);
     mazeInit();
     cnt = 0;
+
+    sPlayer.time = 700;
 }
 
 void Game::handleEvents()
@@ -96,7 +98,11 @@ void Game::update(){
         }
         
     }
-    // std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    if(sPlayer.time>0)
+        sPlayer.time -= 1;
+    if(cPlayer.time>0)
+        cPlayer.time -= 1;
+    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     
 }
 
@@ -111,19 +117,34 @@ void Game::render(){
     sdestR.x = sPlayer.xpos;
     sdestR.y = sPlayer.ypos;
     SDL_RenderCopy(renderer, sPlayer.Tex,  NULL, &sdestR);
+    disp_text(renderer, sPlayer.name , font, sPlayer.xpos, sPlayer.ypos-20);
     cdestR.h = 25;
     cdestR.w = 25;
     cdestR.x = cPlayer.xpos;
     cdestR.y = cPlayer.ypos;
     SDL_RenderCopy(renderer, cPlayer.Tex,  NULL, &cdestR);
+    disp_text(renderer, cPlayer.name , font, cPlayer.xpos, cPlayer.ypos-20);
 
-    char* s = "Sever Player: ";
-    disp_text(renderer, s , font, 100, 200);
-    disp_text(renderer, sPlayer.name , font, 250, 200);
-    char* c = "client Player: ";
-    disp_text(renderer, c , font, 100, 250);
-    disp_text(renderer, cPlayer.name , font, 250, 250);
 
+    disp_text(renderer, sPlayer.name , font, 300, 20);
+    disp_text(renderer, "score: " , font, 400, 20);
+    std::string temp_str = std::to_string(sPlayer.score);
+    char* char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 450, 20);
+    disp_text(renderer, "time: " , font, 500, 20);
+    temp_str = std::to_string(sPlayer.time);
+    char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 550, 20);
+
+    disp_text(renderer, cPlayer.name , font, 300, 40);
+    disp_text(renderer, "score: " , font, 400, 40);
+    temp_str = std::to_string(cPlayer.score);
+    char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 450, 40);
+    disp_text(renderer, "time: " , font, 500, 40);
+    temp_str = std::to_string(cPlayer.time);
+    char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 550, 40);
 
 
     SDL_RenderPresent(renderer);
