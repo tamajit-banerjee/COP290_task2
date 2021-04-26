@@ -93,8 +93,8 @@ void Game::update(){
     
     if(cnt<mazeRows*mazeCols){
         if(maze[int(cnt/mazeRows)][cnt%mazeRows].id == 0 && maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].id == 0){
-            maze[int(cnt/mazeRows)][cnt%mazeRows].update(13);
-            maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].update(11);
+            maze[int(cnt/mazeRows)][cnt%mazeRows].removeWall("right");
+            maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].removeWall("left");
         }
         
     }
@@ -165,8 +165,8 @@ void Game::renderMaze(){
             SDL_Rect dstR;
             dstR.w = cell_width;
             dstR.h = cell_height;
-            dstR.x = dstR.w * i;
-            dstR.y = dstR.h * j;
+            dstR.x = dstR.w * j;
+            dstR.y = dstR.h * i;
             if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
                 std::cout<<"Maze not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
