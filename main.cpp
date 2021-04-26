@@ -1,13 +1,11 @@
 #include "Header.h"
-#include "client.hpp"
-#include "server.hpp"
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
 #include "game.h"
 
 int main(){
-    char menu = 's';
+
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Init(SDL_INIT_VIDEO);
@@ -36,17 +34,29 @@ int main(){
         SDL_Quit();
         return 1;
     }
-    
-    Game *game = new Game();
-    game->init(renderer, font);
+    char name[100];
+    ask_for_name(renderer, font, name);
 
-    server_or_client(renderer, &menu, font);
-    if (menu == 'c') {
-        run_client(renderer,font, game);
+    Game *game = new Game();
+    game->sPlayer.name = name;
+    game->init(renderer, font);
+    game->isServer = true;
+    for (int level = 1; level<2; level++){
+
+        while (game->running()) {
+            
+            game->handleEvents();
+            game->update();
+            game->render();
+
+            if(game->sPlayer.time<=0){
+                game->isRunning = false;
+            }
+        }
+        game->clean();
     }
-    if(menu == 's') {
-        run_server(renderer,font, game);
-    }
+
+    
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

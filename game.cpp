@@ -1,10 +1,6 @@
 #include "Header.h"
 #include "constans.h"
 #include "font.hpp"
-#include "menu.hpp"
-
-#include <chrono>
-#include <thread>
 
 #include "game.h"
 
@@ -118,12 +114,6 @@ void Game::render(){
     sdestR.y = sPlayer.ypos;
     SDL_RenderCopy(renderer, sPlayer.Tex,  NULL, &sdestR);
     disp_text(renderer, sPlayer.name , font, sPlayer.xpos, sPlayer.ypos-20);
-    cdestR.h = 25;
-    cdestR.w = 25;
-    cdestR.x = cPlayer.xpos;
-    cdestR.y = cPlayer.ypos;
-    SDL_RenderCopy(renderer, cPlayer.Tex,  NULL, &cdestR);
-    disp_text(renderer, cPlayer.name , font, cPlayer.xpos, cPlayer.ypos-20);
 
 
     disp_text(renderer, sPlayer.name , font, 300, 20);
@@ -136,16 +126,6 @@ void Game::render(){
     char_type = (char*) temp_str.c_str();
     disp_text(renderer, char_type, font, 550, 20);
 
-    disp_text(renderer, cPlayer.name , font, 300, 40);
-    disp_text(renderer, "score: " , font, 400, 40);
-    temp_str = std::to_string(cPlayer.score);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 450, 40);
-    disp_text(renderer, "time: " , font, 500, 40);
-    temp_str = std::to_string(cPlayer.time);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 550, 40);
-
 
     SDL_RenderPresent(renderer);
 }
@@ -153,8 +133,8 @@ void Game::render(){
 void Game::clean()
 {
 	// SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
-	SDL_Quit();
+	// SDL_DestroyRenderer(renderer);
+	// SDL_Quit();
 }
 
 void Game::renderMaze(){
