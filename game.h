@@ -69,6 +69,7 @@ public:
 			s[i] = ' ';
 			i++;
 		}
+		s[i] = separator; 
 	}
 
 	void decode(char * s){
@@ -79,34 +80,64 @@ public:
 			i++;
 		}
 		name = nametmp;
-		int j = 0;
-		char xpostmp[100];
+
+		i++;
+		std::string xpostmp = ""; 
 		while(s[i]!=separator){
-			xpostmp[j] = s[i];
-			i++; j++;
+			xpostmp += s[i];
+			i++; 
 		}
-		xpos = atoi(xpostmp);
-		j = 0;
-		char ypostmp[100];
+		xpos = std::stoi(xpostmp);
+
+		i++;
+		std::string ypostmp = ""; 
 		while(s[i]!=separator){
-			ypostmp[j] = s[i];
-			i++; j++;
+			ypostmp += s[i];
+			i++; 
 		}
-		ypos = atoi(ypostmp);
-		j = 0;
-		char scoretmp[100];
+		ypos = std::stoi(ypostmp);
+
+		i++;
+		std::string scoretmp = ""; 
 		while(s[i]!=separator){
-			scoretmp[j] = s[i];
-			i++; j++;
+			scoretmp += s[i];
+			i++; 
 		}
-		score = atoi(scoretmp);
-		j = 0;
-		char timetmp[100];
+		score = std::stoi(scoretmp);
+
+		i++;
+		std::string timetmp = "";
 		while(s[i]!=separator){
-			timetmp[j] = s[i];
-			i++; j++;
+			timetmp += s[i];
+			i++; 
 		}
-		time = atoi(timetmp);
+		time = std::stoi(timetmp);
+	}
+
+	void draw(SDL_Renderer *renderer, TTF_Font *font){
+		SDL_Rect destR;
+		destR.h = 25;
+		destR.w = 25;
+		destR.x = xpos;
+		destR.y = ypos;
+		SDL_RenderCopy(renderer, Tex,  NULL, &destR);
+		disp_text(renderer, name , font, xpos, ypos-20);
+	}
+
+	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos){
+		disp_text(renderer, name, font, xpos, ypos);
+	}
+	void dispScore(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos){
+		disp_text(renderer, "Score: ", font, xpos, ypos);
+		std::string temp_str = std::to_string(score);
+		char* char_type = (char*) temp_str.c_str();
+		disp_text(renderer, char_type, font, xpos+50, ypos);
+	}
+	void dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos){
+		disp_text(renderer, "Score: ", font, xpos, ypos);
+		std::string temp_str = std::to_string(time);
+		char* char_type = (char*) temp_str.c_str();
+		disp_text(renderer, char_type, font, xpos+50, ypos);
 	}
 };
 
@@ -267,16 +298,11 @@ public:
 	SDL_Texture *mazeTex;
 	void mazeInit();
 
-	Game(){
-		sPlayer.xpos = 80;
-		sPlayer.ypos = 240;
+	void loadTexture(char *textName, char *path);
 
-		cPlayer.xpos = 500;
-		cPlayer.ypos = 240;
-	}
+	Game(){}
 
-	~Game(){
-	}
+	~Game(){}
 
 private:
 

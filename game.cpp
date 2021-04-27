@@ -13,26 +13,21 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
 	renderer = arg_renderer;
     font = arg_font;
-    if (renderer)
-    {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        
-    }
 
     isRunning = true;
     isLevelRunning = true;
 
-    SDL_Surface* tmpSurface = SDL_LoadBMP("resources/player.bmp");
-    cPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    sPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_FreeSurface(tmpSurface);
+    loadTexture("player", "resources/player.bmp");
+    loadTexture("maze", "resources/maze.bmp");
 
-    SDL_Surface* mazeTmpSurface = SDL_LoadBMP("resources/maze.bmp");
-    mazeTex = SDL_CreateTextureFromSurface(renderer, mazeTmpSurface);
-    SDL_FreeSurface(mazeTmpSurface);
     mazeInit();
+    
     cnt = 0;
 
+    sPlayer.xpos = 80;
+    sPlayer.ypos = 240;
+    cPlayer.xpos = 500;
+    cPlayer.ypos = 240;
     sPlayer.time = 700;
 }
 
@@ -112,41 +107,17 @@ void Game::render(){
 
     renderMaze();
 
-    SDL_Rect sdestR, cdestR;
-    sdestR.h = 25;
-    sdestR.w = 25;
-    sdestR.x = sPlayer.xpos;
-    sdestR.y = sPlayer.ypos;
-    SDL_RenderCopy(renderer, sPlayer.Tex,  NULL, &sdestR);
-    disp_text(renderer, sPlayer.name , font, sPlayer.xpos, sPlayer.ypos-20);
-    cdestR.h = 25;
-    cdestR.w = 25;
-    cdestR.x = cPlayer.xpos;
-    cdestR.y = cPlayer.ypos;
-    SDL_RenderCopy(renderer, cPlayer.Tex,  NULL, &cdestR);
-    disp_text(renderer, cPlayer.name , font, cPlayer.xpos, cPlayer.ypos-20);
+    sPlayer.draw(renderer, font);
+    cPlayer.draw(renderer, font);
 
 
-    disp_text(renderer, sPlayer.name , font, 300, 20);
-    disp_text(renderer, "score: " , font, 400, 20);
-    std::string temp_str = std::to_string(sPlayer.score);
-    char* char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 450, 20);
-    disp_text(renderer, "time: " , font, 500, 20);
-    temp_str = std::to_string(sPlayer.time);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 550, 20);
+    sPlayer.dispName(renderer, font, 300, 20);
+    sPlayer.dispScore(renderer, font, 400, 20);
+    sPlayer.dispTime(renderer, font, 500, 20);
 
-    disp_text(renderer, cPlayer.name , font, 300, 40);
-    disp_text(renderer, "score: " , font, 400, 40);
-    temp_str = std::to_string(cPlayer.score);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 450, 40);
-    disp_text(renderer, "time: " , font, 500, 40);
-    temp_str = std::to_string(cPlayer.time);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 550, 40);
-
+    cPlayer.dispName(renderer, font, 300, 40);
+    cPlayer.dispScore(renderer, font, 400, 40);
+    cPlayer.dispTime(renderer, font, 500, 40);
 
     SDL_RenderPresent(renderer);
 }
@@ -154,21 +125,15 @@ void Game::render(){
 void Game::clean()
 {
 	SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     disp_text(renderer, "Results", font, 300, 140);
     
-    disp_text(renderer, sPlayer.name, font, 250, 200);
-    disp_text(renderer, "score: ", font, 350, 200);
-    std::string temp_str = std::to_string(sPlayer.score);
-    char* char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 410, 200);
+    sPlayer.dispName(renderer, font, 250, 200);
+    sPlayer.dispScore(renderer, font, 350, 200);
 
-    disp_text(renderer, cPlayer.name, font, 250, 250);
-    disp_text(renderer, "score: ", font, 350, 250);
-    temp_str = std::to_string(cPlayer.score);
-    char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 410, 250);
+    cPlayer.dispName(renderer, font, 250, 250);
+    cPlayer.dispScore(renderer, font, 350, 250);
 
     SDL_RenderPresent(renderer);
 }
@@ -198,4 +163,20 @@ void Game::mazeInit(){
             maze[i][j].update(0);
         }
     }
+}
+
+void Game::loadTexture(char *textName, char *path){
+    SDL_Surface* tmpSurface;
+    if(strcmp(textName, "player") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        cPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        sPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "maze") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        mazeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+
 }
