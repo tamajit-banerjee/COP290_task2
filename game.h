@@ -298,6 +298,11 @@ public:
 	SDL_Texture *mazeTex;
 	void mazeInit();
 
+	SDL_Texture *coinTex;
+	int coinId;
+	void placeCoins();
+	void updateCoins();
+
 	void loadTexture(char *textName, char *path);
 
 	Game(){}

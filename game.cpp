@@ -19,6 +19,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     loadTexture("player", "resources/player.bmp");
     loadTexture("maze", "resources/maze.bmp");
+    loadTexture("coin", "resources/coins.bmp");
 
     mazeInit();
     
@@ -98,6 +99,13 @@ void Game::update(){
         sPlayer.time -= 1;
     if(cPlayer.time>0)
         cPlayer.time -= 1;
+
+    coinId++;
+    if(coinId==80){
+        coinId = 0;
+    }
+    updateCoins();
+
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     
 }
@@ -141,6 +149,8 @@ void Game::clean()
 void Game::renderMaze(){
     int cell_width = 64;
     int cell_height = 64;
+    int coin_width = 32;
+    int coin_height = 32;
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
             SDL_Rect dstR;
@@ -153,16 +163,50 @@ void Game::renderMaze(){
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
             }
+            SDL_Rect srcR;
+
+            if(!maze[i][j].hascoin){
+                continue;
+            }
+
+            srcR.w = 160;
+            srcR.h = 160;
+            srcR.x = srcR.w * ((coinId/10)%8);
+            srcR.y = 0;
+
+            dstR.w = coin_width;
+            dstR.h = coin_height;
+            dstR.x = cell_width * j + (cell_width - coin_width)/2;
+            dstR.y = cell_height * i + (cell_height - coin_height)/2;
+            if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                std::cout<<"Coin not rendered properly\n";
+                std::cout<<SDL_GetError()<<"\n";
+                exit(EXIT_FAILURE);
+            }
         }
     }
+}
+void Game::updateCoins(){
+
+}
+void Game::placeCoins(){
+    maze[0][3].hascoin = true;
+    maze[1][5].hascoin = true;
+    maze[3][7].hascoin = true;
+    maze[4][1].hascoin = true;
+    maze[5][4].hascoin = true;
 }
 
 void Game::mazeInit(){
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
             maze[i][j].update(0);
+            maze[i][j].hascoin = false;
+            maze[i][j].hastime = false;
         }
     }
+    coinId = 0;
+    placeCoins();
 }
 
 void Game::loadTexture(char *textName, char *path){
@@ -176,6 +220,11 @@ void Game::loadTexture(char *textName, char *path){
     else if(strcmp(textName, "maze") == 0){
         tmpSurface = SDL_LoadBMP(path);
         mazeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "coin") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        coinTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 
