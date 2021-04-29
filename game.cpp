@@ -24,7 +24,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     mazeInit();
     
-    cnt = 0;
+    counter = 0;
 
     sPlayer.xpos = 80;
     sPlayer.ypos = 240;
@@ -87,12 +87,12 @@ void Game::handleEvents()
 
 void Game::update(){
 
-    cnt++;
+    counter++;
     
-    if(cnt<mazeRows*mazeCols){
-        if(maze[int(cnt/mazeRows)][cnt%mazeRows].id == 0 && maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].id == 0){
-            maze[int(cnt/mazeRows)][cnt%mazeRows].removeWall("right");
-            maze[int((cnt+1)/mazeRows)][(cnt+1)%mazeRows].removeWall("left");
+    if(counter<mazeRows*mazeCols){
+        if(maze[int(counter/mazeRows)][counter%mazeRows].id == 0 && maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].id == 0){
+            maze[int(counter/mazeRows)][counter%mazeRows].removeWall("right");
+            maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].removeWall("left");
         }
         
     }
