@@ -303,6 +303,10 @@ public:
 	void placeCoins();
 	void updateCoins();
 
+	SDL_Texture *timeTex;
+	void placeTimes();
+	void updateTimes();
+
 	void loadTexture(char *textName, char *path);
 
 	Game(){}

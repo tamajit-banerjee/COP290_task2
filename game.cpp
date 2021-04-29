@@ -20,6 +20,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("player", "resources/player.bmp");
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
+    loadTexture("time", "resources/time.bmp");
 
     mazeInit();
     
@@ -153,7 +154,7 @@ void Game::renderMaze(){
     int coin_height = 32;
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
-            SDL_Rect dstR;
+            SDL_Rect dstR, srcR;
             dstR.w = cell_width;
             dstR.h = cell_height;
             dstR.x = dstR.w * j;
@@ -162,11 +163,6 @@ void Game::renderMaze(){
                 std::cout<<"Maze not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
-            }
-            SDL_Rect srcR;
-
-            if(!maze[i][j].hascoin){
-                continue;
             }
 
             srcR.w = 160;
@@ -178,10 +174,21 @@ void Game::renderMaze(){
             dstR.h = coin_height;
             dstR.x = cell_width * j + (cell_width - coin_width)/2;
             dstR.y = cell_height * i + (cell_height - coin_height)/2;
-            if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
-                std::cout<<"Coin not rendered properly\n";
-                std::cout<<SDL_GetError()<<"\n";
-                exit(EXIT_FAILURE);
+            
+            if(maze[i][j].hascoin){
+                if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                    std::cout<<"Coin not rendered properly\n";
+                    std::cout<<SDL_GetError()<<"\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            if(maze[i][j].hastime){
+                if(SDL_RenderCopyEx(renderer, timeTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                    std::cout<<"Time not rendered properly\n";
+                    std::cout<<SDL_GetError()<<"\n";
+                    exit(EXIT_FAILURE);
+                }
             }
         }
     }
@@ -197,6 +204,18 @@ void Game::placeCoins(){
     maze[5][4].hascoin = true;
 }
 
+void updateTimes(){
+    
+}
+void Game::placeTimes(){
+    maze[3][3].hastime = true;
+    maze[2][1].hastime = true;
+    maze[1][0].hastime = true;
+    maze[0][4].hastime = true;
+    maze[5][2].hastime = true;
+}
+
+
 void Game::mazeInit(){
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
@@ -207,6 +226,7 @@ void Game::mazeInit(){
     }
     coinId = 0;
     placeCoins();
+    placeTimes();
 }
 
 void Game::loadTexture(char *textName, char *path){
@@ -225,6 +245,11 @@ void Game::loadTexture(char *textName, char *path){
     else if(strcmp(textName, "coin") == 0){
         tmpSurface = SDL_LoadBMP(path);
         coinTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "time") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        timeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 
