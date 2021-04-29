@@ -16,7 +16,8 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     port_no = atoi(ptr_port);
     char *server_ip_addr = NULL;
     server_ip_addr = static_cast<char *>(malloc(16 * sizeof(char)));
-    ask_for_ip(renderer, font, server_ip_addr);
+    // ask_for_ip(renderer, font, server_ip_addr);
+    server_ip_addr = "127.0.0.1";
     he = gethostbyname(server_ip_addr);
     if (he == NULL)
     {
