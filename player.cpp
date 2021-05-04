@@ -24,13 +24,21 @@ Player::Player(const Player &p){
     down = 0;
 }
 
-void Player::encode(int &x){
-    x = xpos*1000 + ypos;
+void Player::encode(int x[]){
+    x[0] = xpos;
+    x[1] = ypos;
+    x[2] = score;
+    x[3] = time;
+    //x = xpos*1000 + ypos;
 }
 
-void Player::decode(int &y){
-    xpos = y/1000;
-    ypos = y%1000;
+void Player::decode(int y[]){
+//    xpos = y/1000;
+//    ypos = y%1000;
+    xpos = y[0];
+    ypos = y[1];
+    score = y[2];
+    time = y[3];
 }
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){

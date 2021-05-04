@@ -127,8 +127,8 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         sleep(2);
         
-        int splayerInfo;
-        int cplayerInfo;
+        int splayerInfo[4];
+        int cplayerInfo[4];
         
 //        for(int i=0;i<64;i++)
 //            cplayerInfo[i] = cname[i];

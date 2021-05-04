@@ -4,6 +4,7 @@
 #define mazeRows 8
 #define speed 2
 #define LEVELS 4
+#define MONSTERS 4
 #define separator '|'
 
 #include "Header.h"
@@ -24,8 +25,8 @@ public:
 	Player();
 	Player(const Player &p);
 
-	void encode(int &x);
-	void decode(int &y);
+    void encode(int x[]);
+    void decode(int y[]);
 
 	void draw(SDL_Renderer *renderer, TTF_Font *font);
 	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
@@ -35,6 +36,21 @@ public:
 	void move(int s);
 	void handleKeyDown(int key);
 	void handleKeyUp(int key);
+};
+
+class Monster{
+public:
+	int xpos, ypos;
+	int id;
+	int right, left, up, down;
+
+	SDL_Texture *Tex;
+
+	Monster();
+
+	void draw(SDL_Renderer *renderer, TTF_Font *font);
+
+	void move(int s);
 };
 
 class MazeCell{
@@ -73,6 +89,8 @@ public:
 
 	Player sPlayer, cPlayer;
 	bool isServer;
+
+	Monster monsters[MONSTERS];
 
 	void renderMaze();
 	MazeCell maze[mazeRows][mazeCols];

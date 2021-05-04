@@ -63,6 +63,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     isLevelRunning = true;
 
     loadTexture("player", "resources/player.bmp");
+    loadTexture("monster", "resources/monster.bmp");
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
     loadTexture("time", "resources/time.bmp");
@@ -76,6 +77,13 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     cPlayer.xpos = 500;
     cPlayer.ypos = 240;
     sPlayer.time = 700;
+
+    for(int i = 0 ; i<MONSTERS; i++){
+        monsters[i].id = i;
+        monsters[i].xpos = (i*i*i) + 320 -100/(1+i);
+        monsters[i].ypos = (13*i*i) + 130 -50/(1+i);
+    }
+        
 }
 
 void Game::handleEvents()
@@ -126,6 +134,15 @@ void Game::update(){
         
     }
 
+    for(int i = 0 ; i<MONSTERS; i++){
+        int j = (counter) % 100;
+        monsters[i].left = (j <= 7*i*i || monsters[i].xpos < 20) ? 0 : 1;
+        monsters[i].right = (j > 7*i*i || monsters[i].xpos > 600) ? 0 : 1;
+        monsters[i].up = (j <= 57*i -10 || monsters[i].ypos < 20) ? 0 : 1;
+        monsters[i].down = (j > 57*i -10 || monsters[i].ypos > 420) ? 0 : 1;
+        monsters[i].move(speed);
+    }
+
     counter++;
 
     sPlayer.move(speed);
@@ -162,6 +179,10 @@ void Game::render(){
     cPlayer.dispName(renderer, font, 300, 40);
     cPlayer.dispScore(renderer, font, 400, 40);
     cPlayer.dispTime(renderer, font, 500, 40);
+
+    for(int i = 0 ; i<MONSTERS; i++){
+        monsters[i].draw(renderer, font);
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -270,6 +291,13 @@ void Game::loadTexture(char *textName, char *path){
         tmpSurface = SDL_LoadBMP(path);
         cPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         sPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    if(strcmp(textName, "monster") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        for(int i = 0; i<MONSTERS; i++){
+            monsters[i].Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        }
         SDL_FreeSurface(tmpSurface);
     }
     else if(strcmp(textName, "maze") == 0){

@@ -123,8 +123,8 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
     game->isServer = true;
-    int splayerInfo;
-    int cplayerInfo;
+    int splayerInfo[4];
+    int cplayerInfo[4];
 
 //    game->sPlayer.encode(splayerInfo, 100);
 //    for( int i = 0; i<100; i++){
