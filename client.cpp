@@ -113,7 +113,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         game->counter = 0;
         game->mazeInit();
         game->cPlayer.time = 1000;
-        game->sPlayer.time = 1200;
+        game->sPlayer.time = 1000;
         
         game->isLevelRunning = true;
 
@@ -127,16 +127,16 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         sleep(2);
         
-        char splayerInfo[100];
-        char cplayerInfo[100];
+        int splayerInfo;
+        int cplayerInfo;
         
-        for(int i=0;i<64;i++)
-            cplayerInfo[i] = cname[i];
+//        for(int i=0;i<64;i++)
+//            cplayerInfo[i] = cname[i];
         
         while (game->running() && game->isLevelRunning) {
 
             
-             //game->cPlayer.encode(cplayerInfo, 100);
+             game->cPlayer.encode(cplayerInfo);
             
                  bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                  bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
@@ -144,10 +144,10 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 //            bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
 //            bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
 //
-            for(int i=0;i<64;i++)
-                std::cout<< sname[i] << " ";
-            std::cout<<"\n";
-          // game->sPlayer.decode(splayerInfo);
+//            for(int i=0;i<64;i++)
+//                std::cout<< sname[i] << " ";
+//            std::cout<<"\n";
+           game->sPlayer.decode(splayerInfo);
 
             game->handleEvents();
             game->update();

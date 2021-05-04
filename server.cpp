@@ -123,17 +123,17 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     game->cPlayer.name = cname;
     game->sPlayer.name = sname;
     game->isServer = true;
-    char splayerInfo[100];
-    char cplayerInfo[100];
+    int splayerInfo;
+    int cplayerInfo;
 
-    game->sPlayer.encode(splayerInfo, 100);
-    for( int i = 0; i<100; i++){
-        std::cout<<splayerInfo[i];
-    }
+//    game->sPlayer.encode(splayerInfo, 100);
+//    for( int i = 0; i<100; i++){
+//        std::cout<<splayerInfo[i];
+//    }
     std::cout<<'\n';
-    Player *p = new Player;
-    p->decode(splayerInfo);
-    std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
+//    Player *p = new Player;
+//    p->decode(splayerInfo);
+//    std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
     for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
@@ -142,7 +142,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         game->counter = 0;
         game->mazeInit();
         game->cPlayer.time = 1000;
-        game->sPlayer.time = 1200;
+        game->sPlayer.time = 1000;
 
         game->isLevelRunning = true;
         
@@ -155,27 +155,27 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         SDL_RenderPresent(renderer);
 
         sleep(2);
-
-        for(int i=0;i<64;i++)
-            splayerInfo[i] = sname[i];
+//
+//        for(int i=0;i<64;i++)
+//            splayerInfo[i] = sname[i];
         
         while (game->running() && game->isLevelRunning) {
 
 
-       //      game->sPlayer.encode(splayerInfo, 100);
+             game->sPlayer.encode(splayerInfo);
 
-                 bytes_recvd = recv(newsockfd, &cplayerInfo, strlen(cplayerInfo), 0);
+                 bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                  bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
             
 //            bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
 //            bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
 //
 
-       //     game->cPlayer.decode(cplayerInfo);
+           game->cPlayer.decode(cplayerInfo);
 //
-            for(int i=0;i<64;i++)
-                std::cout<< cname[i] << " ";
-            std::cout<<"\n";
+//            for(int i=0;i<64;i++)
+//                std::cout<< cname[i] << " ";
+//            std::cout<<"\n";
 //
             game->handleEvents();
             game->update();

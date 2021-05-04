@@ -24,85 +24,13 @@ Player::Player(const Player &p){
     down = 0;
 }
 
-void Player::encode(char * s, int size){
-    int i = 0;
-    while(i<sizeof(name)/sizeof(name[0])){
-        s[i] = name[i];
-        i++;
-    }
-    s[i] = separator; i++;
-    int j = 0;
-    while(j<(std::to_string(xpos).length())){
-        s[i] = std::to_string(xpos)[j];
-        i++; j++;
-    }
-    j = 0;
-    s[i] = separator; i++;
-    while(j<(std::to_string(ypos).length())){
-        s[i] = std::to_string(ypos)[j];
-        i++; j++;
-    }
-    j = 0;
-    s[i] = separator; i++;
-    while(j<(std::to_string(score).length())){
-        s[i] = std::to_string(score)[j];
-        i++; j++;
-    }
-    j = 0;
-    s[i] = separator; i++;
-    while(j<(std::to_string(time).length())){
-        s[i] = std::to_string(time)[j];
-        i++; j++;
-    }
-    s[i] = separator; 
-    i++;
-    while(i<size){
-        s[i] = ' ';
-        i++;
-    }
-    
+void Player::encode(int &x){
+    x = xpos*1000 + ypos;
 }
 
-void Player::decode(char * s){
-    int i = 0;
-    char nametmp[100];
-    while(s[i]!=separator){
-        nametmp[i] = s[i];
-        i++;
-    }
-    name = nametmp;
-
-    i++;
-    std::string xpostmp = ""; 
-    while(s[i]!=separator){
-        xpostmp += s[i];
-        i++; 
-    }
-    xpos = std::stoi(xpostmp);
-
-    i++;
-    std::string ypostmp = ""; 
-    while(s[i]!=separator){
-        ypostmp += s[i];
-        i++; 
-    }
-    ypos = std::stoi(ypostmp);
-
-    i++;
-    std::string scoretmp = ""; 
-    while(s[i]!=separator){
-        scoretmp += s[i];
-        i++; 
-    }
-    score = std::stoi(scoretmp);
-
-    i++;
-    std::string timetmp = "";
-    while(s[i]!=separator){
-        timetmp += s[i];
-        i++; 
-    }
-    time = std::stoi(timetmp);
+void Player::decode(int &y){
+    xpos = y/1000;
+    ypos = y%1000;
 }
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){

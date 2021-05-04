@@ -24,8 +24,8 @@ public:
 	Player();
 	Player(const Player &p);
 
-	void encode(char * s, int size);
-	void decode(char * s);
+	void encode(int &x);
+	void decode(int &y);
 
 	void draw(SDL_Renderer *renderer, TTF_Font *font);
 	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
