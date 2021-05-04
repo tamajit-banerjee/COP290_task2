@@ -134,11 +134,13 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     Player *p = new Player;
     p->decode(splayerInfo);
     std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
-    for (int level = 1; level<3; level++){
+    for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
             break;
         }
+        game->counter = 0;
+        game->mazeInit();
         game->cPlayer.time = 1000;
         game->sPlayer.time = 1200;
 
@@ -161,7 +163,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
             // game->sPlayer.encode(splayerInfo, 100);
 
             // do{
-            //     bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+            //     bytes_recvd = recv(newsockfd, &cplayerInfo, strlen(cplayerInfo), 0);
             //     if (bytes_recvd == -1 && flag == 0)
             //     {
             //         memset(&cname, 0, sizeof(cname));

@@ -8,6 +8,51 @@
 
 #include "game.h"
 
+
+#define mapSize 38
+// 0 - top 1 - bottom 2 - right 3 - left
+int map[mapSize][3] = {
+    {0, 0, 2},
+    {0, 1, 3},
+    {0, 1, 2},
+    {0, 2, 3},
+    {0, 2, 1},
+    {1, 2, 0},
+    {1, 2, 1},
+    {2, 2, 0},
+    {2, 2, 1},
+    {3, 2, 0},
+    {3, 2, 2},
+    {3, 3, 3},
+    {3, 3, 2},
+    {3, 4, 3},
+    {3, 4, 2},
+    {3, 5, 3},
+    {3, 5, 1},
+    {4, 5, 0},
+    {4, 5, 1},
+    {5, 5, 0},
+    {5, 5, 2},
+    {5, 6, 3},
+    {5, 6, 2},
+    {5, 7, 3},
+    {5, 7, 2},
+    {5, 8, 3},
+    {5, 8, 1},
+    {6, 8, 0},
+    {6, 8, 1},
+    {7, 8, 0},
+    {5, 0, 2},
+    {5, 1, 3},
+    {5, 1, 2},
+    {5, 2, 3},
+    {5, 2, 1},
+    {6, 2, 0},
+    {6, 2, 1},
+    {7, 2, 0},
+
+};
+
 void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 {
 
@@ -44,42 +89,19 @@ void Game::handleEvents()
 		isRunning = false;
 		break;
     case SDL_KEYDOWN:
-        if(isServer){
-            switch (event.key.keysym.sym){
-                case SDLK_LEFT:
-                    sPlayer.xpos -= speed;
-                    break;
-                case SDLK_RIGHT:
-                    sPlayer.xpos += speed;
-                    break;
-                case SDLK_UP:
-                    sPlayer.ypos -= speed;
-                    break;
-                case SDLK_DOWN:
-                    sPlayer.ypos += speed;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else{
-            switch (event.key.keysym.sym){
-                case SDLK_LEFT:
-                    cPlayer.xpos -= speed;
-                    break;
-                case SDLK_RIGHT:
-                    cPlayer.xpos += speed;
-                    break;
-                case SDLK_UP:
-                    cPlayer.ypos -= speed;
-                    break;
-                case SDLK_DOWN:
-                    cPlayer.ypos += speed;
-                    break;
-                default:
-                    break;
-            }
-        }
+        if(event.key.keysym.sym == SDLK_ESCAPE)
+            isRunning = false;
+        if(isServer)
+            sPlayer.handleKeyDown(event.key.keysym.sym);
+        else
+            cPlayer.handleKeyDown(event.key.keysym.sym);
+        break;
+    case SDL_KEYUP:
+        if(isServer)
+            sPlayer.handleKeyUp(event.key.keysym.sym);
+        else
+            cPlayer.handleKeyUp(event.key.keysym.sym);
+        break;
 	default:
 		break;
 	}
@@ -87,15 +109,28 @@ void Game::handleEvents()
 
 void Game::update(){
 
-    counter++;
     
-    if(counter<mazeRows*mazeCols){
-        if(maze[int(counter/mazeRows)][counter%mazeRows].id == 0 && maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].id == 0){
-            maze[int(counter/mazeRows)][counter%mazeRows].removeWall("right");
-            maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].removeWall("left");
+    
+    if(counter<5*mapSize){
+        // if(maze[int(counter/mazeRows)][counter%mazeRows].id == 0 && maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].id == 0){
+        //     maze[int(counter/mazeRows)][counter%mazeRows].removeWall("right");
+        //     maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].removeWall("left");
+        // }
+        if(counter%10==0){
+            int i = counter / 10;
+
+            maze[map[2*i][0]][map[2*i][1]].removeWall(map[2*i][2]);
+            maze[map[2*i+1][0]][map[2*i+1][1]].removeWall(map[2*i+1][2]);
         }
         
+        
     }
+
+    counter++;
+
+    sPlayer.move(speed);
+    cPlayer.move(speed);
+
     if(sPlayer.time>0)
         sPlayer.time -= 1;
     if(cPlayer.time>0)

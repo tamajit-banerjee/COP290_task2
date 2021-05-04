@@ -105,14 +105,16 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     game->sPlayer.name = sname;
     game->isServer = false;
 
-    for (int level = 1; level<3; level++){
+    for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
             break;
         }
+        game->counter = 0;
+        game->mazeInit();
         game->cPlayer.time = 1000;
         game->sPlayer.time = 1200;
-
+        
         game->isLevelRunning = true;
 
         SDL_RenderClear(renderer);

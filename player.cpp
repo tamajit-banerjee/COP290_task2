@@ -6,6 +6,10 @@ Player::Player(){
     ypos = 0;
     score = 0;
     time = 500;
+    right = 0;
+    left = 0;
+    up = 0;
+    down = 0;
 }
 
 Player::Player(const Player &p){
@@ -14,6 +18,10 @@ Player::Player(const Player &p){
     ypos = p.ypos;
     score = p.score;
     time = p.time;
+    right = 0;
+    left = 0;
+    up = 0;
+    down = 0;
 }
 
 void Player::encode(char * s, int size){
@@ -46,11 +54,13 @@ void Player::encode(char * s, int size){
         s[i] = std::to_string(time)[j];
         i++; j++;
     }
+    s[i] = separator; 
+    i++;
     while(i<size){
         s[i] = ' ';
         i++;
     }
-    s[i] = separator; 
+    
 }
 
 void Player::decode(char * s){
@@ -119,4 +129,52 @@ void Player::dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos
     std::string temp_str = std::to_string(time);
     char* char_type = (char*) temp_str.c_str();
     disp_text(renderer, char_type, font, xpos+50, ypos);
+}
+
+void Player::move(int s){
+    if(right)
+        xpos+=s;
+    if(left)
+        xpos-=s;
+    if(up)
+        ypos-=s;
+    if(down)
+        ypos+=s;
+}
+
+void Player::handleKeyDown(int key){
+    switch(key){
+        case SDLK_LEFT:
+            left = 1;
+            break;
+        case SDLK_RIGHT:
+            right = 1;
+            break;
+        case SDLK_UP:
+            up = 1;
+            break;
+        case SDLK_DOWN:
+            down = 1;
+            break;
+        default:
+            break;
+    }
+}
+void Player::handleKeyUp(int key){
+    switch(key){
+        case SDLK_LEFT:
+            left = 0;
+            break;
+        case SDLK_RIGHT:
+            right = 0;
+            break;
+        case SDLK_UP:
+            up = 0;
+            break;
+        case SDLK_DOWN:
+            down = 0;
+            break;
+        default:
+            break;
+    }
 }

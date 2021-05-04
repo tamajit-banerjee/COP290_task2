@@ -19,6 +19,28 @@ void MazeCell::update(int arg_id){
     srcR.y = srcR.h*int(id/10);
 }
 
+void MazeCell::removeWall(int direction){
+    switch(direction){
+        case 0:
+            removeWall("top");
+            break;
+        case 1:
+            removeWall("bottom");
+            break;
+        case 2:
+            removeWall("right");
+            break;
+        case 3:
+            removeWall("left");
+            break;
+        default:
+            std::cout<<"Invalid use of removeWall()!\n";
+            exit(EXIT_FAILURE);
+            break;
+
+    }
+}
+
 void MazeCell::removeWall(char *direction){
     if(strcmp(direction, "top") == 0){
         switch(id){

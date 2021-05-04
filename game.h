@@ -3,6 +3,7 @@
 #define mazeCols 10
 #define mazeRows 8
 #define speed 2
+#define LEVELS 4
 #define separator '|'
 
 #include "Header.h"
@@ -16,6 +17,7 @@ public:
 	int score;
 	int time;
 	int xpos, ypos;
+	int right, left, up, down;
 
 	SDL_Texture *Tex;
 
@@ -29,6 +31,10 @@ public:
 	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 	void dispScore(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 	void dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
+
+	void move(int s);
+	void handleKeyDown(int key);
+	void handleKeyUp(int key);
 };
 
 class MazeCell{
@@ -43,6 +49,7 @@ public:
 
 	void update(int arg_id);
 	void removeWall(char *direction);
+	void removeWall(int direction);
 };
 
 class Game
