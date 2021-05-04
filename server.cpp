@@ -156,27 +156,27 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
         sleep(2);
 
+        for(int i=0;i<64;i++)
+            splayerInfo[i] = sname[i];
+        
         while (game->running() && game->isLevelRunning) {
-            // char splayerInfo[100];
-            // char cplayerInfo[100];
 
-            // game->sPlayer.encode(splayerInfo, 100);
 
-            // do{
-            //     bytes_recvd = recv(newsockfd, &cplayerInfo, strlen(cplayerInfo), 0);
-            //     if (bytes_recvd == -1 && flag == 0)
-            //     {
-            //         memset(&cname, 0, sizeof(cname));
-            //         std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-            //     }
-            //     bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-            //     {
-            //         std::cout<<"Could not SEND Player Data! "<<"Trying Again..."<<std::endl;
-            //     }
-            // }while(bytes_recvd == -1 || bytes_sent == -1);
+       //      game->sPlayer.encode(splayerInfo, 100);
 
-            // game->cPlayer.decode(cplayerInfo);
+                 bytes_recvd = recv(newsockfd, &cplayerInfo, strlen(cplayerInfo), 0);
+                 bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+            
+//            bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
+//            bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
+//
 
+       //     game->cPlayer.decode(cplayerInfo);
+//
+            for(int i=0;i<64;i++)
+                std::cout<< cname[i] << " ";
+            std::cout<<"\n";
+//
             game->handleEvents();
             game->update();
             game->render();

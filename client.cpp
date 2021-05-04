@@ -61,8 +61,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         std::cout<<"PLAYER DATA NOT SENT!"<<std::endl<<"Trying Again...";
     }
     else
-    {        cli_choice = 'X';
-        
+    {
         flag = 1;
         memset(&sname, 0, sizeof(sname));
         bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
@@ -110,6 +109,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         if(!game->running()){
             break;
         }
+        
         game->counter = 0;
         game->mazeInit();
         game->cPlayer.time = 1000;
@@ -126,27 +126,28 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         SDL_RenderPresent(renderer);
 
         sleep(2);
-
+        
+        char splayerInfo[100];
+        char cplayerInfo[100];
+        
+        for(int i=0;i<64;i++)
+            cplayerInfo[i] = cname[i];
+        
         while (game->running() && game->isLevelRunning) {
-            // char splayerInfo[100];
-            // char cplayerInfo[100];
-            
-            // game->cPlayer.encode(cplayerInfo, 100);
-            
-            // do{
-            //     bytes_sent = send(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
-            //     {
-            //         std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
-            //     }
-            //     bytes_recvd = recv(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-            //     if (bytes_recvd == -1)
-            //     {
-            //         memset(&sname, 0, sizeof(sname));
-            //         std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-            //     }
-            // }while(bytes_recvd == -1 || bytes_sent == -1);
 
-            // game->sPlayer.decode(splayerInfo);
+            
+             //game->cPlayer.encode(cplayerInfo, 100);
+            
+                 bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+                 bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
+            
+//            bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
+//            bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
+//
+            for(int i=0;i<64;i++)
+                std::cout<< sname[i] << " ";
+            std::cout<<"\n";
+          // game->sPlayer.decode(splayerInfo);
 
             game->handleEvents();
             game->update();
