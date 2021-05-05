@@ -68,18 +68,20 @@ void Player::dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos
     char* char_type = (char*) temp_str.c_str();
     disp_text(renderer, char_type, font, xpos+50, ypos);
 }
-
-void Player::move(int s){
+std::pair<int,int> Player::move(int s){
+    int new_x = xpos;
+    int new_y = ypos;
     if(!freeze){
         if(right)
-            xpos+=s;
+            new_x+=s;
         if(left)
-            xpos-=s;
+            new_x-=s;
         if(up)
-            ypos-=s;
+            new_y-=s;
         if(down)
-            ypos+=s;
+            new_y+=s;
     }
+    return std::make_pair(new_x, new_y);
 }
 
 void Player::handleKeyDown(int key){

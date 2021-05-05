@@ -160,8 +160,18 @@ void Game::update(){
     }
 
 
-    sPlayer.move(speed);
-    cPlayer.move(speed);
+    std::pair<int, int> s_p = sPlayer.move(speed);
+    std::pair<int, int> c_p = cPlayer.move(speed);
+    if(!checkWallCollisions(s_p.first, s_p.second, sPlayer.width, sPlayer.height)){
+        sPlayer.xpos = s_p.first;
+        sPlayer.ypos = s_p.second;
+    }
+
+    if(!checkWallCollisions(c_p.first, c_p.second, cPlayer.width, cPlayer.height)){
+        cPlayer.xpos = c_p.first;
+        cPlayer.ypos = c_p.second;
+    }
+
 
     if(sPlayer.time>0)
         sPlayer.time -= 1;
@@ -225,17 +235,18 @@ void Game::renderMaze(){
     int coin_height = 32;
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
-            SDL_Rect dstR, srcR;
-            dstR.w = cell_width;
-            dstR.h = cell_height;
-            dstR.x = dstR.w * j;
-            dstR.y = dstR.h * i;
-            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+            
+            maze[i][j].dstR.w = cell_width;
+            maze[i][j].dstR.h = cell_height;
+            maze[i][j].dstR.x = maze[i][j].dstR.w * j;
+            maze[i][j].dstR.y = maze[i][j].dstR.h * i;
+            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &maze[i][j].dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
                 std::cout<<"Maze not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
             }
 
+            SDL_Rect dstR, srcR;
             srcR.w = 160;
             srcR.h = 160;
             srcR.x = srcR.w * ((coinId/10)%8);
@@ -312,7 +323,7 @@ bool iscolliding(Player p, Monster m){
 
 void Game::checkMonsterCollisions(Player p){
     for(int i = 0; i< MONSTERS; i++){
-        std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
+        // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
         std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
         if(iscolliding(p, monsters[i])){
             std::cout<<"colliding!\n";
@@ -320,6 +331,32 @@ void Game::checkMonsterCollisions(Player p){
             p.freeze = true;
         }
     }
+}
+
+bool iscollidingwall(int x, int y, int w, int h, SDL_Rect maze_cell){
+    if (x >= maze_cell.x + maze_cell.w || maze_cell.x >= x + w)
+        return false;
+    if (y <= maze_cell.y + maze_cell.h || maze_cell.y <= y + h)
+        return false;
+
+    return true;
+    
+}
+
+bool Game::checkWallCollisions(int x, int y, int w, int h){
+    for(int i =0; i<mazeRows; i++){
+        for(int j = 0; j<mazeCols; j++){
+            int id = maze[i][j].id;
+            
+            SDL_Rect maze_cell;
+            maze_cell = maze[i][j].dstR;
+            maze_cell.h /= 10;
+            if(iscollidingwall(x, y, w, h, maze_cell)){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void Game::loadTexture(char *textName, char *path){

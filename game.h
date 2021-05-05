@@ -39,7 +39,7 @@ public:
 	void dispScore(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 	void dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 
-	void move(int s);
+	std::pair<int, int> move(int s);
 	void handleKeyDown(int key);
 	void handleKeyUp(int key);
 };
@@ -104,6 +104,7 @@ public:
 	MazeCell maze[mazeRows][mazeCols];
 	SDL_Texture *mazeTex;
 	void mazeInit();
+	bool checkWallCollisions(int x, int y, int w, int h);
 
 	SDL_Texture *coinTex;
 	int coinId;
