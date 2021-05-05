@@ -10,7 +10,10 @@ Player::Player(){
     left = 0;
     up = 0;
     down = 0;
+    width = 25;
+    height = 25;
 }
+
 
 Player::Player(const Player &p){
     name = p.name;
@@ -22,6 +25,8 @@ Player::Player(const Player &p){
     left = 0;
     up = 0;
     down = 0;
+    width = p.width;
+    height = p.height;
 }
 
 void Player::encode(int x[]){
@@ -43,8 +48,6 @@ void Player::decode(int y[]){
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
     SDL_Rect destR;
-    width = 25;
-    height = 25;
     destR.h = height;
     destR.w = width;
     destR.x = xpos;
@@ -80,6 +83,8 @@ std::pair<int,int> Player::move(int s){
             new_y-=s;
         if(down)
             new_y+=s;
+    }else{
+        std::cout<<"froze\n";
     }
     return std::make_pair(new_x, new_y);
 }

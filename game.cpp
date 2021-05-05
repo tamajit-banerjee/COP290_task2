@@ -150,6 +150,7 @@ void Game::update(){
 
     sPlayer.freeze_counter++;
     cPlayer.freeze_counter++;
+    
     if(sPlayer.freeze){
         if (sPlayer.freeze_counter >= FREEZE_LIMIT)
             sPlayer.freeze = false;
@@ -322,12 +323,24 @@ bool iscolliding(Player p, Monster m){
     
 }
 
-void Game::checkMonsterCollisions(Player p){
+void Game::checkMonsterCollisions(Player &p){
     for(int i = 0; i< MONSTERS; i++){
         // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
         // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
-        if(iscolliding(p, monsters[i])){
+        SDL_Rect destR , srcR;
+        destR.h = p.height;
+        destR.w = p.width;
+        destR.x = p.xpos;
+        destR.y = p.ypos;
+        srcR.h = monsters[i].height;
+        srcR.w = monsters[i].width;
+        srcR.x = monsters[i].xpos;
+        srcR.y = monsters[i].ypos;
+        SDL_Rect *d = &destR;
+        SDL_Rect *b = &srcR;
+        if(SDL_HasIntersection(d,b)){
             std::cout<<"colliding!\n";
+            std::cout<<p.name<<"\n";
             p.freeze_counter = 0;
             p.freeze = true;
         }

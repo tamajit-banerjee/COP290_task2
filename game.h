@@ -6,7 +6,7 @@
 #define LEVELS 4
 #define MONSTERS 4
 #define separator '|'
-#define FREEZE_LIMIT 1000
+#define FREEZE_LIMIT 20
 #define WALL_RATIO 8
 
 #include "Header.h"
@@ -98,7 +98,7 @@ public:
 	bool isServer;
 
 	Monster monsters[MONSTERS];
-	void checkMonsterCollisions(Player p);
+	void checkMonsterCollisions(Player &p);
 
 	void renderMaze();
 	MazeCell maze[mazeRows][mazeCols];
