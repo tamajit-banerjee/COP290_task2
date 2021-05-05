@@ -72,10 +72,10 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     
     counter = 0;
 
-    sPlayer.xpos = 80;
-    sPlayer.ypos = 240;
-    cPlayer.xpos = 500;
-    cPlayer.ypos = 240;
+    sPlayer.xpos = 10;
+    sPlayer.ypos = 10;
+    cPlayer.xpos = 10;
+    cPlayer.ypos = 10;
     sPlayer.time = 700;
 
     for(int i = 0 ; i<MONSTERS; i++){
@@ -149,13 +149,14 @@ void Game::update(){
     checkMonsterCollisions(cPlayer);
 
     sPlayer.freeze_counter++;
+    cPlayer.freeze_counter++;
     if(sPlayer.freeze){
-        if (sPlayer.freeze_counter == FREEZE_LIMIT)
+        if (sPlayer.freeze_counter >= FREEZE_LIMIT)
             sPlayer.freeze = false;
     }
     cPlayer.freeze_counter++;
     if(cPlayer.freeze){
-        if (cPlayer.freeze_counter == FREEZE_LIMIT)
+        if (cPlayer.freeze_counter >= FREEZE_LIMIT)
             cPlayer.freeze = false;
     }
 
@@ -314,7 +315,7 @@ void Game::mazeInit(){
 bool iscolliding(Player p, Monster m){
     if (p.xpos >= m.xpos + m.width || m.xpos >= p.xpos + p.width)
         return false;
-    if (p.ypos <= m.ypos + m.height || m.ypos <= p.ypos + p.height)
+    if (p.ypos >= m.ypos + m.height || m.ypos >= p.ypos + p.height)
         return false;
 
     return true;
@@ -324,7 +325,7 @@ bool iscolliding(Player p, Monster m){
 void Game::checkMonsterCollisions(Player p){
     for(int i = 0; i< MONSTERS; i++){
         // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
-        std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
+        // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
         if(iscolliding(p, monsters[i])){
             std::cout<<"colliding!\n";
             p.freeze_counter = 0;
@@ -336,7 +337,7 @@ void Game::checkMonsterCollisions(Player p){
 bool iscollidingwall(int x, int y, int w, int h, SDL_Rect maze_cell){
     if (x >= maze_cell.x + maze_cell.w || maze_cell.x >= x + w)
         return false;
-    if (y <= maze_cell.y + maze_cell.h || maze_cell.y <= y + h)
+    if (y >= maze_cell.y + maze_cell.h || maze_cell.y >= y + h)
         return false;
 
     return true;
