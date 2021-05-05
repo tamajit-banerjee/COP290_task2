@@ -302,7 +302,7 @@ void Game::placeTimes(){
 void Game::mazeInit(){
     for(int i =0; i<mazeRows; i++){
         for(int j = 0; j<mazeCols; j++){
-            maze[i][j].update(0);
+            maze[i][j].update(15);
             maze[i][j].hascoin = false;
             maze[i][j].hastime = false;
         }
