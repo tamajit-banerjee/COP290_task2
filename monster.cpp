@@ -13,8 +13,10 @@ Monster::Monster(){
 
 void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
     SDL_Rect destR;
-    destR.h = 10*(id+2);
-    destR.w = 10*(id+2);
+    width = 10*(id+2);
+    height = 10*(id+2);
+    destR.h = height;
+    destR.w = width;
     destR.x = xpos;
     destR.y = ypos;
     // SDL_RenderCopy(renderer, Tex,  NULL, &destR);

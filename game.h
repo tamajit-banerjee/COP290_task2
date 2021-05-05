@@ -6,6 +6,8 @@
 #define LEVELS 4
 #define MONSTERS 4
 #define separator '|'
+#define FREEZE_LIMIT 1000
+#define COLLISION_AREA 1000
 
 #include "Header.h"
 #include "constans.h"
@@ -19,8 +21,12 @@ public:
 	int time;
 	int xpos, ypos;
 	int right, left, up, down;
+	int width, height;
 
 	SDL_Texture *Tex;
+
+	bool freeze;
+	int freeze_counter;
 
 	Player();
 	Player(const Player &p);
@@ -43,6 +49,7 @@ public:
 	int xpos, ypos;
 	int id;
 	int right, left, up, down;
+	int width, height;
 
 	SDL_Texture *Tex;
 
@@ -91,6 +98,7 @@ public:
 	bool isServer;
 
 	Monster monsters[MONSTERS];
+	void checkMonsterCollisions(Player p);
 
 	void renderMaze();
 	MazeCell maze[mazeRows][mazeCols];

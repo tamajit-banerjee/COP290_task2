@@ -43,8 +43,10 @@ void Player::decode(int y[]){
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
     SDL_Rect destR;
-    destR.h = 25;
-    destR.w = 25;
+    width = 25;
+    height = 25;
+    destR.h = height;
+    destR.w = width;
     destR.x = xpos;
     destR.y = ypos;
     SDL_RenderCopy(renderer, Tex,  NULL, &destR);
@@ -68,14 +70,16 @@ void Player::dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos
 }
 
 void Player::move(int s){
-    if(right)
-        xpos+=s;
-    if(left)
-        xpos-=s;
-    if(up)
-        ypos-=s;
-    if(down)
-        ypos+=s;
+    if(!freeze){
+        if(right)
+            xpos+=s;
+        if(left)
+            xpos-=s;
+        if(up)
+            ypos-=s;
+        if(down)
+            ypos+=s;
+    }
 }
 
 void Player::handleKeyDown(int key){

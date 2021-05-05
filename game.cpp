@@ -145,6 +145,21 @@ void Game::update(){
 
     counter++;
 
+    checkMonsterCollisions(sPlayer);
+    checkMonsterCollisions(cPlayer);
+
+    sPlayer.freeze_counter++;
+    if(sPlayer.freeze){
+        if (sPlayer.freeze_counter == FREEZE_LIMIT)
+            sPlayer.freeze = false;
+    }
+    cPlayer.freeze_counter++;
+    if(cPlayer.freeze){
+        if (cPlayer.freeze_counter == FREEZE_LIMIT)
+            cPlayer.freeze = false;
+    }
+
+
     sPlayer.move(speed);
     cPlayer.move(speed);
 
@@ -283,6 +298,28 @@ void Game::mazeInit(){
     coinId = 0;
     placeCoins();
     placeTimes();
+}
+
+bool iscolliding(Player p, Monster m){
+    if (p.xpos >= m.xpos + m.width || m.xpos >= p.xpos + p.width)
+        return false;
+    if (p.ypos <= m.ypos + m.height || m.ypos <= p.ypos + p.height)
+        return false;
+
+    return true;
+    
+}
+
+void Game::checkMonsterCollisions(Player p){
+    for(int i = 0; i< MONSTERS; i++){
+        std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
+        std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
+        if(iscolliding(p, monsters[i])){
+            std::cout<<"colliding!\n";
+            p.freeze_counter = 0;
+            p.freeze = true;
+        }
+    }
 }
 
 void Game::loadTexture(char *textName, char *path){
