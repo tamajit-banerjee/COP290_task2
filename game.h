@@ -7,7 +7,7 @@
 #define MONSTERS 4
 #define separator '|'
 #define FREEZE_LIMIT 1000
-#define COLLISION_AREA 1000
+#define WALL_RATIO 8
 
 #include "Header.h"
 #include "constans.h"

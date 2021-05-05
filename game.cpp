@@ -72,10 +72,10 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     
     counter = 0;
 
-    sPlayer.xpos = 10;
-    sPlayer.ypos = 10;
-    cPlayer.xpos = 10;
-    cPlayer.ypos = 10;
+    sPlayer.xpos = 144;
+    sPlayer.ypos = 16;
+    cPlayer.xpos = 16;
+    cPlayer.ypos = 16;
     sPlayer.time = 700;
 
     for(int i = 0 ; i<MONSTERS; i++){
@@ -334,14 +334,21 @@ void Game::checkMonsterCollisions(Player p){
     }
 }
 
-bool iscollidingwall(int x, int y, int w, int h, SDL_Rect maze_cell){
-    if (x >= maze_cell.x + maze_cell.w || maze_cell.x >= x + w)
+bool iscollidingwall(int x, int y, int w, int h, SDL_Rect maze_rect){
+    if (x >= maze_rect.x + maze_rect.w || maze_rect.x >= x + w)
         return false;
-    if (y >= maze_cell.y + maze_cell.h || maze_cell.y >= y + h)
+    if (y >= maze_rect.y + maze_rect.h || maze_rect.y >= y + h)
         return false;
 
     return true;
     
+}
+
+int pow(int x, int y){
+    if(y <= 0)
+        return 1;
+    else    
+        return x * pow(x, y-1);
 }
 
 bool Game::checkWallCollisions(int x, int y, int w, int h){
@@ -349,11 +356,26 @@ bool Game::checkWallCollisions(int x, int y, int w, int h){
         for(int j = 0; j<mazeCols; j++){
             int id = maze[i][j].id;
             
-            SDL_Rect maze_cell;
-            maze_cell = maze[i][j].dstR;
-            maze_cell.h /= 10;
-            if(iscollidingwall(x, y, w, h, maze_cell)){
-                return true;
+            SDL_Rect maze_rect[4];
+            // left
+            maze_rect[0] = maze[i][j].dstR;
+            maze_rect[0].w /= WALL_RATIO;
+            // right
+            maze_rect[1] = maze[i][j].dstR;
+            maze_rect[1].w /= WALL_RATIO;
+            maze_rect[1].x += maze[i][j].dstR.w - maze_rect[1].w;
+            // top
+            maze_rect[2] = maze[i][j].dstR;
+            maze_rect[2].h /= WALL_RATIO;
+            // bottom
+            maze_rect[3] = maze[i][j].dstR;
+            maze_rect[3].h /= WALL_RATIO;
+            maze_rect[3].y += maze[i][j].dstR.h - maze_rect[3].h;
+            
+            for(int k = 0; k<4; k++){
+                if((int(id/pow(2, k))%2 != 0) && iscollidingwall(x, y, w, h, maze_rect[k])){
+                    return true;
+                }
             }
         }
     }
