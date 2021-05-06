@@ -112,6 +112,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
         game->counter = 0;
         game->mazeInit();
+        game->maze_gen();
         game->cPlayer.time = 1000;
         game->sPlayer.time = 1000;
         

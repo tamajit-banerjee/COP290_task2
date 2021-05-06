@@ -134,11 +134,11 @@ void Game::dfs(int x, int y){
         random = random%4;
         if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
             switch (random) {
-                case 0:
+                case 1:
                     maze[x][y].removeWall("top");
                     maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
                     break;
-                case 1:
+                case 0:
                     maze[x][y].removeWall("bottom");
                     maze[x+dir[random].first][y+dir[random].second].removeWall("top");
                     break;
@@ -171,7 +171,7 @@ void Game:: maze_gen(){
     
     int x = std::rand()%10;
     int y = std::rand()%10;
-    
+
     dfs(x,y);
     
     
