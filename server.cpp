@@ -125,6 +125,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     game->isServer = true;
     int splayerInfo[4];
     int cplayerInfo[4];
+    
 
 //    game->sPlayer.encode(splayerInfo, 100);
 //    for( int i = 0; i<100; i++){
@@ -141,6 +142,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         }
         game->counter = 0;
         game->mazeInit();
+        game->maze_gen();
         game->cPlayer.time = 1000;
         game->sPlayer.time = 1000;
 

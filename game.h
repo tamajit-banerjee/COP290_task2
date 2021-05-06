@@ -1,7 +1,7 @@
 #pragma once
 
 #define mazeCols 10
-#define mazeRows 8
+#define mazeRows 10
 #define speed 2
 #define LEVELS 4
 #define MONSTERS 4
@@ -101,6 +101,9 @@ public:
 	void checkMonsterCollisions(Player &p);
 
 	void renderMaze();
+    bool ok(int x, int y);
+    void dfs(int x, int y);
+    void maze_gen();
 	MazeCell maze[mazeRows][mazeCols];
 	SDL_Texture *mazeTex;
 	void mazeInit();

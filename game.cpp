@@ -10,6 +10,8 @@
 
 
 #define mapSize 38
+
+std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
 // 0 - top 1 - bottom 2 - right 3 - left
 int map[mapSize][3] = {
     {0, 0, 2},
@@ -115,24 +117,83 @@ void Game::handleEvents()
 	}
 }
 
+bool Game::ok(int x, int y){
+    if(x>=0 && x<10 && y>=0 && y<10){
+        return true;
+    }else
+        return false;
+}
+
+void Game::dfs(int x, int y){
+    
+    std::cout<<"dfs/n";
+    while(true){
+        renderMaze();
+        //sleep(2);
+        int random = std::rand();
+        random = random%4;
+        if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
+            switch (random) {
+                case 0:
+                    maze[x][y].removeWall("top");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+                    break;
+                case 1:
+                    maze[x][y].removeWall("bottom");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+                    break;
+                case 2:
+                    maze[x][y].removeWall("right");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+                    break;
+                case 3:
+                    maze[x][y].removeWall("left");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+                    break;
+                default:
+                    break;
+            }
+            dfs(x+dir[random].first,y+dir[random].second);
+        }
+        int cnt = 0;
+        for(int i=0;i<4;i++){
+            if(ok(x+dir[i].first,y+dir[i].second) && maze[x+dir[i].first][y+dir[i].second].id == 15  ){
+                ++cnt;
+            }
+        }
+        if(!cnt)
+            break;
+    }
+    
+}
+
+void Game:: maze_gen(){
+    
+    int x = std::rand()%10;
+    int y = std::rand()%10;
+    
+    dfs(x,y);
+    
+    
+}
 void Game::update(){
 
     
     
-    if(counter<5*mapSize){
-        // if(maze[int(counter/mazeRows)][counter%mazeRows].id == 0 && maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].id == 0){
-        //     maze[int(counter/mazeRows)][counter%mazeRows].removeWall("right");
-        //     maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].removeWall("left");
-        // }
-        if(counter%10==0){
-            int i = counter / 10;
-
-            maze[map[2*i][0]][map[2*i][1]].removeWall(map[2*i][2]);
-            maze[map[2*i+1][0]][map[2*i+1][1]].removeWall(map[2*i+1][2]);
-        }
-        
-        
-    }
+//    if(counter<5*mapSize){
+//        // if(maze[int(counter/mazeRows)][counter%mazeRows].id == 0 && maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].id == 0){
+//        //     maze[int(counter/mazeRows)][counter%mazeRows].removeWall("right");
+//        //     maze[int((counter+1)/mazeRows)][(counter+1)%mazeRows].removeWall("left");
+//        // }
+//        if(counter%10==0){
+//            int i = counter / 10;
+//
+//            maze[map[2*i][0]][map[2*i][1]].removeWall(map[2*i][2]);
+//            maze[map[2*i+1][0]][map[2*i+1][1]].removeWall(map[2*i+1][2]);
+//        }
+//
+//
+//    }
 
     for(int i = 0 ; i<MONSTERS; i++){
         int j = (counter) % 100;
