@@ -10,6 +10,9 @@
 #define COIN_SIZE (CELL_SIZE / 2)
 #define COIN_SCORE 10
 
+#define TIME_SIZE (COIN_SIZE)
+#define TIME_INCREASE 100
+
 #define SPEED 2
 #define LEVELS 4
 #define MONSTERS 4
@@ -124,7 +127,8 @@ public:
 	int coinId;
 	void placeCoins();
 	void updateCoins();
-	void checkCoinEat();
+	void checkCoinTimeEat();
+	void updateCoinTime(Player & p, MazeCell & m);
 
 	SDL_Texture *timeTex;
 	void placeTimes();

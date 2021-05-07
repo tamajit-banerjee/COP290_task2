@@ -266,7 +266,7 @@ bool Game::checkWallCollisions(int x, int y, int w, int h){
     return false;
 }
 
-bool isOnCoin(int x, int y, int w, int h, SDL_Rect & rect){
+bool isOnPower(int x, int y, int w, int h, SDL_Rect & rect){
     // std::cout<<"width "<<w<<"x: "<<x<<"y: "<<y<<'\n';
     // std::cout<<"r width "<<rect.w<<"r x: "<<rect.x<<"r y: "<<rect.y<<'\n';
     int threshold = COIN_SIZE;
@@ -283,36 +283,50 @@ bool isOnCoin(int x, int y, int w, int h, SDL_Rect & rect){
 
 bool playerOnCoin(Player & p, MazeCell & m){
     // std::cout<<m.hascoin<<isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR);
-    if(m.hascoin && isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR)){
+    if(m.hascoin && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
         m.hascoin = false;
         p.score += COIN_SCORE;
         return true;
     }
     return false;
 }
+bool playerOnTime(Player & p, MazeCell & m){
+    // std::cout<<m.hascoin<<isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR);
+    if(m.hastime && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
+        m.hastime = false;
+        p.time += TIME_INCREASE;
+        return true;
+    }
+    return false;
+}
 
-void Game::checkCoinEat(){
-    std::pair<int, int> s_co = sPlayer.getMazeCoordinates(maze[0][0].dstR);
-    std::pair<int, int> c_co = cPlayer.getMazeCoordinates(maze[0][0].dstR);
-    
+void Game::updateCoinTime(Player & p, MazeCell & m){
     int random_i = std::rand() % MAZEROWS;
     int random_j = std::rand() % MAZECOLS;
-    if(playerOnCoin(sPlayer, maze[s_co.first][s_co.second])){
-        while(maze[random_i][random_j].hascoin == true){
+    if(playerOnCoin(p, m)){
+        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = std::rand() % MAZEROWS;
             random_j = std::rand() % MAZECOLS;
         }
         maze[random_i][random_j].hascoin = true;
     }
-
     random_i = std::rand() % MAZEROWS;
     random_j = std::rand() % MAZECOLS;
-    if(playerOnCoin(cPlayer, maze[c_co.first][c_co.second])){
-        while(maze[random_i][random_j].hascoin == true){
+    if(playerOnTime(p, m)){
+        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = std::rand() % MAZEROWS;
             random_j = std::rand() % MAZECOLS;
         }
-        maze[random_i%MAZEROWS][random_j%MAZECOLS].hascoin = true;
+        maze[random_i][random_j].hastime = true;
     }
-    // std::cout<<'\n';
 }
+void Game::checkCoinTimeEat(){
+    std::pair<int, int> s_co = sPlayer.getMazeCoordinates(maze[0][0].dstR);
+    std::pair<int, int> c_co = cPlayer.getMazeCoordinates(maze[0][0].dstR);
+    
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second]);
+    updateCoinTime(cPlayer, maze[c_co.first][c_co.second]);
+
+}
+
+
