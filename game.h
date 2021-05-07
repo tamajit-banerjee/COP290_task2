@@ -1,13 +1,21 @@
 #pragma once
 
-#define mazeCols 10
-#define mazeRows 10
-#define speed 2
+#define CELL_SIZE 64
+#define MAZECOLS 10
+#define MAZEROWS 10
+
+#define SCREEN_WIDTH (MAZECOLS * CELL_SIZE)
+#define SCREEN_HEIGHT (MAZECOLS * CELL_SIZE)
+
+#define COIN_SIZE (CELL_SIZE / 2)
+#define SPEED 2
 #define LEVELS 4
 #define MONSTERS 4
-#define separator '|'
+#define SEPARATOR '|'
 #define FREEZE_LIMIT 20
 #define WALL_RATIO 8
+
+
 
 #include "Header.h"
 #include "constans.h"
@@ -104,7 +112,7 @@ public:
     bool ok(int x, int y);
     void dfs(int x, int y);
     void maze_gen();
-	MazeCell maze[mazeRows][mazeCols];
+	MazeCell maze[MAZEROWS][MAZECOLS];
 	SDL_Texture *mazeTex;
 	void mazeInit();
 	bool checkWallCollisions(int x, int y, int w, int h);

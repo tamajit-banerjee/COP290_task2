@@ -1,4 +1,5 @@
 #include "menu.hpp"
+#include "game.h"
 
 
 void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font){
@@ -19,7 +20,7 @@ void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font){
         usleep(200);
         SDL_RenderClear(renderer);
         char c[] = "[s]erver or [c]lient?";
-        disp_text(renderer, c , font, 240, 200);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 70, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
     }
 }
@@ -56,8 +57,8 @@ void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char* ip) {
         usleep(200);
         SDL_RenderClear(renderer);
         char c[] = "ip adress";
-        disp_text(renderer, c , font, 240, 200);
-        disp_text(renderer, ip ,  font, 240, 230);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 70, int(SCREEN_HEIGHT/2));
+        disp_text(renderer, ip ,  font, int(SCREEN_WIDTH/2) - 70, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
     }
 }
@@ -94,8 +95,8 @@ void ask_for_name(SDL_Renderer *renderer, TTF_Font *font, char* name){
         usleep(200);
         SDL_RenderClear(renderer);
         char c[] = "Enter your name ";
-        disp_text(renderer, c , font, 240, 200);
-        disp_text(renderer, name ,  font, 240, 230);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)-20);
+        disp_text(renderer, name ,  font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)+20);
         SDL_RenderPresent(renderer);
     }
 }

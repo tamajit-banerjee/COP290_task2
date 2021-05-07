@@ -50,8 +50,6 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         return;
     }
         
-    //char *cname = NULL;
-    //cname = static_cast<char *>(malloc(16 * sizeof(char)));
     ask_for_name(renderer, font, cname);
     
     static int flag = 0;
@@ -76,7 +74,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
                 strcat(full_text,sname);
                 strcat(full_text,last);
                 SDL_RenderClear(renderer);
-                disp_text(renderer, full_text , font, 200, 200);
+                disp_text(renderer, full_text , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
                 SDL_RenderPresent(renderer);
         }
     }
@@ -86,7 +84,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     
         char* c = "Creating Game Please wait ";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, 200, 200);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
 
     
@@ -95,7 +93,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
         c = "Thank You for playing";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, 200, 200);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
     
     sleep(2);
@@ -131,9 +129,6 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         int splayerInfo[4];
         int cplayerInfo[4];
         
-//        for(int i=0;i<64;i++)
-//            cplayerInfo[i] = cname[i];
-        
         while (game->running() && game->isLevelRunning) {
 
             
@@ -141,14 +136,8 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             
                  bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                  bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
-            
-//            bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
-//            bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
-//
-//            for(int i=0;i<64;i++)
-//                std::cout<< sname[i] << " ";
-//            std::cout<<"\n";
-           game->sPlayer.decode(splayerInfo);
+        
+            game->sPlayer.decode(splayerInfo);
 
             game->handleEvents();
             game->update();

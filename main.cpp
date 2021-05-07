@@ -18,8 +18,8 @@ int main(){
             "game",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
-            640,
-            480,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
             0);
 
     if (window == NULL) {

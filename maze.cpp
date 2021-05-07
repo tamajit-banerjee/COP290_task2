@@ -67,3 +67,201 @@ void MazeCell::removeWall(char *direction){
     }
 
 }
+
+
+bool Game::ok(int x, int y){
+    if(x>=0 && x<MAZEROWS && y>=0 && y<MAZECOLS){
+        return true;
+    }else
+        return false;
+}
+
+void Game::dfs(int x, int y){
+    
+    std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
+    
+    // std::cout<<"dfs/n";
+    while(true){
+        renderMaze();
+        int random = std::rand();
+        random = random%4;
+        if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
+            switch (random) {
+                case 1:
+                    maze[x][y].removeWall("top");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+                    break;
+                case 0:
+                    maze[x][y].removeWall("bottom");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+                    break;
+                case 2:
+                    maze[x][y].removeWall("right");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+                    break;
+                case 3:
+                    maze[x][y].removeWall("left");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+                    break;
+                default:
+                    break;
+            }
+            dfs(x+dir[random].first,y+dir[random].second);
+        }
+        int cnt = 0;
+        for(int i=0;i<4;i++){
+            if(ok(x+dir[i].first,y+dir[i].second) && maze[x+dir[i].first][y+dir[i].second].id == 15  ){
+                ++cnt;
+            }
+        }
+        if(!cnt)
+            break;
+    }
+    
+}
+
+void Game:: maze_gen(){
+    
+    int x = std::rand()%10;
+    int y = std::rand()%10;
+
+    dfs(x,y);
+    
+    
+}
+
+
+
+
+void Game::renderMaze(){
+    int cell_width = CELL_SIZE;
+    int cell_height = CELL_SIZE;
+    int coin_width = COIN_SIZE;
+    int coin_height = COIN_SIZE;
+    for(int i =0; i<MAZEROWS; i++){
+        for(int j = 0; j<MAZECOLS; j++){
+            
+            maze[i][j].dstR.w = cell_width;
+            maze[i][j].dstR.h = cell_height;
+            maze[i][j].dstR.x = maze[i][j].dstR.w * j;
+            maze[i][j].dstR.y = maze[i][j].dstR.h * i;
+            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &maze[i][j].dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                std::cout<<"Maze not rendered properly\n";
+                std::cout<<SDL_GetError()<<"\n";
+                exit(EXIT_FAILURE);
+            }
+
+            SDL_Rect dstR, srcR;
+            srcR.w = 160;
+            srcR.h = 160;
+            srcR.x = srcR.w * ((coinId/10)%8);
+            srcR.y = 0;
+
+            dstR.w = coin_width;
+            dstR.h = coin_height;
+            dstR.x = cell_width * j + (cell_width - coin_width)/2;
+            dstR.y = cell_height * i + (cell_height - coin_height)/2;
+            
+            if(maze[i][j].hascoin){
+                if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                    std::cout<<"Coin not rendered properly\n";
+                    std::cout<<SDL_GetError()<<"\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            if(maze[i][j].hastime){
+                if(SDL_RenderCopyEx(renderer, timeTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                    std::cout<<"Time not rendered properly\n";
+                    std::cout<<SDL_GetError()<<"\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+    }
+}
+void Game::updateCoins(){
+
+}
+void Game::placeCoins(){
+    maze[0][3].hascoin = true;
+    maze[1][5].hascoin = true;
+    maze[3][7].hascoin = true;
+    maze[4][1].hascoin = true;
+    maze[5][4].hascoin = true;
+}
+
+void updateTimes(){
+    
+}
+void Game::placeTimes(){
+    maze[3][3].hastime = true;
+    maze[2][1].hastime = true;
+    maze[1][0].hastime = true;
+    maze[0][4].hastime = true;
+    maze[5][2].hastime = true;
+}
+
+
+void Game::mazeInit(){
+    for(int i =0; i<MAZEROWS; i++){
+        for(int j = 0; j<MAZECOLS; j++){
+            maze[i][j].update(15);
+            maze[i][j].hascoin = false;
+            maze[i][j].hastime = false;
+        }
+    }
+    coinId = 0;
+    placeCoins();
+    placeTimes();
+}
+
+
+
+bool iscollidingwall(int x, int y, int w, int h, SDL_Rect maze_rect){
+    if (x >= maze_rect.x + maze_rect.w || maze_rect.x >= x + w)
+        return false;
+    if (y >= maze_rect.y + maze_rect.h || maze_rect.y >= y + h)
+        return false;
+
+    return true;
+    
+}
+
+int pow(int x, int y){
+    if(y <= 0)
+        return 1;
+    else    
+        return x * pow(x, y-1);
+}
+
+bool Game::checkWallCollisions(int x, int y, int w, int h){
+    for(int i =0; i<MAZEROWS; i++){
+        for(int j = 0; j<MAZECOLS; j++){
+            int id = maze[i][j].id;
+            
+            SDL_Rect maze_rect[4];
+            // left
+            maze_rect[0] = maze[i][j].dstR;
+            maze_rect[0].w /= WALL_RATIO;
+            // right
+            maze_rect[1] = maze[i][j].dstR;
+            maze_rect[1].w /= WALL_RATIO;
+            maze_rect[1].x += maze[i][j].dstR.w - maze_rect[1].w;
+            // top
+            maze_rect[2] = maze[i][j].dstR;
+            maze_rect[2].h /= WALL_RATIO;
+            // bottom
+            maze_rect[3] = maze[i][j].dstR;
+            maze_rect[3].h /= WALL_RATIO;
+            maze_rect[3].y += maze[i][j].dstR.h - maze_rect[3].h;
+            
+            for(int k = 0; k<4; k++){
+                if((int(id/pow(2, k))%2 != 0) && iscollidingwall(x, y, w, h, maze_rect[k])){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}

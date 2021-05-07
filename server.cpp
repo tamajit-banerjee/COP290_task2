@@ -47,7 +47,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
     SDL_RenderClear(renderer);
     char ci[] = "Waiting for a Client to connect to the server";
-    disp_text(renderer, ci , font, 200, 200);
+    disp_text(renderer, ci , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
     SDL_RenderPresent(renderer);
     listenfd = listen(sockfd, 5);
     if (listenfd == -1)
@@ -69,44 +69,41 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     std::cout<<"Server received connections from "<<cli_ip<<std::endl;
     SDL_RenderClear(renderer);
     memset(&cname, 0, sizeof(cname));
-    
-    // {
-        static int flag = 0;
-        bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
-        if (bytes_recvd == -1 && flag == 0)
-        {
-            memset(&cname, 0, sizeof(cname));
-            std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
-            // continue;
-        }
-        else
-        {
-            flag = 1;
-            bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
-            if (bytes_sent == -1)
-                std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
-            else{
 
-                    const char* c = "You have joined  ";
-                    const char* last = " for a game ";
-                    char* full_text;
-                    full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(cname)));
-                    strcpy(full_text,c);
-                    strcat(full_text,cname);
-                    strcat(full_text,last);
-                    SDL_RenderClear(renderer);
-                    disp_text(renderer, full_text , font, 200, 200);
-                    SDL_RenderPresent(renderer);
-                
-                }
-        }
-    // }while(bytes_recvd == -1 || bytes_sent == -1);
+    static int flag = 0;
+    bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
+    if (bytes_recvd == -1 && flag == 0)
+    {
+        memset(&cname, 0, sizeof(cname));
+        std::cout<<"Could not ACQUIRE Player Information!"<<std::endl<<"Trying again..."<<std::endl;
+    }
+    else
+    {
+        flag = 1;
+        bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
+        if (bytes_sent == -1)
+            std::cout<<"Could not SEND Player Data!"<<"Trying Again..."<<std::endl;
+        else{
+
+                const char* c = "You have joined  ";
+                const char* last = " for a game ";
+                char* full_text;
+                full_text=static_cast<char *>(malloc(strlen(c)+strlen(last)+strlen(cname)));
+                strcpy(full_text,c);
+                strcat(full_text,cname);
+                strcat(full_text,last);
+                SDL_RenderClear(renderer);
+                disp_text(renderer, full_text , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
+                SDL_RenderPresent(renderer);
+            
+            }
+    }
     
     sleep(2);
     
         char* c = "Creating Game Please wait ";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, 200, 200);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
 
     
@@ -115,7 +112,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     
         c = "Thank You for playing";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, 200, 200);
+        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
 
     sleep(2);
@@ -126,15 +123,6 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     int splayerInfo[4];
     int cplayerInfo[4];
     
-
-//    game->sPlayer.encode(splayerInfo, 100);
-//    for( int i = 0; i<100; i++){
-//        std::cout<<splayerInfo[i];
-//    }
-    std::cout<<'\n';
-//    Player *p = new Player;
-//    p->decode(splayerInfo);
-//    std::cout<<p->name<<p->xpos<<p->ypos<<p->score<<p->time<<'\n';
     for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
@@ -157,9 +145,6 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         SDL_RenderPresent(renderer);
 
         sleep(2);
-//
-//        for(int i=0;i<64;i++)
-//            splayerInfo[i] = sname[i];
         
         while (game->running() && game->isLevelRunning) {
 
@@ -168,17 +153,9 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
                  bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                  bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-            
-//            bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
-//            bytes_sent = send(newsockfd, &sname, sizeof(sname), 0);
-//
 
-           game->cPlayer.decode(cplayerInfo);
-//
-//            for(int i=0;i<64;i++)
-//                std::cout<< cname[i] << " ";
-//            std::cout<<"\n";
-//
+            game->cPlayer.decode(cplayerInfo);
+
             game->handleEvents();
             game->update();
             game->render();

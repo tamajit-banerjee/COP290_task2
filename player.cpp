@@ -34,12 +34,9 @@ void Player::encode(int x[]){
     x[1] = ypos;
     x[2] = score;
     x[3] = time;
-    //x = xpos*1000 + ypos;
 }
 
 void Player::decode(int y[]){
-//    xpos = y/1000;
-//    ypos = y%1000;
     xpos = y[0];
     ypos = y[1];
     score = y[2];
@@ -83,8 +80,6 @@ std::pair<int,int> Player::move(int s){
             new_y-=s;
         if(down)
             new_y+=s;
-    }else{
-        std::cout<<"froze\n";
     }
     return std::make_pair(new_x, new_y);
 }
