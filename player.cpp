@@ -63,7 +63,7 @@ void Player::dispScore(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypo
     disp_text(renderer, char_type, font, xpos+50, ypos);
 }
 void Player::dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos){
-    disp_text(renderer, "Score: ", font, xpos, ypos);
+    disp_text(renderer, "Time: ", font, xpos, ypos);
     std::string temp_str = std::to_string(time);
     char* char_type = (char*) temp_str.c_str();
     disp_text(renderer, char_type, font, xpos+50, ypos);
@@ -120,3 +120,21 @@ void Player::handleKeyUp(int key){
             break;
     }
 }
+
+std::pair<int, int> Player::getMazeCoordinates(SDL_Rect &r){
+    int i = 0;
+    int j = 0;
+    while(i<MAZEROWS){
+        while(j<MAZECOLS){
+            if(xpos>=r.w * j)
+                j+=1;
+            if(ypos>=r.h * i)
+                i+=1;
+            if(xpos<r.w * j && ypos<r.h * i)
+                return std::make_pair(i-1, j-1);
+        }
+    }
+    return std::make_pair(-1, -1);
+}
+
+

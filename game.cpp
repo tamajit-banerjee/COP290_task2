@@ -112,6 +112,7 @@ void Game::update(){
         cPlayer.ypos = c_p.second;
     }
 
+    checkCoinEat();
 
     if(sPlayer.time>0)
         sPlayer.time -= 1;

@@ -265,3 +265,54 @@ bool Game::checkWallCollisions(int x, int y, int w, int h){
     }
     return false;
 }
+
+bool isOnCoin(int x, int y, int w, int h, SDL_Rect & rect){
+    // std::cout<<"width "<<w<<"x: "<<x<<"y: "<<y<<'\n';
+    // std::cout<<"r width "<<rect.w<<"r x: "<<rect.x<<"r y: "<<rect.y<<'\n';
+    int threshold = COIN_SIZE;
+    int count = 0;
+    if((x - rect.x + w/2 - int(rect.w/2))*(x - rect.x + w/2 - int(rect.w/2)) < threshold*threshold)
+        count ++;
+    if((y - rect.y + h/2 - int(rect.h/2))*(y - rect.y + h/2 - int(rect.h/2)) < threshold*threshold)
+        count ++;
+    if (count == 2)
+        return true;
+    else    
+        return false;
+}
+
+bool playerOnCoin(Player & p, MazeCell & m){
+    // std::cout<<m.hascoin<<isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR);
+    if(m.hascoin && isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR)){
+        m.hascoin = false;
+        p.score += COIN_SCORE;
+        return true;
+    }
+    return false;
+}
+
+void Game::checkCoinEat(){
+    std::pair<int, int> s_co = sPlayer.getMazeCoordinates(maze[0][0].dstR);
+    std::pair<int, int> c_co = cPlayer.getMazeCoordinates(maze[0][0].dstR);
+    
+    int random_i = std::rand() % MAZEROWS;
+    int random_j = std::rand() % MAZECOLS;
+    if(playerOnCoin(sPlayer, maze[s_co.first][s_co.second])){
+        while(maze[random_i][random_j].hascoin == true){
+            random_i = std::rand() % MAZEROWS;
+            random_j = std::rand() % MAZECOLS;
+        }
+        maze[random_i][random_j].hascoin = true;
+    }
+
+    random_i = std::rand() % MAZEROWS;
+    random_j = std::rand() % MAZECOLS;
+    if(playerOnCoin(cPlayer, maze[c_co.first][c_co.second])){
+        while(maze[random_i][random_j].hascoin == true){
+            random_i = std::rand() % MAZEROWS;
+            random_j = std::rand() % MAZECOLS;
+        }
+        maze[random_i%MAZEROWS][random_j%MAZECOLS].hascoin = true;
+    }
+    // std::cout<<'\n';
+}

@@ -8,6 +8,8 @@
 #define SCREEN_HEIGHT (MAZECOLS * CELL_SIZE)
 
 #define COIN_SIZE (CELL_SIZE / 2)
+#define COIN_SCORE 10
+
 #define SPEED 2
 #define LEVELS 4
 #define MONSTERS 4
@@ -50,6 +52,7 @@ public:
 	std::pair<int, int> move(int s);
 	void handleKeyDown(int key);
 	void handleKeyUp(int key);
+	std::pair<int, int> getMazeCoordinates(SDL_Rect & r);
 };
 
 class Monster{
@@ -121,6 +124,7 @@ public:
 	int coinId;
 	void placeCoins();
 	void updateCoins();
+	void checkCoinEat();
 
 	SDL_Texture *timeTex;
 	void placeTimes();
