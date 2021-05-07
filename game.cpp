@@ -35,8 +35,8 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     for(int i = 0 ; i<MONSTERS; i++){
         monsters[i].id = i;
-        monsters[i].xpos = (i*i*i) + 320 -100/(1+i);
-        monsters[i].ypos = (13*i*i) + 130 -50/(1+i);
+        monsters[i].xpos = rand()%SCREEN_WIDTH/2;
+        monsters[i].ypos = rand()%SCREEN_WIDTH/2;
     }
         
 }
@@ -74,10 +74,10 @@ void Game::update(){
 
     for(int i = 0 ; i<MONSTERS; i++){
         int j = (counter) % 100;
-        monsters[i].left = (j <= 7*i*i || monsters[i].xpos < 20) ? 0 : 1;
-        monsters[i].right = (j > 7*i*i || monsters[i].xpos > 600) ? 0 : 1;
-        monsters[i].up = (j <= 57*i -10 || monsters[i].ypos < 20) ? 0 : 1;
-        monsters[i].down = (j > 57*i -10 || monsters[i].ypos > 420) ? 0 : 1;
+        monsters[i].left = (j < 50 ) ? 0 : 1;
+        monsters[i].right = (j >= 50) ? 0 : 1;
+        monsters[i].up = (j < 50) ? 0 : 1;
+        monsters[i].down = (j >= 50) ? 0 : 1;
         monsters[i].move(SPEED);
     }
 
