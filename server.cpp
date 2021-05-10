@@ -1,6 +1,7 @@
 #include "server.hpp"
 
 void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
+    srand(1);
     //cout<<"hello\n";
     int sockfd, newsockfd, port_no, bindfd, listenfd, bytes_sent, bytes_recvd;
     char sbuffer[512], cli_ip[16], cname[64],sname[64];

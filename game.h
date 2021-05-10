@@ -32,11 +32,13 @@ public:
 	char* name;
 	int score;
 	int time;
-	int xpos, ypos;
+	int xpos, ypos, old_xpos, old_ypos;
 	int right, left, up, down;
 	int width, height;
 
 	SDL_Texture *Tex;
+	int playerId;
+	int renderCycle;
 
 	bool freeze;
 	int freeze_counter;

@@ -17,7 +17,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     isRunning = true;
     isLevelRunning = true;
 
-    loadTexture("player", "resources/player.bmp");
+    loadTexture("player", "resources/players_combined.bmp");
     loadTexture("monster", "resources/monster.bmp");
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
@@ -32,6 +32,9 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     cPlayer.xpos = 16;
     cPlayer.ypos = 16;
     sPlayer.time = 700;
+
+    sPlayer.playerId = 1;
+    cPlayer.playerId = 4;
 
     for(int i = 0 ; i<MONSTERS; i++){
         monsters[i].id = i;

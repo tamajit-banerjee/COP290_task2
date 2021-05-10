@@ -77,7 +77,7 @@ bool Game::ok(int x, int y){
 }
 
 void Game::dfs(int x, int y){
-    srand(1);
+    
     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
     
     // std::cout<<"dfs/n";

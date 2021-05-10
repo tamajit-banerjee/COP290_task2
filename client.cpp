@@ -2,6 +2,7 @@
 
 
 void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
+    srand(1);
     int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
     char cbuffer[512], sname[64],cname[64];
     char *ptr = &cbuffer[0];
