@@ -4,18 +4,12 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     srand(1);
     //cout<<"hello\n";
     int sockfd, newsockfd, port_no, bindfd, listenfd, bytes_sent, bytes_recvd;
-    char sbuffer[512], cli_ip[16], cname[64],sname[64];
-    char *ptr_buff, *ptr_port;
+    char cli_ip[16], cname[64],sname[64];
+    char *ptr_port;
     const char *ptr_cli_ip;
     struct sockaddr_in serv_addr, cli_addr;
     socklen_t serv_size, cli_size;
 
-    int inp_true = 0, count = 0, inp, ni, x, y, toss;
-    char serv_choice, cli_choice, nc;
-    char choice_buffer[2], co_ordinates_buffer[2], toss_buffer;
-    
-
-    ptr_buff = &sbuffer[0];
     ptr_port = (char *)&PORT;
 
     //creating sever side socket

@@ -3,16 +3,11 @@
 
 void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     srand(1);
-    int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
-    char cbuffer[512], sname[64],cname[64];
-    char *ptr = &cbuffer[0];
+    int sockfd, port_no, connectfd, bytes_sent, bytes_recvd;
+    char sname[64], cname[64];
     char *ptr_port = (char *)&PORT;
     struct sockaddr_in serv_addr;
     struct hostent *he;
-    
-    int count = 0, inp, x, y, ni, inp_true = 0, toss;
-    char serv_choice, cli_choice, nc;
-    char choice_buffer[2], co_ordinates_buffer[2], toss_buffer;
 
     port_no = atoi(ptr_port);
     char *server_ip_addr = NULL;
