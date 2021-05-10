@@ -119,14 +119,99 @@ void Game::dfs(int x, int y){
     
 }
 
+int parent[MAZECOLS*MAZEROWS];
+int size[MAZECOLS*MAZEROWS];
+
+int Game::find_set(int v) {
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+
+void Game::make_set(int v) {
+    parent[v] = v;
+    size[v] = 1;
+}
+
+bool Game::union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b) {
+        if (size[a] < size[b])
+            std::swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+        return true;
+    }else
+        return false;
+}
+
 void Game:: maze_gen(){
     
-    int x = std::rand()%10;
-    int y = std::rand()%10;
+//    srand(1);
+//
+//    int x = std::rand()%10;
+//    int y = std::rand()%10;
+//
+//    dfs(x,y);
+//
+    std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
+    std::vector<std::pair<std::pair<int,int>,std::pair<int,int> > > store;
 
-    dfs(x,y);
-    
-    
+    for(int i=0;i<MAZEROWS;i++){
+        for(int j=0;j<MAZECOLS;j++){
+            std::pair<int,int> p1 = std::make_pair(i,j);
+            for(int k=0;k<4;k++){
+                if(ok(i+dir[k].first,j+dir[k].second)){
+                    std::pair<int,int> p2 = std::make_pair(i+dir[k].first,j+dir[k].second);
+                    store.push_back(std::make_pair(p1,p2));
+                }
+            }
+        }
+    }
+
+    std::random_shuffle(store.begin(),store.end());
+
+    for(int i=0;i<MAZECOLS*MAZEROWS;i++)
+        make_set(i);
+    for(int i=0;i<store.size();i++){
+
+        std::pair<int,int> p1 = store[i].first;
+        std::pair<int,int> p2 = store[i].second;
+        int l1 = p1.first*MAZECOLS + p1.second ;
+        int l2 = p2.first*MAZECOLS + p2.second ;
+        if(union_sets(l1,l2)){
+            int k =0;
+            for( ;k<4 ; k++){
+                if(p1.first+dir[k].first == p2.first and  p1.second+dir[k].second == p2.second)
+                    break;
+            }
+            int random = k;
+            int x = p1.first;
+            int y = p1.second;
+            switch (random) {
+                case 1:
+                    maze[x][y].removeWall("top");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+                    break;
+                case 0:
+                    maze[x][y].removeWall("bottom");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+                    break;
+                case 2:
+                    maze[x][y].removeWall("right");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+                    break;
+                case 3:
+                    maze[x][y].removeWall("left");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+    }
 }
 
 
