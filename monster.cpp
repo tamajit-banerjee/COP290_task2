@@ -128,35 +128,64 @@ bool checkIfWall(int i, MazeCell & m){
     return int(m.id/factor)%2 != 0;
 }
 
+bool colliding(Monster & m, MazeCell & maze){
+    if(m.left)
+        return maze.id % 2 != 0;
+    if(m.right)
+        return maze.id/2 % 2 != 0;
+    if(m.up)
+        return maze.id/4 % 2 != 0;
+    if(m.down)
+        return maze.id/8 % 2 != 0;
+    return false;
+}
 void resetDirections(Monster & m){
     m.left = 0;
     m.right = 0;
     m.up = 0;
     m.down = 0;
 }
+
 void Game::updateMonsters(){
     
     for(int i = 0 ; i<MONSTERS; i++){
-        if((monsters[i].xpos + monsters[i].width/2 - CELL_SIZE/2)%CELL_SIZE == 0 && (monsters[i].ypos + monsters[i].height/2 - CELL_SIZE/2)%CELL_SIZE == 0){
+        bool tochange = false;
+        if(monsters[i].changeDirectionCounter == 0){
+            tochange = true;
+        }
+        else{
             std::pair<int, int> i_j = monsters[i].getMazeCoordinates(maze[0][0].dstR);
-            resetDirections(monsters[i]);
-            if(maze[i_j.first][i_j.second].id == 15)
-                continue;
+            if(colliding(monsters[i], maze[i_j.first][i_j.second])){
+                tochange = true;
+            }
+        }
+        if(tochange){
+            monsters[i].changeDirectionCounter = MONSTERS_DIR_CHANGE - std::rand()%(MONSTERS_DIR_CHANGE / 2);
             
-            int random = std::rand()%4;
-            while(checkIfWall(random, maze[i_j.first][i_j.second])){
-                random = std::rand()%4;
+            if((monsters[i].xpos + monsters[i].width/2 - CELL_SIZE/2)%CELL_SIZE == 0 && (monsters[i].ypos + monsters[i].height/2 - CELL_SIZE/2)%CELL_SIZE == 0){
+                std::pair<int, int> i_j = monsters[i].getMazeCoordinates(maze[0][0].dstR);
+                resetDirections(monsters[i]);
+                if(maze[i_j.first][i_j.second].id == 15)
+                    continue;
+                
+                int random = std::rand()%4;
+                while(checkIfWall(random, maze[i_j.first][i_j.second])){
+                    random = std::rand()%4;
+                }
+                switch(random){
+                    case 0:
+                        monsters[i].left = 1; break;
+                    case 1: 
+                        monsters[i].right = 1; break;
+                    case 2: 
+                        monsters[i].up = 1; break;
+                    case 3: 
+                        monsters[i].down = 1; break;
+                }
             }
-            switch(random){
-                case 0:
-                    monsters[i].left = 1; break;
-                case 1: 
-                    monsters[i].right = 1; break;
-                case 2: 
-                    monsters[i].up = 1; break;
-                case 3: 
-                    monsters[i].down = 1; break;
-            }
+        }
+        else{
+            monsters[i].changeDirectionCounter -- ;
         }
         monsters[i].move(SPEED);
     }
