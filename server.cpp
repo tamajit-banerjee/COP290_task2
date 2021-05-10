@@ -141,7 +141,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
             game->update();
             game->render();
 
-            if(game->sPlayer.time<=0){
+            if(game->sPlayer.time<=0 && game->cPlayer.time<=0){
                 game->isLevelRunning = false;
             }
         }
