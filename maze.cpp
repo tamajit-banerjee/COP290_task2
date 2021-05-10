@@ -82,7 +82,6 @@ void Game::dfs(int x, int y){
     
     // std::cout<<"dfs/n";
     while(true){
-        renderMaze();
         int random = std::rand();
         random = random%4;
         if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
@@ -146,7 +145,7 @@ void Game::renderMaze(){
             maze[i][j].dstR.x = maze[i][j].dstR.w * j;
             maze[i][j].dstR.y = maze[i][j].dstR.h * i;
             if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &maze[i][j].dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
-                std::cout<<"Maze not rendered properly\n";
+                std::cout<<"Maze cell"<<i<<", "<<j<<" not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
             }
@@ -179,10 +178,9 @@ void Game::renderMaze(){
             }
         }
     }
+    coinId = (coinId + 1)%80;
 }
-void Game::updateCoins(){
 
-}
 void Game::placeCoins(){
     maze[0][3].hascoin = true;
     maze[1][5].hascoin = true;

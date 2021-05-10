@@ -123,31 +123,17 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         if(!game->running()){
             break;
         }
-        game->counter = 0;
-        game->mazeInit();
-        game->maze_gen();
-        game->cPlayer.time = 1000;
-        game->sPlayer.time = 1000;
-
-        game->isLevelRunning = true;
-        
-        SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        disp_text(renderer, "Level: ", font, 290, 220);
-        std::string temp_str = std::to_string(level);
-        char* char_type = (char*) temp_str.c_str();
-        disp_text(renderer, char_type, font, 340, 220);
-        SDL_RenderPresent(renderer);
+        game->levelStart(level);
 
         sleep(2);
         
         while (game->running() && game->isLevelRunning) {
 
 
-             game->sPlayer.encode(splayerInfo);
+            game->sPlayer.encode(splayerInfo);
 
-                 bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
-                 bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
+                bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+                bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
 
             game->cPlayer.decode(cplayerInfo);
 
@@ -159,7 +145,7 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
                 game->isLevelRunning = false;
             }
         }
-        game->clean();
+        game->levelEnd();
         sleep(2);
     }
     close(newsockfd);

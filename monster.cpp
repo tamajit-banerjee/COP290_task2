@@ -73,3 +73,32 @@ void Game::checkMonsterCollisions(Player &p){
         }
     }
 }
+
+void Game::handleMonsterCollisions(){
+    checkMonsterCollisions(sPlayer);
+    checkMonsterCollisions(cPlayer);
+
+    sPlayer.freeze_counter++;
+    cPlayer.freeze_counter++;
+    
+    if(sPlayer.freeze){
+        if (sPlayer.freeze_counter >= FREEZE_LIMIT)
+            sPlayer.freeze = false;
+    }
+    cPlayer.freeze_counter++;
+    if(cPlayer.freeze){
+        if (cPlayer.freeze_counter >= FREEZE_LIMIT)
+            cPlayer.freeze = false;
+    }
+}
+void Game::updateMonsters(){
+    for(int i = 0 ; i<MONSTERS; i++){
+        int j = (counter) % 100;
+        monsters[i].left = (j < 50 ) ? 0 : 1;
+        monsters[i].right = (j >= 50) ? 0 : 1;
+        monsters[i].up = (j < 50) ? 0 : 1;
+        monsters[i].down = (j >= 50) ? 0 : 1;
+        monsters[i].move(SPEED);
+    }
+}
+

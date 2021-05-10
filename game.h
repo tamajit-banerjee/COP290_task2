@@ -35,6 +35,7 @@ public:
 	int xpos, ypos, old_xpos, old_ypos;
 	int right, left, up, down;
 	int width, height;
+	void setPosCenter(SDL_Rect & rect);
 
 	SDL_Texture *Tex;
 	int playerId;
@@ -100,7 +101,8 @@ public:
 	void update();
 	bool running() { return isRunning; }
 	void render();
-	void clean();
+	void levelStart(int level);
+	void levelEnd();
 
 	SDL_Renderer *renderer;
 	TTF_Font *font;
@@ -115,6 +117,8 @@ public:
 
 	Monster monsters[MONSTERS];
 	void checkMonsterCollisions(Player &p);
+	void handleMonsterCollisions();
+	void updateMonsters();
 
 	void renderMaze();
     bool ok(int x, int y);
@@ -128,13 +132,11 @@ public:
 	SDL_Texture *coinTex;
 	int coinId;
 	void placeCoins();
-	void updateCoins();
 	void checkCoinTimeEat();
 	void updateCoinTime(Player & p, MazeCell & m);
 
 	SDL_Texture *timeTex;
 	void placeTimes();
-	void updateTimes();
 
 	void loadTexture(char *textName, char *path);
 

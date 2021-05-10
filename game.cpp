@@ -15,23 +15,12 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     font = arg_font;
 
     isRunning = true;
-    isLevelRunning = true;
 
     loadTexture("player", "resources/players_combined.bmp");
     loadTexture("monster", "resources/monster.bmp");
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
     loadTexture("time", "resources/time.bmp");
-
-    mazeInit();
-    
-    counter = 0;
-
-    sPlayer.xpos = 144;
-    sPlayer.ypos = 16;
-    cPlayer.xpos = 16;
-    cPlayer.ypos = 16;
-    sPlayer.time = 700;
 
     sPlayer.playerId = 1;
     cPlayer.playerId = 4;
@@ -42,6 +31,51 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
         monsters[i].ypos = rand()%SCREEN_WIDTH/2;
     }
         
+}
+
+void Game::levelStart(int arg_level){
+    level = arg_level;
+
+    counter = 0;
+    mazeInit();
+    maze_gen();
+    cPlayer.time = 1000;
+    sPlayer.time = 1000;
+
+    int random_i = std::rand() % int(MAZEROWS/3);
+    int random_j = std::rand() % int(MAZECOLS/3);
+    
+    sPlayer.xpos = random_i*CELL_SIZE + CELL_SIZE/2 - sPlayer.width/2;
+    sPlayer.ypos = random_j*CELL_SIZE + CELL_SIZE/2 - sPlayer.height/2;
+
+    cPlayer.xpos = (MAZEROWS - 1 - random_i)*CELL_SIZE + CELL_SIZE/2 - cPlayer.width/2;
+    cPlayer.ypos = (MAZECOLS - 1 - random_j)*CELL_SIZE + CELL_SIZE/2 - cPlayer.height/2;
+    isLevelRunning = true;
+    
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    disp_text(renderer, "Level: ", font, 290, 220);
+    std::string temp_str = std::to_string(level);
+    char* char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 340, 220);
+    SDL_RenderPresent(renderer);
+
+}
+
+void Game::levelEnd()
+{
+	SDL_RenderClear(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    disp_text(renderer, "Results", font, 300, 140);
+    
+    sPlayer.dispName(renderer, font, 250, 200);
+    sPlayer.dispScore(renderer, font, 350, 200);
+
+    cPlayer.dispName(renderer, font, 250, 250);
+    cPlayer.dispScore(renderer, font, 350, 250);
+
+    SDL_RenderPresent(renderer);
 }
 
 void Game::handleEvents()
@@ -75,44 +109,20 @@ void Game::handleEvents()
 
 void Game::update(){
 
-    for(int i = 0 ; i<MONSTERS; i++){
-        int j = (counter) % 100;
-        monsters[i].left = (j < 50 ) ? 0 : 1;
-        monsters[i].right = (j >= 50) ? 0 : 1;
-        monsters[i].up = (j < 50) ? 0 : 1;
-        monsters[i].down = (j >= 50) ? 0 : 1;
-        monsters[i].move(SPEED);
-    }
-
     counter++;
 
-    checkMonsterCollisions(sPlayer);
-    checkMonsterCollisions(cPlayer);
+    updateMonsters();
 
-    sPlayer.freeze_counter++;
-    cPlayer.freeze_counter++;
-    
-    if(sPlayer.freeze){
-        if (sPlayer.freeze_counter >= FREEZE_LIMIT)
-            sPlayer.freeze = false;
-    }
-    cPlayer.freeze_counter++;
-    if(cPlayer.freeze){
-        if (cPlayer.freeze_counter >= FREEZE_LIMIT)
-            cPlayer.freeze = false;
-    }
+    handleMonsterCollisions();
 
-
-    std::pair<int, int> s_p = sPlayer.move(SPEED);
-    std::pair<int, int> c_p = cPlayer.move(SPEED);
+    std::pair<int, int> s_p = sPlayer.move(SPEED); 
     if(!checkWallCollisions(s_p.first, s_p.second, sPlayer.width, sPlayer.height)){
-        sPlayer.xpos = s_p.first;
-        sPlayer.ypos = s_p.second;
+        sPlayer.xpos = s_p.first; sPlayer.ypos = s_p.second;
     }
 
+    std::pair<int, int> c_p = cPlayer.move(SPEED);
     if(!checkWallCollisions(c_p.first, c_p.second, cPlayer.width, cPlayer.height)){
-        cPlayer.xpos = c_p.first;
-        cPlayer.ypos = c_p.second;
+        cPlayer.xpos = c_p.first; cPlayer.ypos = c_p.second;
     }
 
     checkCoinTimeEat();
@@ -121,12 +131,6 @@ void Game::update(){
         sPlayer.time -= 1;
     if(cPlayer.time>0)
         cPlayer.time -= 1;
-
-    coinId++;
-    if(coinId==80){
-        coinId = 0;
-    }
-    updateCoins();
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     
@@ -155,23 +159,6 @@ void Game::render(){
 
     SDL_RenderPresent(renderer);
 }
-
-void Game::clean()
-{
-	SDL_RenderClear(renderer);
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    disp_text(renderer, "Results", font, 300, 140);
-    
-    sPlayer.dispName(renderer, font, 250, 200);
-    sPlayer.dispScore(renderer, font, 350, 200);
-
-    cPlayer.dispName(renderer, font, 250, 250);
-    cPlayer.dispScore(renderer, font, 350, 250);
-
-    SDL_RenderPresent(renderer);
-}
-
 
 
 
