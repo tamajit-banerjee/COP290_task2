@@ -42,9 +42,9 @@ void Player::decode(int y[]){
     time = y[3];
 }
 
-void Player::setPosCenter(SDL_Rect & rect){
-    xpos = rect.x + rect.w/2;
-    ypos = rect.y + rect.h/2;
+void Player::setPosCenter(int i, int j){
+    xpos = i*CELL_SIZE + CELL_SIZE/2 - width/2;
+    ypos = j*CELL_SIZE + CELL_SIZE/2 - height/2;
 }
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){

@@ -8,23 +8,21 @@ Monster::Monster(){
     up = 0;
     down = 0;
     id = 0;
+    width = 30;
+    height = 30;
+    changeDirectionCounter = 0;
 }
 
+void Monster::setPosCenter(int i, int j){
+    xpos = i*CELL_SIZE + CELL_SIZE/2 - width/2;
+    ypos = j*CELL_SIZE + CELL_SIZE/2 - height/2;
+}
 
-void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
-    SDL_Rect destR;
-    width = 20;
-    height = 20;
-    destR.h = height;
-    destR.w = width;
-    destR.x = xpos;
-    destR.y = ypos;
-    // SDL_RenderCopy(renderer, Tex,  NULL, &destR);
-    if(SDL_RenderCopy(renderer, Tex,  NULL, &destR) < 0){
-        std::cout<<"Monster not rendered properly\n";
-        std::cout<<SDL_GetError()<<"\n";
-        exit(EXIT_FAILURE);
-    }
+void Game::initMonsters(){
+    monsters[0].setPosCenter(4, 4);
+    monsters[1].setPosCenter(4, 5);
+    monsters[2].setPosCenter(5, 4);
+    monsters[3].setPosCenter(5, 5);
 }
 
 void Monster::move(int s){
@@ -38,6 +36,20 @@ void Monster::move(int s){
     if(down)
         ypos+=s;
     // std::cout<<"xpos: "<<xpos<<" ypos: "<<ypos<<'\n';
+}
+
+void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
+    SDL_Rect destR;
+    destR.h = height;
+    destR.w = width;
+    destR.x = xpos;
+    destR.y = ypos;
+    // SDL_RenderCopy(renderer, Tex,  NULL, &destR);
+    if(SDL_RenderCopy(renderer, Tex,  NULL, &destR) < 0){
+        std::cout<<"Monster not rendered properly\n";
+        std::cout<<SDL_GetError()<<"\n";
+        exit(EXIT_FAILURE);
+    }
 }
 
 
@@ -91,13 +103,61 @@ void Game::handleMonsterCollisions(){
             cPlayer.freeze = false;
     }
 }
+std::pair<int, int> Monster::getMazeCoordinates(SDL_Rect &r){
+    int i = 0;
+    int j = 0;
+    while(i<MAZEROWS){
+        while(j<MAZECOLS){
+            if(xpos>=r.w * j)
+                j+=1;
+            if(ypos>=r.h * i)
+                i+=1;
+            if(xpos<r.w * j && ypos<r.h * i)
+                return std::make_pair(i-1, j-1);
+        }
+    }
+    return std::make_pair(-1, -1);
+}
+
+bool checkIfWall(int i, MazeCell & m){
+    int factor = 1;
+    while(i>0){
+        factor = 2*factor;
+        i--;
+    }
+    return int(m.id/factor)%2 != 0;
+}
+
+void resetDirections(Monster & m){
+    m.left = 0;
+    m.right = 0;
+    m.up = 0;
+    m.down = 0;
+}
 void Game::updateMonsters(){
+    
     for(int i = 0 ; i<MONSTERS; i++){
-        int j = (counter) % 100;
-        monsters[i].left = (j < 50 ) ? 0 : 1;
-        monsters[i].right = (j >= 50) ? 0 : 1;
-        monsters[i].up = (j < 50) ? 0 : 1;
-        monsters[i].down = (j >= 50) ? 0 : 1;
+        if((monsters[i].xpos + monsters[i].width/2 - CELL_SIZE/2)%CELL_SIZE == 0 && (monsters[i].ypos + monsters[i].height/2 - CELL_SIZE/2)%CELL_SIZE == 0){
+            std::pair<int, int> i_j = monsters[i].getMazeCoordinates(maze[0][0].dstR);
+            resetDirections(monsters[i]);
+            if(maze[i_j.first][i_j.second].id == 15)
+                continue;
+            
+            int random = std::rand()%4;
+            while(checkIfWall(random, maze[i_j.first][i_j.second])){
+                random = std::rand()%4;
+            }
+            switch(random){
+                case 0:
+                    monsters[i].left = 1; break;
+                case 1: 
+                    monsters[i].right = 1; break;
+                case 2: 
+                    monsters[i].up = 1; break;
+                case 3: 
+                    monsters[i].down = 1; break;
+            }
+        }
         monsters[i].move(SPEED);
     }
 }

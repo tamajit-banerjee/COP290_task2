@@ -24,12 +24,6 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     sPlayer.playerId = 1;
     cPlayer.playerId = 4;
-
-    for(int i = 0 ; i<MONSTERS; i++){
-        monsters[i].id = i;
-        monsters[i].xpos = rand()%SCREEN_WIDTH/2;
-        monsters[i].ypos = rand()%SCREEN_WIDTH/2;
-    }
         
 }
 
@@ -45,11 +39,11 @@ void Game::levelStart(int arg_level){
     int random_i = std::rand() % int(MAZEROWS/3);
     int random_j = std::rand() % int(MAZECOLS/3);
     
-    sPlayer.xpos = random_i*CELL_SIZE + CELL_SIZE/2 - sPlayer.width/2;
-    sPlayer.ypos = random_j*CELL_SIZE + CELL_SIZE/2 - sPlayer.height/2;
+    sPlayer.setPosCenter(random_i, random_j);
+    cPlayer.setPosCenter(MAZEROWS - 1 - random_i, MAZECOLS - 1 - random_j);
 
-    cPlayer.xpos = (MAZEROWS - 1 - random_i)*CELL_SIZE + CELL_SIZE/2 - cPlayer.width/2;
-    cPlayer.ypos = (MAZECOLS - 1 - random_j)*CELL_SIZE + CELL_SIZE/2 - cPlayer.height/2;
+    initMonsters();
+
     isLevelRunning = true;
     
     SDL_RenderClear(renderer);

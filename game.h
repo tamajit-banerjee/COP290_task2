@@ -16,6 +16,7 @@
 #define SPEED 2
 #define LEVELS 4
 #define MONSTERS 4
+#define MONSTERS_DIR_CHANGE 100
 #define SEPARATOR '|'
 #define FREEZE_LIMIT 20
 #define WALL_RATIO 8
@@ -35,7 +36,7 @@ public:
 	int xpos, ypos, old_xpos, old_ypos;
 	int right, left, up, down;
 	int width, height;
-	void setPosCenter(SDL_Rect & rect);
+	void setPosCenter(int i, int j);
 
 	SDL_Texture *Tex;
 	int playerId;
@@ -70,11 +71,15 @@ public:
 
 	SDL_Texture *Tex;
 
+	int changeDirectionCounter;
+
 	Monster();
 
 	void draw(SDL_Renderer *renderer, TTF_Font *font);
+	void setPosCenter(int i, int j);
 
 	void move(int s);
+	std::pair<int, int> getMazeCoordinates(SDL_Rect & r);
 };
 
 class MazeCell{
@@ -116,6 +121,7 @@ public:
 	bool isServer;
 
 	Monster monsters[MONSTERS];
+	void initMonsters();
 	void checkMonsterCollisions(Player &p);
 	void handleMonsterCollisions();
 	void updateMonsters();
