@@ -64,7 +64,7 @@ void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char* ip) {
 }
 
 
-void ask_for_name(SDL_Renderer *renderer, TTF_Font *font, char* name){
+void ask_for_name(SDL_Renderer *renderer, TTF_Font *font, char* name, bool server){
     memset(name, ' ', 15);
     SDL_Event e;
     int position = 0;
@@ -94,9 +94,17 @@ void ask_for_name(SDL_Renderer *renderer, TTF_Font *font, char* name){
         }
         usleep(200);
         SDL_RenderClear(renderer);
+        if(server)
+            // disp_text(renderer, "Player 1" , font, int(SCREEN_WIDTH/2) - 60, int(SCREEN_HEIGHT/2)-45);
+            disp_text_center(renderer, "Player 1" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+        else    
+            // disp_text(renderer, "Player 2" , font, int(SCREEN_WIDTH/2) - 60, int(SCREEN_HEIGHT/2)-45);
+            disp_text_center(renderer, "Player 2" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
         char c[] = "Enter your name ";
-        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)-20);
-        disp_text(renderer, name ,  font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)+20);
+        // disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)-20);
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-20);
+        // disp_text(renderer, name ,  font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2)+20);
+        disp_text_center(renderer, name , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+20);
         SDL_RenderPresent(renderer);
     }
 }

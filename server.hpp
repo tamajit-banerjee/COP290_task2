@@ -7,6 +7,7 @@
 #include "menu.hpp"
 #include "game.h"
 #define  PORT "9987";
-void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game);
+
+int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game);
 
 #endif /* server_hpp */

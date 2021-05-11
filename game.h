@@ -35,6 +35,7 @@
 class Player{
 public:
 	char* name;
+	int player_no;
 	int score;
 	int time;
 	int xpos, ypos, old_xpos, old_ypos;

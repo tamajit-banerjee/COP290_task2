@@ -1,7 +1,7 @@
 #include "client.hpp"
 
 
-void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
+int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     srand(1);
     int sockfd, port_no, connectfd, bytes_sent, bytes_recvd;
     char sname[64], cname[64];
@@ -18,14 +18,14 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     if (he == NULL)
     {
         perror("No Such Host!");
-        return;
+        return -1;
     }
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd == -1)
     {
         perror("Sorry. Socket could not be created!");
-        return;
+        return -1;
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -39,14 +39,14 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     {
             char c[] = "Sorry. Could not connect to server.";
             SDL_RenderClear(renderer);
-            disp_text(renderer, c , font, 200, 200);
+            disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
             SDL_RenderPresent(renderer);
             sleep(3);
         close(sockfd);
-        return;
+        return -1;
     }
         
-    ask_for_name(renderer, font, cname);
+    ask_for_name(renderer, font, cname, false);
     
     static int flag = 0;
     bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
@@ -70,7 +70,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
                 strcat(full_text,sname);
                 strcat(full_text,last);
                 SDL_RenderClear(renderer);
-                disp_text(renderer, full_text , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
+                disp_text_center(renderer, full_text , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
                 SDL_RenderPresent(renderer);
         }
     }
@@ -80,7 +80,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     
         char* c = "Creating Game Please wait ";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
 
     
@@ -89,7 +89,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
         c = "Thank You for playing";
         SDL_RenderClear(renderer);
-        disp_text(renderer, c , font, int(SCREEN_WIDTH/2) - 100, int(SCREEN_HEIGHT/2));
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
         SDL_RenderPresent(renderer);
     
     sleep(2);
@@ -122,7 +122,7 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             game->update();
 
             game->sPlayer.decode(splayerInfo);
-            
+
             game->render();
 
             
@@ -136,4 +136,5 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     }
     
     close(sockfd);
+    return 1;
 }

@@ -23,8 +23,10 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("time", "resources/time.bmp");
 
     sPlayer.playerId = 1;
+    sPlayer.player_no = 1;
+
     cPlayer.playerId = 4;
-        
+    cPlayer.player_no = 2;
 }
 
 void Game::levelStart(int arg_level){

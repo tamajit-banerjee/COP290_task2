@@ -11,9 +11,10 @@ Player::Player(){
     score = 0;
     time = 500;
     right = 0, left = 0, up = 0, down = 0;
-    width = 24; height = 36;
+    width = 32; height = 48;
     playerId = 1;
     renderCycle = 1;
+    player_no = 1;
 }
 
 
@@ -26,6 +27,7 @@ Player::Player(const Player &p){
     width = p.width, height = p.height;
     playerId = p.playerId;
     renderCycle = p.renderCycle;
+    player_no = p.player_no;
 }
 
 void Player::encode(int x[]){
@@ -81,7 +83,12 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         exit(EXIT_FAILURE);
     }
     renderCycle = (renderCycle+1)%(3*RENDER_PLAYER_DELAY) ;
-    disp_text(renderer, name , font, xpos, ypos-20);
+    disp_text(renderer, "P" , font, xpos + width, ypos+5);
+    if(player_no == 1)
+        disp_text(renderer,  "1", font, xpos + width, ypos+20);
+    else
+        disp_text(renderer,  "2", font, xpos + width, ypos+20);
+    
 }
 
 void Player::dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos){

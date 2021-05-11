@@ -7,7 +7,7 @@
 #include "game.h"
 
 int main(){
-    char menu = 's';
+    // char menu = 's';
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Init(SDL_INIT_VIDEO);
@@ -40,12 +40,16 @@ int main(){
     Game *game = new Game();
     game->init(renderer, font);
 
-    server_or_client(renderer, &menu, font);
-    if (menu == 'c') {
+    // server_or_client(renderer, &menu, font);
+    // if (menu == 'c') {
+    //     run_client(renderer,font, game);
+    // }
+    // if(menu == 's') {
+    //     run_server(renderer,font, game);
+    // }
+    
+    if(run_server(renderer,font, game) == -1){
         run_client(renderer,font, game);
-    }
-    if(menu == 's') {
-        run_server(renderer,font, game);
     }
 
     SDL_DestroyRenderer(renderer);
