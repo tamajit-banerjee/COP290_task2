@@ -1,5 +1,6 @@
 #include "game.h"
 
+
 Monster::Monster(){
     xpos = 0;
     ypos = 0;
@@ -8,9 +9,10 @@ Monster::Monster(){
     up = 0;
     down = 0;
     id = 0;
-    width = 30;
-    height = 30;
+    width = 60;
+    height = 60;
     changeDirectionCounter = 0;
+    renderCycle = 1;
 }
 
 void Monster::setPosCenter(int i, int j){
@@ -26,7 +28,7 @@ void Game::initMonsters(){
 }
 
 void Monster::move(int s){
-    
+    old_xpos = xpos, old_ypos = ypos;
     if(right)
         xpos+=s;
     if(left)
@@ -39,13 +41,34 @@ void Monster::move(int s){
 }
 
 void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
+
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;
     destR.x = xpos;
     destR.y = ypos;
-    // SDL_RenderCopy(renderer, Tex,  NULL, &destR);
-    if(SDL_RenderCopy(renderer, Tex,  NULL, &destR) < 0){
+
+    SDL_Rect srcR;
+    srcR.h = MONSTER_SIZE;
+    srcR.w = MONSTER_SIZE;
+    
+    if(xpos > old_xpos)
+        srcR.y = 2*MONSTER_SIZE;
+    else if(xpos < old_xpos)
+        srcR.y = 1*MONSTER_SIZE;
+    else if(ypos < old_ypos)
+        srcR.y = 3*MONSTER_SIZE;
+    else if(ypos > old_ypos)
+        srcR.y = 0;
+    else{
+        srcR.y = 0;
+        renderCycle = 0;
+    }
+    srcR.x = int(renderCycle/MONSTER_DELAY) * MONSTER_SIZE;
+    renderCycle = (renderCycle+1)%(3*MONSTER_DELAY) ;
+
+    // SDL_RenderCopy(renderer, Tex,  srcR, &destR);
+    if(SDL_RenderCopyEx(renderer, Tex,  &srcR, &destR, 0.0, NULL, SDL_FLIP_NONE) < 0){
         std::cout<<"Monster not rendered properly\n";
         std::cout<<SDL_GetError()<<"\n";
         exit(EXIT_FAILURE);

@@ -74,7 +74,7 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
 
     // SDL_RenderCopy(renderer, Tex,  srcR, &destR);
     if(SDL_RenderCopyEx(renderer, Tex,  &srcR, &destR, 0.0, NULL, SDL_FLIP_NONE) < 0){
-        std::cout<<"Maze not rendered properly\n";
+        std::cout<<"Players not rendered properly\n";
         std::cout<<SDL_GetError()<<"\n";
         exit(EXIT_FAILURE);
     }

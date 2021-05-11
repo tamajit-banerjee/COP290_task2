@@ -15,8 +15,12 @@
 
 #define SPEED 2
 #define LEVELS 4
+
 #define MONSTERS 4
-#define MONSTERS_DIR_CHANGE 100
+#define MONSTERS_DIR_CHANGE 30
+#define MONSTER_SIZE 131
+#define MONSTER_DELAY 8
+
 #define SEPARATOR '|'
 #define FREEZE_LIMIT 20
 #define WALL_RATIO 8
@@ -65,9 +69,11 @@ public:
 class Monster{
 public:
 	int xpos, ypos;
+	int old_xpos, old_ypos;
 	int id;
 	int right, left, up, down;
 	int width, height;
+	int renderCycle;
 
 	SDL_Texture *Tex;
 
@@ -140,7 +146,7 @@ public:
 	bool checkWallCollisions(int x, int y, int w, int h);
 
 	SDL_Texture *coinTex;
-	int coinId;
+	int coinCycle, timeCycle;
 	void placeCoins();
 	void checkCoinTimeEat();
 	void updateCoinTime(Player & p, MazeCell & m);

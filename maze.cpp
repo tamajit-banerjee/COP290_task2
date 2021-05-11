@@ -238,7 +238,7 @@ void Game::renderMaze(){
             SDL_Rect dstR, srcR;
             srcR.w = 160;
             srcR.h = 160;
-            srcR.x = srcR.w * ((coinId/10)%8);
+            srcR.x = srcR.w * ((coinCycle/10)%8);
             srcR.y = 0;
 
             dstR.w = coin_width;
@@ -253,9 +253,13 @@ void Game::renderMaze(){
                     exit(EXIT_FAILURE);
                 }
             }
+            srcR.w = 360;
+            srcR.h = 360;
+            srcR.x = srcR.w * ((coinCycle/10)%8);
+            srcR.y = 0;
 
             if(maze[i][j].hastime){
-                if(SDL_RenderCopyEx(renderer, timeTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+                if(SDL_RenderCopyEx(renderer, timeTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
                     std::cout<<"Time not rendered properly\n";
                     std::cout<<SDL_GetError()<<"\n";
                     exit(EXIT_FAILURE);
@@ -263,15 +267,16 @@ void Game::renderMaze(){
             }
         }
     }
-    coinId = (coinId + 1)%80;
+    coinCycle = (coinCycle + 1)%80;
+    timeCycle = (timeCycle + 1)%80;
 }
 
 void Game::placeCoins(){
     maze[0][3].hascoin = true;
     maze[1][5].hascoin = true;
     maze[3][7].hascoin = true;
-    maze[4][1].hascoin = true;
-    maze[5][4].hascoin = true;
+    maze[4][8].hascoin = true;
+    maze[9][4].hascoin = true;
 }
 
 void updateTimes(){
@@ -279,9 +284,9 @@ void updateTimes(){
 }
 void Game::placeTimes(){
     maze[3][3].hastime = true;
-    maze[2][1].hastime = true;
+    maze[2][8].hastime = true;
     maze[1][0].hastime = true;
-    maze[0][4].hastime = true;
+    maze[8][5].hastime = true;
     maze[5][2].hastime = true;
 }
 
@@ -294,7 +299,8 @@ void Game::mazeInit(){
             maze[i][j].hastime = false;
         }
     }
-    coinId = 0;
+    coinCycle = 0;
+    timeCycle = 0;
     placeCoins();
     placeTimes();
 }
