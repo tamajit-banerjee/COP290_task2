@@ -149,7 +149,7 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         sleep(2);
     }
     close(newsockfd);
-    close(sockfd);
+    //close(sockfd);
 
     return 1;
 
