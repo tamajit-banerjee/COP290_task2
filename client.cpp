@@ -117,12 +117,15 @@ void run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             
                 bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                 bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
-        
-            game->sPlayer.decode(splayerInfo);
 
             game->handleEvents();
             game->update();
+
+            game->sPlayer.decode(splayerInfo);
+            
             game->render();
+
+            
 
             if(game->sPlayer.time<=0 && game->cPlayer.time<=0){
                 game->isLevelRunning = false;

@@ -123,8 +123,12 @@ void Game::update(){
 
     if(sPlayer.time>0)
         sPlayer.time -= 1;
+    else    
+        sPlayer.freeze = true;
     if(cPlayer.time>0)
         cPlayer.time -= 1;
+    else    
+        cPlayer.freeze = true;
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     

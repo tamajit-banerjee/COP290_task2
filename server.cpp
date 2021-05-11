@@ -135,10 +135,11 @@ void run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
                 bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                 bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
 
-            game->cPlayer.decode(cplayerInfo);
-
             game->handleEvents();
             game->update();
+
+            game->cPlayer.decode(cplayerInfo);
+
             game->render();
 
             if(game->sPlayer.time<=0 && game->cPlayer.time<=0){

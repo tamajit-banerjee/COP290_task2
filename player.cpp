@@ -36,6 +36,8 @@ void Player::encode(int x[]){
 }
 
 void Player::decode(int y[]){
+    old_xpos = xpos;
+    old_ypos = ypos;
     xpos = y[0];
     ypos = y[1];
     score = y[2];
