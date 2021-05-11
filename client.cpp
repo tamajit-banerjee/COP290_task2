@@ -112,14 +112,13 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
         while (game->running() && game->isLevelRunning) {
 
+            game->handleEvents();
+            game->update();
             
             game->cPlayer.encode(cplayerInfo);
             
                 bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                 bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
-
-            game->handleEvents();
-            game->update();
 
             game->sPlayer.decode(splayerInfo);
 

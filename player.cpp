@@ -109,7 +109,7 @@ void Player::dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos
 std::pair<int,int> Player::move(int s){
     old_xpos = xpos, old_ypos = ypos;
     int new_x = xpos, new_y = ypos;
-    if(!freeze){
+    if(!freeze and !final_freeze){
         if(right)
             new_x+=s;
         if(left)

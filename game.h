@@ -48,6 +48,7 @@ public:
 	int renderCycle;
 
 	bool freeze;
+    bool final_freeze;
 	int freeze_counter;
 
 	Player();

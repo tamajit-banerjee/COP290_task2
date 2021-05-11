@@ -37,6 +37,10 @@ void Game::levelStart(int arg_level){
     maze_gen();
     cPlayer.time = 1000;
     sPlayer.time = 1000;
+    cPlayer.freeze = false;
+    cPlayer.final_freeze = false;
+    sPlayer.freeze = false;
+    sPlayer.final_freeze = false;
 
     int random_i = std::rand() % int(MAZEROWS/3);
     int random_j = std::rand() % int(MAZECOLS/3);
@@ -126,11 +130,11 @@ void Game::update(){
     if(sPlayer.time>0)
         sPlayer.time -= 1;
     else    
-        sPlayer.freeze = true;
+        sPlayer.final_freeze = true;
     if(cPlayer.time>0)
         cPlayer.time -= 1;
     else    
-        cPlayer.freeze = true;
+        cPlayer.final_freeze = true;
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     

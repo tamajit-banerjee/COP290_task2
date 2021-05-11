@@ -128,13 +128,14 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         while (game->running() && game->isLevelRunning) {
 
 
+            game->handleEvents();
+            game->update();
+            
+            
             game->sPlayer.encode(splayerInfo);
 
                 bytes_recvd = recv(newsockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
                 bytes_sent = send(newsockfd, &splayerInfo, sizeof(splayerInfo), 0);
-
-            game->handleEvents();
-            game->update();
 
             game->cPlayer.decode(cplayerInfo);
 
