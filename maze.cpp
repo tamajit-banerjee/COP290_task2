@@ -1,4 +1,6 @@
 #include "game.h"
+#include <chrono>
+#include <thread>
 
 
 MazeCell::MazeCell(){
@@ -209,6 +211,12 @@ void Game:: maze_gen(){
                 default:
                     break;
             }
+            SDL_RenderClear(renderer);
+            renderMaze();
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            coinCycle+=4;
+            timeCycle+=4;
+            SDL_RenderPresent(renderer);
             
         }
     }

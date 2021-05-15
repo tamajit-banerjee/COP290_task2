@@ -122,8 +122,6 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
             break;
         }
         game->levelStart(level);
-
-        sleep(2);
         
         while (game->running() && game->isLevelRunning) {
 

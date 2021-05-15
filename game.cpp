@@ -32,6 +32,16 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 void Game::levelStart(int arg_level){
     level = arg_level;
 
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    disp_text(renderer, "Level: ", font, 290, 220);
+    std::string temp_str = std::to_string(level);
+    char* char_type = (char*) temp_str.c_str();
+    disp_text(renderer, char_type, font, 340, 220);
+    SDL_RenderPresent(renderer);
+
+    sleep(2);
+
     counter = 0;
     mazeInit();
     maze_gen();
@@ -52,13 +62,7 @@ void Game::levelStart(int arg_level){
 
     isLevelRunning = true;
     
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    disp_text(renderer, "Level: ", font, 290, 220);
-    std::string temp_str = std::to_string(level);
-    char* char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 340, 220);
-    SDL_RenderPresent(renderer);
+    
 
 }
 
