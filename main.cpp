@@ -36,6 +36,10 @@ int main(){
         SDL_Quit();
         return 1;
     }
+    SDL_Rect viewPort;
+    viewPort.h = SCREEN_HEIGHT; viewPort.w = SCREEN_WIDTH;
+    viewPort.x = 0; viewPort.y = 0;
+    SDL_RenderSetViewport(renderer, &viewPort);
     
     Game *game = new Game();
     game->init(renderer, font);

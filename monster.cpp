@@ -40,13 +40,13 @@ void Monster::move(int s){
     // std::cout<<"xpos: "<<xpos<<" ypos: "<<ypos<<'\n';
 }
 
-void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
+void Monster::draw(SDL_Renderer *renderer, TTF_Font *font, int * viewPort){
 
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;
-    destR.x = xpos;
-    destR.y = ypos;
+    destR.x = xpos - viewPort[0];
+    destR.y = ypos - viewPort[1];
 
     SDL_Rect srcR;
     srcR.h = MONSTER_SIZE;
@@ -179,7 +179,10 @@ void Game::updateMonsters(){
        // bool tochange = false;
         
         if(centre(monsters[i])){
-            std::pair<int, int> i_j = monsters[i].getMazeCoordinates(maze[0][0].dstR);
+            SDL_Rect rect;
+            rect.x = 0; rect.y = 0;
+            rect.w = CELL_SIZE; rect.h = CELL_SIZE;
+            std::pair<int, int> i_j = monsters[i].getMazeCoordinates(rect);
             resetDirections(monsters[i]);
             if(maze[i_j.first][i_j.second].id == 15)
                 continue;

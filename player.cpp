@@ -51,12 +51,12 @@ void Player::setPosCenter(int i, int j){
     ypos = j*CELL_SIZE + CELL_SIZE/2 - height/2;
 }
 
-void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
+void Player::draw(SDL_Renderer *renderer, TTF_Font *font, int * viewPort){
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;
-    destR.x = xpos;
-    destR.y = ypos;
+    destR.x = xpos - viewPort[0];
+    destR.y = ypos - viewPort[1];
 
     SDL_Rect srcR;
     srcR.h = PLAYER_HEIGHT_SRC;
@@ -83,11 +83,11 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         exit(EXIT_FAILURE);
     }
     renderCycle = (renderCycle+1)%(3*RENDER_PLAYER_DELAY) ;
-    disp_text(renderer, "P" , font, xpos + width, ypos+5);
+    disp_text(renderer, "P" , font, xpos + width - viewPort[0], ypos+5 - viewPort[1]);
     if(player_no == 1)
-        disp_text(renderer,  "1", font, xpos + width, ypos+20);
+        disp_text(renderer,  "1", font, xpos + width - viewPort[0], ypos+20 - viewPort[1]);
     else
-        disp_text(renderer,  "2", font, xpos + width, ypos+20);
+        disp_text(renderer,  "2", font, xpos + width - viewPort[0], ypos+20 - viewPort[1]);
     
 }
 

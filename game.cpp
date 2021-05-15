@@ -140,6 +140,7 @@ void Game::update(){
     else    
         cPlayer.final_freeze = true;
 
+    updateVisibility();
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     
 }
@@ -149,8 +150,8 @@ void Game::render(){
 
     renderMaze();
 
-    sPlayer.draw(renderer, font);
-    cPlayer.draw(renderer, font);
+    sPlayer.draw(renderer, font, viewPort);
+    cPlayer.draw(renderer, font, viewPort);
 
 
     sPlayer.dispName(renderer, font, 300, 20);
@@ -162,7 +163,7 @@ void Game::render(){
     cPlayer.dispTime(renderer, font, 500, 40);
 
     for(int i = 0 ; i<MONSTERS; i++){
-        monsters[i].draw(renderer, font);
+        monsters[i].draw(renderer, font, viewPort);
     }
 
     SDL_RenderPresent(renderer);
