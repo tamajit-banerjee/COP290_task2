@@ -21,6 +21,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
     loadTexture("time", "resources/time.bmp");
+    loadTexture("periscope", "resources/periscope.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
@@ -164,6 +165,8 @@ void Game::render(){
     for(int i = 0 ; i<MONSTERS; i++){
         monsters[i].draw(renderer, font);
     }
+    
+    renderPeriscope();
 
     SDL_RenderPresent(renderer);
 }
@@ -199,6 +202,11 @@ void Game::loadTexture(char *textName, char *path){
     else if(strcmp(textName, "time") == 0){
         tmpSurface = SDL_LoadBMP(path);
         timeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "periscope") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        periTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 

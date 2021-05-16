@@ -175,4 +175,22 @@ std::pair<int, int> Player::getMazeCoordinates(SDL_Rect &r){
     return std::make_pair(-1, -1);
 }
 
+void Game::renderPeriscope(){
+    SDL_Rect dstR;
+    dstR.x = 0; dstR.y = 0;
+    dstR.w = 2*SCREEN_WIDTH; dstR.h = 2*SCREEN_HEIGHT;
+    if(isServer){
+        dstR.x = sPlayer.xpos + sPlayer.width/2 - dstR.w/2;
+        dstR.y = sPlayer.ypos + sPlayer.height/2 - dstR.h/2;
+    }
+    else{
+        dstR.x = cPlayer.xpos + cPlayer.width/2 - dstR.w/2;
+        dstR.y = cPlayer.ypos + cPlayer.height/2 - dstR.h/2;
+    }
+    if(SDL_RenderCopyEx(renderer, periTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+        std::cout<<"Periscope view not rendered properly\n";
+        std::cout<<SDL_GetError()<<"\n";
+        exit(EXIT_FAILURE);
+    }
+}
 

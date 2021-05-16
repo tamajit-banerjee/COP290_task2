@@ -121,6 +121,9 @@ public:
 	TTF_Font *font;
 	SDL_Event event;
 
+	SDL_Texture *periTex;
+	void renderPeriscope();
+
 	bool isRunning;
 	bool isLevelRunning;
 	int level;
