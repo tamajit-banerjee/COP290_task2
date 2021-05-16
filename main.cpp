@@ -36,21 +36,9 @@ int main(){
         SDL_Quit();
         return 1;
     }
-    SDL_Rect viewPort;
-    viewPort.h = SCREEN_HEIGHT; viewPort.w = SCREEN_WIDTH;
-    viewPort.x = 0; viewPort.y = 0;
-    SDL_RenderSetViewport(renderer, &viewPort);
     
     Game *game = new Game();
     game->init(renderer, font);
-
-    // server_or_client(renderer, &menu, font);
-    // if (menu == 'c') {
-    //     run_client(renderer,font, game);
-    // }
-    // if(menu == 's') {
-    //     run_server(renderer,font, game);
-    // }
     
     if(run_server(renderer,font, game) == -1){
         run_client(renderer,font, game);

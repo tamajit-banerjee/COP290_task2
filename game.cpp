@@ -22,6 +22,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("coin", "resources/coins.bmp");
     loadTexture("time", "resources/time.bmp");
     loadTexture("bullet", "resources/bullet.bmp");
+    loadTexture("periscope", "resources/periscope.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
@@ -46,8 +47,8 @@ void Game::levelStart(int arg_level){
     counter = 0;
     mazeInit();
     maze_gen();
-    cPlayer.time = 10000;
-    sPlayer.time = 10000;
+    cPlayer.time = 5000;
+    sPlayer.time = 5000;
     cPlayer.freeze = false;
     cPlayer.final_freeze = false;
     sPlayer.freeze = false;
@@ -163,7 +164,6 @@ void Game::update(){
     else    
         cPlayer.final_freeze = true;
 
-    updateVisibility();
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     
 }
@@ -175,8 +175,8 @@ void Game::render(){
 
     render_bullets();
 
-    sPlayer.draw(renderer, font, viewPort);
-    cPlayer.draw(renderer, font, viewPort);
+    sPlayer.draw(renderer, font);
+    cPlayer.draw(renderer, font);
     sPlayer.dispName(renderer, font, 300, 20);
     sPlayer.dispScore(renderer, font, 400, 20);
     sPlayer.dispTime(renderer, font, 500, 20);
@@ -186,9 +186,10 @@ void Game::render(){
     cPlayer.dispTime(renderer, font, 500, 40);
 
     for(int i = 0 ; i<MONSTERS; i++){
-        monsters[i].draw(renderer, font, viewPort);
+        monsters[i].draw(renderer, font);
     }
 
+    renderPeriscope();
     SDL_RenderPresent(renderer);
 }
 
@@ -203,7 +204,7 @@ void Game::loadTexture(char *textName, char *path){
         sPlayer.Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
-    if(strcmp(textName, "monster") == 0){
+    else if(strcmp(textName, "monster") == 0){
         tmpSurface = SDL_LoadBMP(path);
         for(int i = 0; i<MONSTERS; i++){
             monsters[i].Tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
@@ -224,9 +225,15 @@ void Game::loadTexture(char *textName, char *path){
         tmpSurface = SDL_LoadBMP(path);
         timeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
-    }else if(strcmp(textName, "bullet") == 0){
+    }
+    else if(strcmp(textName, "bullet") == 0){
         tmpSurface = SDL_LoadBMP(path);
         bullet = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "periscope") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        periTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 

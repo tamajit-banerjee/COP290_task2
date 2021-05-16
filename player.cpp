@@ -56,12 +56,12 @@ void Player::setPosCenter(int i, int j){
     ypos = j*CELL_SIZE + CELL_SIZE/2 - height/2;
 }
 
-void Player::draw(SDL_Renderer *renderer, TTF_Font *font, int * viewPort){
+void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;
-    destR.x = xpos - viewPort[0];
-    destR.y = ypos - viewPort[1];
+    destR.x = xpos;
+    destR.y = ypos;
 
     SDL_Rect srcR;
     srcR.h = PLAYER_HEIGHT_SRC;
@@ -88,11 +88,11 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font, int * viewPort){
         exit(EXIT_FAILURE);
     }
     renderCycle = (renderCycle+1)%(3*RENDER_PLAYER_DELAY) ;
-    disp_text(renderer, "P" , font, xpos + width - viewPort[0], ypos+5 - viewPort[1]);
+    disp_text(renderer, "P" , font, xpos + width, ypos+5);
     if(player_no == 1)
-        disp_text(renderer,  "1", font, xpos + width - viewPort[0], ypos+20 - viewPort[1]);
+        disp_text(renderer,  "1", font, xpos + width, ypos+20);
     else
-        disp_text(renderer,  "2", font, xpos + width - viewPort[0], ypos+20 - viewPort[1]);
+        disp_text(renderer,  "2", font, xpos + width, ypos+20);
     
 }
 
@@ -210,4 +210,24 @@ std::pair<int, int> Player::getMazeCoordinates(SDL_Rect &r){
         }
     }
     return std::make_pair(-1, -1);
+}
+
+
+void Game::renderPeriscope(){
+    SDL_Rect dstR;
+    dstR.x = 0; dstR.y = 0;
+    dstR.w = 2*SCREEN_WIDTH; dstR.h = 2*SCREEN_HEIGHT;
+    if(isServer){
+        dstR.x = sPlayer.xpos + sPlayer.width/2 - dstR.w/2;
+        dstR.y = sPlayer.ypos + sPlayer.height/2 - dstR.h/2;
+    }
+    else{
+        dstR.x = cPlayer.xpos + cPlayer.width/2 - dstR.w/2;
+        dstR.y = cPlayer.ypos + cPlayer.height/2 - dstR.h/2;
+    }
+    if(SDL_RenderCopyEx(renderer, periTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+        std::cout<<"Periscope view not rendered properly\n";
+        std::cout<<SDL_GetError()<<"\n";
+        exit(EXIT_FAILURE);
+    }
 }

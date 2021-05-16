@@ -237,11 +237,7 @@ void Game::renderMaze(){
             maze[i][j].dstR.h = cell_height;
             maze[i][j].dstR.x = maze[i][j].dstR.w * j;
             maze[i][j].dstR.y = maze[i][j].dstR.h * i;
-            SDL_Rect mazedstR;
-            mazedstR.w = maze[i][j].dstR.w; mazedstR.h = maze[i][j].dstR.h;
-            mazedstR.x = maze[i][j].dstR.x - viewPort[0];
-            mazedstR.y = maze[i][j].dstR.y - viewPort[1];
-            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &mazedstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &maze[i][j].dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
                 std::cout<<"Maze cell"<<i<<", "<<j<<" not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
@@ -255,8 +251,8 @@ void Game::renderMaze(){
 
             dstR.w = coin_width;
             dstR.h = coin_height;
-            dstR.x = cell_width * j + (cell_width - coin_width)/2 - viewPort[0];
-            dstR.y = cell_height * i + (cell_height - coin_height)/2 - viewPort[1];
+            dstR.x = cell_width * j + (cell_width - coin_width)/2;
+            dstR.y = cell_height * i + (cell_height - coin_height)/2;
             
             if(maze[i][j].hascoin){
                 if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
@@ -428,21 +424,4 @@ void Game::checkCoinTimeEat(){
     updateCoinTime(sPlayer, maze[s_co.first][s_co.second]);
     updateCoinTime(cPlayer, maze[c_co.first][c_co.second]);
 
-}
-
-
-void Game::updatePlayerVisibility(Player &p){
-    viewPort[0] = SCREEN_WIDTH * int((p.xpos + p.width/2)/SCREEN_WIDTH);
-    viewPort[1] = SCREEN_HEIGHT * int((p.ypos + p.height/2)/SCREEN_HEIGHT);
-    // std::cout<<"In quadrant: "<<rect.x<<" "<<rect.y<<'\n';
-
-}
-
-void Game::updateVisibility(){
-    if(isServer){
-        updatePlayerVisibility(sPlayer);
-    }
-    else{
-        updatePlayerVisibility(cPlayer);
-    }
 }

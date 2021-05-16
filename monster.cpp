@@ -40,13 +40,13 @@ void Monster::move(int s){
     // std::cout<<"xpos: "<<xpos<<" ypos: "<<ypos<<'\n';
 }
 
-void Monster::draw(SDL_Renderer *renderer, TTF_Font *font, int * viewPort){
+void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
 
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;
-    destR.x = xpos - viewPort[0];
-    destR.y = ypos - viewPort[1];
+    destR.x = xpos;
+    destR.y = ypos;
 
     SDL_Rect srcR;
     srcR.h = MONSTER_SIZE;
