@@ -172,7 +172,9 @@ void Game:: maze_gen(){
         }
     }
 
-    std::random_shuffle(store.begin(),store.end());
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); 
+
+    std::shuffle(store.begin(),store.end(),std::default_random_engine(seed));
 
     for(int i=0;i<MAZECOLS*MAZEROWS;i++)
         make_set(i);
