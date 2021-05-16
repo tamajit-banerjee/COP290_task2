@@ -21,6 +21,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("maze", "resources/maze.bmp");
     loadTexture("coin", "resources/coins.bmp");
     loadTexture("time", "resources/time.bmp");
+    loadTexture("bullet", "resources/bullet.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
@@ -45,8 +46,8 @@ void Game::levelStart(int arg_level){
     counter = 0;
     mazeInit();
     maze_gen();
-    cPlayer.time = 1000;
-    sPlayer.time = 1000;
+    cPlayer.time = 10000;
+    sPlayer.time = 10000;
     cPlayer.freeze = false;
     cPlayer.final_freeze = false;
     sPlayer.freeze = false;
@@ -119,15 +120,37 @@ void Game::update(){
 
     handleMonsterCollisions();
 
+    updateBullets(sPlayer);
+    updateBullets(cPlayer);
+
     std::pair<int, int> s_p = sPlayer.move(SPEED); 
     if(!checkWallCollisions(s_p.first, s_p.second, sPlayer.width, sPlayer.height)){
         sPlayer.xpos = s_p.first; sPlayer.ypos = s_p.second;
     }
 
+    if(sPlayer.attack && sPlayer.attack_counter%1000 == 0 ){
+        Bullet b(sPlayer.xpos + sPlayer.width/2,sPlayer.ypos + sPlayer.height/2 ,sPlayer.attack_dir);
+        sPlayer.bullets.push_back(b);
+    }
+
+    if(sPlayer.attack)
+        ++sPlayer.attack_counter;
+
+
+    Bullet_hit_Player();
+
     std::pair<int, int> c_p = cPlayer.move(SPEED);
     if(!checkWallCollisions(c_p.first, c_p.second, cPlayer.width, cPlayer.height)){
         cPlayer.xpos = c_p.first; cPlayer.ypos = c_p.second;
     }
+
+    if(cPlayer.attack && cPlayer.attack_counter%1000 == 0 ){
+        Bullet b(cPlayer.xpos + cPlayer.width/2,cPlayer.ypos + cPlayer.height/2 ,cPlayer.attack_dir);
+        cPlayer.bullets.push_back(b);
+    }
+
+    if(cPlayer.attack)
+        ++cPlayer.attack_counter;
 
     checkCoinTimeEat();
 
@@ -150,10 +173,10 @@ void Game::render(){
 
     renderMaze();
 
+    render_bullets();
+
     sPlayer.draw(renderer, font, viewPort);
     cPlayer.draw(renderer, font, viewPort);
-
-
     sPlayer.dispName(renderer, font, 300, 20);
     sPlayer.dispScore(renderer, font, 400, 20);
     sPlayer.dispTime(renderer, font, 500, 20);
@@ -200,6 +223,10 @@ void Game::loadTexture(char *textName, char *path){
     else if(strcmp(textName, "time") == 0){
         tmpSurface = SDL_LoadBMP(path);
         timeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }else if(strcmp(textName, "bullet") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        bullet = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 

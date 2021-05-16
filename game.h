@@ -33,6 +33,17 @@
 #include "font.hpp"
 #include "menu.hpp"
 
+
+class Bullet {
+	public:
+    SDL_Rect position;
+    int dir;
+	Bullet(int x, int y , int dir);
+	std::pair<int,int> move(int s);
+	void draw(SDL_Renderer *renderer, SDL_Texture *bullet );
+};
+
+
 class Player{
 public:
 	char* name;
@@ -42,7 +53,11 @@ public:
 	int xpos, ypos, old_xpos, old_ypos;
 	int right, left, up, down;
 	int width, height;
+	bool attack;
+	int attack_dir;
+	int attack_counter;
 	void setPosCenter(int i, int j);
+	std::vector<Bullet> bullets;
 
 	SDL_Texture *Tex;
 	int playerId;
@@ -62,7 +77,6 @@ public:
 	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 	void dispScore(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
 	void dispTime(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
-
 	std::pair<int, int> move(int s);
 	void handleKeyDown(int key);
 	void handleKeyUp(int key);
@@ -121,7 +135,7 @@ public:
 	void updateVisibility();
 	void updatePlayerVisibility(Player &p);
 	int viewPort[2];
-
+	void Bullet_hit_Player();
 	SDL_Renderer *renderer;
 	TTF_Font *font;
 	SDL_Event event;
@@ -130,8 +144,12 @@ public:
 	bool isLevelRunning;
 	int level;
 
+	void render_bullets();
+
 	Player sPlayer, cPlayer;
 	bool isServer;
+
+	void updateBullets(Player &p);
 
 	Monster monsters[MONSTERS];
 	void initMonsters();
@@ -151,6 +169,8 @@ public:
 	SDL_Texture *mazeTex;
 	void mazeInit();
 	bool checkWallCollisions(int x, int y, int w, int h);
+
+	SDL_Texture *bullet;
 
 	SDL_Texture *coinTex;
 	int coinCycle, timeCycle;

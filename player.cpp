@@ -15,6 +15,8 @@ Player::Player(){
     playerId = 1;
     renderCycle = 1;
     player_no = 1;
+    attack = false;
+    attack_counter = 0;
 }
 
 
@@ -28,6 +30,9 @@ Player::Player(const Player &p){
     playerId = p.playerId;
     renderCycle = p.renderCycle;
     player_no = p.player_no;
+    attack_counter=p.attack_counter;
+    attack = false;
+    attack_dir = p.attack_dir;
 }
 
 void Player::encode(int x[]){
@@ -136,6 +141,26 @@ void Player::handleKeyDown(int key){
         case SDLK_DOWN:
             down = 1;
             break;
+        case  SDLK_a:
+            attack = true;
+            attack_dir = 0;
+            attack_counter =0;
+            break;
+        case  SDLK_d:
+            attack = true;
+            attack_dir = 1;
+            attack_counter =0;
+            break;
+        case  SDLK_w:
+            attack = true;
+            attack_dir = 2;
+            attack_counter =0;
+            break;
+        case  SDLK_s:
+            attack = true;
+            attack_dir = 3;
+            attack_counter =0;
+            break;
         default:
             break;
     }
@@ -153,6 +178,18 @@ void Player::handleKeyUp(int key){
             break;
         case SDLK_DOWN:
             down = 0;
+            break;
+        case  SDLK_a:
+            attack = false;
+            break;
+        case  SDLK_d:
+            attack = false;
+            break;
+        case  SDLK_w:
+            attack = false;
+            break;
+        case  SDLK_s:
+            attack = false;
             break;
         default:
             break;
@@ -174,5 +211,3 @@ std::pair<int, int> Player::getMazeCoordinates(SDL_Rect &r){
     }
     return std::make_pair(-1, -1);
 }
-
-
