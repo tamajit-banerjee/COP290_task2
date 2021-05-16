@@ -1,6 +1,6 @@
 #pragma once
 
-#define VIEW_FACTOR 1
+#define VIEW_FACTOR 2
 #define CELL_SIZE 64*VIEW_FACTOR
 #define MAZECOLS 10
 #define MAZEROWS 10
