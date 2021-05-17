@@ -47,6 +47,10 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     }
         
     ask_for_name(renderer, font, cname, false);
+    game->cPlayer.name = cname;
+    game->sPlayer.name = sname;
+    game->isServer = false;
+    game->askPlayerAvatar();
     
     static int flag = 0;
     bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
@@ -94,9 +98,8 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     
     sleep(2);
 
-    game->cPlayer.name = cname;
-    game->sPlayer.name = sname;
-    game->isServer = false;
+    int splayerInfo[5];
+    int cplayerInfo[5];
 
     for (int level = 1; level<=LEVELS; level++){
 
@@ -104,9 +107,6 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             break;
         }
         game->levelStart(level);
-        
-        int splayerInfo[4];
-        int cplayerInfo[4];
         
         while (game->running() && game->isLevelRunning) {
 

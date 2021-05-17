@@ -1,9 +1,5 @@
 #include "game.h"
 
-#define PLAYER_WIDTH_SRC 48
-#define PLAYER_HEIGHT_SRC 72
-#define RENDER_PLAYER_DELAY 10
-
 Player::Player(){
     name = "Not Entered yet!";
     xpos = 0, ypos = 0;
@@ -11,7 +7,7 @@ Player::Player(){
     score = 0;
     time = 500;
     right = 0, left = 0, up = 0, down = 0;
-    width = 32; height = 48;
+    width = PLAYER_WIDTH; height = PLAYER_HEIGHT;
     playerId = 1;
     renderCycle = 1;
     player_no = 1;
@@ -40,6 +36,7 @@ void Player::encode(int x[]){
     x[1] = ypos;
     x[2] = score;
     x[3] = time;
+    x[4] = playerId;
 }
 
 void Player::decode(int y[]){
@@ -49,6 +46,7 @@ void Player::decode(int y[]){
     ypos = y[1];
     score = y[2];
     time = y[3];
+    playerId = y[4];
 }
 
 void Player::setPosCenter(int i, int j){
@@ -230,4 +228,79 @@ void Game::renderPeriscope(){
         std::cout<<SDL_GetError()<<"\n";
         exit(EXIT_FAILURE);
     }
+}
+
+void Game::askPlayerAvatar(){
+    char id[1];
+    memset(id, ' ', 1);
+    SDL_Event e;
+    int position = 0;
+    int ok = false;
+    while (!ok) {
+        if (SDL_PollEvent(&e)) {
+            if (e.type == SDL_KEYDOWN) {
+                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9)) {
+                    if (position > 0) {
+                        position = 0;
+                    }
+                    id[position] = e.key.keysym.sym;
+                    position++;
+                }
+                if (e.key.keysym.sym == SDLK_BACKSPACE) {
+                    position--;
+                    if (position < 0) {
+                        position = 0;
+                    }
+                    id[position] = ' ';
+                }
+                if (e.key.keysym.sym == SDLK_RETURN) {
+                    id[position] = 0;
+                    ok = true;
+                }
+            }
+        }
+
+        SDL_Rect srcR[8];
+        for(int i = 0; i<8; i++){
+            srcR[i].w = PLAYER_WIDTH_SRC; srcR[i].h = PLAYER_HEIGHT_SRC;
+            srcR[i].y = 0;
+            srcR[i].x = (i*3 + 1) * PLAYER_WIDTH_SRC;
+        }
+
+        SDL_Rect dstR[8];
+        for(int i = 0; i<8; i++){
+            dstR[i].w = PLAYER_WIDTH; dstR[i].h = PLAYER_HEIGHT;
+            dstR[i].y = SCREEN_HEIGHT/2+20;
+            dstR[i].x = 10 + SCREEN_WIDTH/2 + (i-4)*(PLAYER_WIDTH + 10);
+        }
+
+
+        usleep(200);
+        SDL_RenderClear(renderer);
+        if(isServer)
+            disp_text_center(renderer, "Player 1" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+        else    
+            disp_text_center(renderer, "Player 2" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+        char c[] = "Please chose Your Avatar";
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2)+10, int(SCREEN_HEIGHT/2)-20);
+        disp_text_center(renderer, id , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+120);
+
+        for(int i = 0; i<8; i++){
+            if(SDL_RenderCopyEx(renderer, sPlayer.Tex,  &srcR[i], &dstR[i], 0.0, NULL, SDL_FLIP_NONE) < 0){
+                std::cout<<"Avatars not rendered properly\n";
+                std::cout<<SDL_GetError()<<"\n";
+                exit(EXIT_FAILURE);
+            }
+            char * digits[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            char * p_id = digits[i]; 
+            
+            disp_text_center(renderer, p_id , font, dstR[i].x+dstR[i].w/2 , int(SCREEN_HEIGHT/2)+80);
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+    if(isServer)
+        sPlayer.playerId = std::stoi(id);
+    else    
+        cPlayer.playerId = std::stoi(id);
 }

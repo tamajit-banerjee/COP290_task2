@@ -16,6 +16,12 @@
 #define SPEED 2
 #define LEVELS 4
 
+#define PLAYER_WIDTH_SRC 48
+#define PLAYER_HEIGHT_SRC 72
+#define RENDER_PLAYER_DELAY 10
+#define PLAYER_WIDTH 32
+#define PLAYER_HEIGHT 48
+
 #define MONSTERS 4
 #define MONSTERS_DIR_CHANGE 30
 #define MONSTER_SIZE 131
@@ -147,6 +153,7 @@ public:
 
 	Player sPlayer, cPlayer;
 	bool isServer;
+	void askPlayerAvatar();
 
 	void updateBullets(Player &p);
 

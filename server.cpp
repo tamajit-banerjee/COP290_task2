@@ -39,6 +39,11 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     //sname = static_cast<char *>(malloc(16 * sizeof(char)));
     ask_for_name(renderer, font, sname, true);
 
+    game->sPlayer.name = sname;
+    game->cPlayer.name = cname;
+    game->isServer = true;
+    game->askPlayerAvatar();
+
     SDL_RenderClear(renderer);
     disp_text_center(renderer, "Waiting for Player 2 to join" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
     SDL_RenderPresent(renderer);
@@ -110,11 +115,9 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
     sleep(2);
 
-    game->cPlayer.name = cname;
-    game->sPlayer.name = sname;
-    game->isServer = true;
-    int splayerInfo[4];
-    int cplayerInfo[4];
+    
+    int splayerInfo[5];
+    int cplayerInfo[5];
     
     for (int level = 1; level<=LEVELS; level++){
 
