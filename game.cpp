@@ -149,7 +149,21 @@ void Game::update(){
     updateBullets(sPlayer);
     updateBullets(cPlayer);
 
-    std::pair<int, int> s_p = sPlayer.move(SPEED); 
+    Bullet_hit_Player();
+
+    checkCoinTimeEat();
+
+    if(sPlayer.get_time()>0)
+        sPlayer.set_time(sPlayer.get_time() - 1);
+    else    
+        sPlayer.final_freeze = true;
+
+    if(cPlayer.get_time()>0)
+        cPlayer.set_time(cPlayer.get_time() - 1);
+    else    
+        cPlayer.final_freeze = true;
+
+        std::pair<int, int> s_p = sPlayer.move(SPEED); 
     if(!checkWallCollisions(s_p.first, sPlayer.ypos, sPlayer.width, sPlayer.height)){
         sPlayer.xpos = s_p.first;
     }
@@ -179,20 +193,6 @@ void Game::update(){
     }
     if(cPlayer.attack)
         ++cPlayer.attack_counter;
-
-    Bullet_hit_Player();
-
-    checkCoinTimeEat();
-
-    if(sPlayer.get_time()>0)
-        sPlayer.set_time(sPlayer.get_time() - 1);
-    else    
-        sPlayer.final_freeze = true;
-
-    if(cPlayer.get_time()>0)
-        cPlayer.set_time(cPlayer.get_time() - 1);
-    else    
-        cPlayer.final_freeze = true;
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
     

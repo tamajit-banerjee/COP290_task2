@@ -37,8 +37,8 @@ void Player::encode(int x[]){
 
     x[0] = xpos;
     x[1] = ypos;
-    x[2] = score;
-    x[3] = time;
+    x[2] = attack;
+    x[3] = attack_dir;
     x[4] = playerId;
 
 }
@@ -48,8 +48,8 @@ void Player::decode(int y[]){
     old_ypos = ypos;
     xpos = y[0];
     ypos = y[1];
-  //  score = y[2];
-    //   time = y[3];
+    attack = y[2];
+    attack_dir = y[3];
     playerId = y[4];
 }
 
