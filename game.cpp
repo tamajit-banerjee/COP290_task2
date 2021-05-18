@@ -31,10 +31,14 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     cPlayer.playerId = 4;
     cPlayer.player_no = 2;
+
+    sounds.init();
 }
 
 void Game::levelStart(int arg_level){
     level = arg_level;
+
+    sounds.play(1, true);
 
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -72,6 +76,7 @@ void Game::levelStart(int arg_level){
 
 void Game::levelEnd()
 {
+    sounds.stop(1);
 	SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

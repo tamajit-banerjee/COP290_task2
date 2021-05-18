@@ -1,6 +1,6 @@
 #pragma once
 #include "Header.h"
-#define NUMOFSOUNDS 10
+#define NUMOFSOUNDS 5
 
 class Sounds{
 public:

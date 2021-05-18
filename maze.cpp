@@ -157,6 +157,9 @@ void Game:: maze_gen(){
 //
 //    dfs(x,y);
 //
+
+    sounds.play(0, false);
+
     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
     std::vector<std::pair<std::pair<int,int>,std::pair<int,int> > > store;
 
@@ -398,6 +401,7 @@ void Game::updateCoinTime(Player & p, MazeCell & m){
     int random_i = std::rand() % MAZEROWS;
     int random_j = std::rand() % MAZECOLS;
     if(playerOnCoin(p, m)){
+        sounds.play(2, false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = std::rand() % MAZEROWS;
             random_j = std::rand() % MAZECOLS;
@@ -407,6 +411,7 @@ void Game::updateCoinTime(Player & p, MazeCell & m){
     random_i = std::rand() % MAZEROWS;
     random_j = std::rand() % MAZECOLS;
     if(playerOnTime(p, m)){
+        sounds.play(3, false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = std::rand() % MAZEROWS;
             random_j = std::rand() % MAZECOLS;

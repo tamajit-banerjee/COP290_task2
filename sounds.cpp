@@ -67,8 +67,11 @@ bool Sounds::init() {
 
         isinit = true;
     }
+    catch(const char * s){
+        std::cout<<s<<'\n';
+    }
     catch ( ... ) {
-        std::cerr << "Unexpected exception";
+        std::cerr << "Unexpected exception\n";
     }
     return true;
 }
@@ -77,16 +80,16 @@ Sounds::Sounds() :
         on(true), isinit(false)
 {
     //set sound paths
-    soundpaths[0] = "sound/intro.wav";
-    soundpaths[1] = "sound/munch_a.wav";
-    soundpaths[2] = "sound/munch_b.wav";
-    soundpaths[3] = "sound/large_pellet.wav";
-    soundpaths[4] = "sound/ghost_eat.wav";
-    soundpaths[5] = "sound/fruit.wav";
-    soundpaths[6] = "sound/extra_man.wav";
-    soundpaths[7] = "sound/vuln.wav";
-    soundpaths[8] = "sound/death.wav";
-    soundpaths[9] = "sound/newgame.wav";
+    soundpaths[0] = "sounds/intro.wav";
+    soundpaths[1] = "sounds/update.wav";
+    soundpaths[2] = "sounds/coin_eat.wav";
+    soundpaths[3] = "sounds/time_eat.wav";
+    soundpaths[4] = "sounds/death.wav";
+    // soundpaths[5] = "sounds/fruit.wav";
+    // soundpaths[6] = "sounds/extra_man.wav";
+    // soundpaths[7] = "sounds/vuln.wav";
+    // soundpaths[8] = "sounds/death.wav";
+    // soundpaths[9] = "sounds/newgame.wav";
     // soundpaths[10] = "sound/siren.wav";
     // soundpaths[11] = "sound/intermission.wav";
     // soundpaths[12] = "sound/booster.wav";
@@ -94,5 +97,5 @@ Sounds::Sounds() :
 
 Sounds::~Sounds()
 {
-    // Mix_CloseAudio();
+    Mix_CloseAudio();
 }
