@@ -3,6 +3,8 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
+#include <SDL_audio.h>
 #include <iostream>
 #include <ostream>
 #include <vector>
@@ -16,5 +18,6 @@
 #include <chrono>
 #include <thread>
 #include <random> 
+
 
 #endif /* Header_h */

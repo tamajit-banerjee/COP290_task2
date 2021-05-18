@@ -38,7 +38,7 @@
 #include "constans.h"
 #include "font.hpp"
 #include "menu.hpp"
-
+#include "sounds.s"
 
 class Bullet {
 	public:
@@ -138,6 +138,8 @@ public:
 	void render();
 	void levelStart(int level);
 	void levelEnd();
+
+	Sounds sound;
 
 	SDL_Texture *periTex;
 	void renderPeriscope();
