@@ -34,9 +34,13 @@
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 8
 
-#define CHASE_TIME 1000
+#define CHASE_TIME 10
 
-#define LEVEL_TIME 5000
+#define LEVEL_TIME 2000
+
+#define NON_CHASE_TIME 24
+
+#define WALL_TIME 100
 
 
 

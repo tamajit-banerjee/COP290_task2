@@ -136,8 +136,6 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         while (game->running() && game->isLevelRunning) {
 
 
-            game->handleEvents();
-            game->update();
             
             
             game->sPlayer.encode(splayerInfo);
@@ -147,11 +145,17 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
             game->cPlayer.decode(cplayerInfo);
 
+            
+
             game->render();
 
             if(game->sPlayer.get_time()<=0 && game->cPlayer.get_time()<=0){
                 game->isLevelRunning = false;
             }
+
+            game->handleEvents();
+            game->update();
+            
         }
         game->levelEnd();
         sleep(2);

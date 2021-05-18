@@ -123,40 +123,71 @@ void Game::dfs(int x, int y){
 
 void Game:: random_wall_removal(){
 
-      std::pair<int,int> dir[] = {std::make_pair(0,1),std::make_pair(0,-1),std::make_pair(-1,0),std::make_pair(1,0)};
+    //srand( seedi + level );
+
+      std::pair<int,int> dir[] = {std::make_pair(0,-1),std::make_pair(0,1),std::make_pair(-1,0),std::make_pair(1,0)};
 
     int i = rand()%MAZEROWS;
     int j = rand()%MAZECOLS;
-    while(maze[i][j].id == 0){
+    std::vector<int> store;
+    for(int k=0;k<4;k++)
+    if(ok(i+dir[k].first,j+dir[k].second) && (((maze[i][j].id)>>k)%2 == 1)  )
+        store.push_back(k);
+
+    while( store.size() == 0){
+ //   std::cout<<"hi MAZE\n";
     i = rand()%MAZEROWS;
     j = rand()%MAZECOLS;
+
+    for(int k=0;k<4;k++)
+    if(ok(i+dir[k].first,j+dir[k].second) && (((maze[i][j].id)>>k)%2 == 1)  )
+        store.push_back(k);
+    
     }
+
     int x = i;
     int y = j;
-    int random = rand()%4;
-    while(! ok(x+dir[random].first,y+dir[random].second) && ((maze[i][j].id)>>random)%2 )
-            random = rand()%4;
 
-            switch (random) {
+    std::shuffle(store.begin(),store.end(),std::default_random_engine(rand()));
+
+    int rom = store[0];
+
+
+
+  //  std::cout<<x<<" "<<y<<" "<<(maze[x][y].id)<<"\n";
+
+    // while( rom < store.size()   &&  ((maze[x][y].id)>>store[rom])%2 == 0  ){
+    //     std::cout<<store[rom]<<"\n";
+    //     ++rom;
+    // }
+
+    // if(rom == store.size())
+    //     return;
+
+ //std::cout<<rom<<"\n";
+
+
+            switch (rom) {
                 case 2:
                     maze[x][y].removeWall("top");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+                    maze[x+dir[rom].first][y+dir[rom].second].removeWall("bottom");
                     break;
                 case 3:
                     maze[x][y].removeWall("bottom");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+                    maze[x+dir[rom].first][y+dir[rom].second].removeWall("top");
                     break;
                 case 1:
                     maze[x][y].removeWall("right");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+                    maze[x+dir[rom].first][y+dir[rom].second].removeWall("left");
                     break;
                 case 0:
                     maze[x][y].removeWall("left");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+                    maze[x+dir[rom].first][y+dir[rom].second].removeWall("right");
                     break;
                 default:
                     break;
         }
+
 }
 
 int parent[MAZECOLS*MAZEROWS];
@@ -516,7 +547,8 @@ bool playerOnTime(Player & p, MazeCell & m){
 }
 
 void Game::updateCoinTime(Player & p, MazeCell & m){
-    srand(seedi);
+    srand(seedi + level );
+    
     int random_i = rand() % MAZEROWS;
     int random_j = rand() % MAZECOLS;
     if(playerOnCoin(p, m)){

@@ -117,8 +117,7 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
         while (game->running() && game->isLevelRunning) {
 
-            game->handleEvents();
-            game->update();
+
             
             game->cPlayer.encode(cplayerInfo);
             
@@ -134,6 +133,10 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             if(game->sPlayer.get_time()<=0 && game->cPlayer.get_time()<=0){
                 game->isLevelRunning = false;
             }
+
+            game->handleEvents();
+            game->update();
+
         }
         game->levelEnd();
         sleep(2);

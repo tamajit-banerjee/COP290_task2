@@ -58,8 +58,8 @@ void Game::levelStart(int arg_level , int seedx ){
     mazeInit();
     maze_gen();
     maze_dist_update();
-    cPlayer.set_time(2000);
-    sPlayer.set_time(2000);
+    cPlayer.set_time(LEVEL_TIME);
+    sPlayer.set_time(LEVEL_TIME);
     cPlayer.freeze = false;
     cPlayer.final_freeze = false;
     sPlayer.freeze = false;
@@ -132,9 +132,12 @@ void Game::update(){
 
     counter++;
 
-    srand( seedi);
+    srand( seedi + level );
 
-    if(counter%50 == 0){
+    // if(counter%100 == 0){
+    //     std::cout<<rand()<<" "<<sPlayer.get_time() + cPlayer.get_time()<<"\n";
+    // }
+    if(counter%WALL_TIME == 0){
         random_wall_removal();
         maze_dist_update();
     }

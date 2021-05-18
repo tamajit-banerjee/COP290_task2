@@ -24,7 +24,7 @@ void Game::initMonsters(){
     srand(10*level);
     monsters[0].setPosCenter(0 + rand()%5, 0 + rand()%5);
     monsters[0].dest = rand()%(MAZECOLS*MAZEROWS);
-    monsters[0].chase_which_player = 0;
+    monsters[0].chase_which_player = 1;
     monsters[0].mode_chase = true;
     monsters[0].chase_time = 0;
     monsters[0].not_chase_time = 0;
@@ -241,7 +241,7 @@ void Game::updateMonsters(){
                     std::pair<int, int> pos = sPlayer.getMazeCoordinates(rect);
                     int s = pos.first * MAZECOLS + pos.second;
                     monsters[i].dest = s;
-                    if(checkoneMonsterCollisions(sPlayer,monsters[i]) || monsters[i].chase_time ==  MAZECOLS*MAZEROWS ){
+                    if(checkoneMonsterCollisions(sPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME ){
                         monsters[i].mode_chase = false;
                         monsters[i].not_chase_time = 0;
                     }
@@ -250,7 +250,7 @@ void Game::updateMonsters(){
                     std::pair<int, int> pos = cPlayer.getMazeCoordinates(rect);
                     int s = pos.first * MAZECOLS + pos.second;
                     monsters[i].dest = s;
-                    if(checkoneMonsterCollisions(cPlayer,monsters[i]) || monsters[i].chase_time ==  MAZECOLS*MAZEROWS ){
+                    if(checkoneMonsterCollisions(cPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME ){
                         monsters[i].mode_chase = false;
                         monsters[i].not_chase_time = 0;
                     }
@@ -264,7 +264,7 @@ void Game::updateMonsters(){
         }
             
             ++monsters[i].not_chase_time;
-            if(monsters[i].not_chase_time == 20 ){
+            if(monsters[i].not_chase_time == NON_CHASE_TIME/level){
                 monsters[i].mode_chase = true;
                 monsters[i].chase_time = 0 ;
             }
