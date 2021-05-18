@@ -103,6 +103,10 @@ public:
 
 	int changeDirectionCounter;
 
+	bool mode_chase = false;
+	int dest;
+	int chase_which_player;
+
 	Monster();
 
 	void draw(SDL_Renderer *renderer, TTF_Font *font);
@@ -110,6 +114,7 @@ public:
 
 	void move(int s);
 	std::pair<int, int> getMazeCoordinates(SDL_Rect & r);
+
 };
 
 class MazeCell{
@@ -117,6 +122,7 @@ public:
 	bool hascoin;
 	bool hastime;
 	int id; 
+	int to_go[MAZECOLS*MAZEROWS];
 	// id denotes which type of cell it is. refer to walls_mapping.png for reference
 	SDL_Rect srcR, dstR;
 	MazeCell();
@@ -168,6 +174,7 @@ public:
 	void updateMonsters();
 
 	void renderMaze();
+	void maze_dist_update();
     bool ok(int x, int y);
     void dfs(int x, int y);
     void maze_gen();

@@ -33,12 +33,14 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     cPlayer.player_no = 2;
 
     sounds.init();
+
 }
 
 void Game::levelStart(int arg_level){
-    level = arg_level;
 
     sounds.play(1, true);
+
+    level = arg_level;
 
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -53,6 +55,7 @@ void Game::levelStart(int arg_level){
     counter = 0;
     mazeInit();
     maze_gen();
+    maze_dist_update();
     cPlayer.time = 5000;
     sPlayer.time = 5000;
     cPlayer.freeze = false;
@@ -76,7 +79,6 @@ void Game::levelStart(int arg_level){
 
 void Game::levelEnd()
 {
-    sounds.stop(1);
 	SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -89,6 +91,9 @@ void Game::levelEnd()
     cPlayer.dispScore(renderer, font, 350, 250);
 
     SDL_RenderPresent(renderer);
+
+    sounds.stop(1);
+    
 }
 
 void Game::handleEvents()
@@ -200,7 +205,7 @@ void Game::render(){
         monsters[i].draw(renderer, font);
     }
 
-    renderPeriscope();
+   // renderPeriscope();
     SDL_RenderPresent(renderer);
 }
 

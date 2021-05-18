@@ -1,101 +1,102 @@
 #include "sounds.h"
-
-
+ 
+ 
 void Sounds::toggleSounds() {
-    if ( on ) {
-        on = false;
-        stop();
-    }
-    else
-        on = true;
+   if ( on ) {
+       on = false;
+       stop();
+   }
+   else
+       on = true;
 }
-
+ 
 void Sounds::stop() {
-    int i;
-    for (i=0;i<NUMOFSOUNDS;i++)
-        stop(i);
+   int i;
+   for (i=0;i<NUMOFSOUNDS;i++)
+       stop(i);
 }
-
+ 
 void Sounds::stop(int i) {
-    if ( !isinit ) return;
-    if (Mix_Playing(i))
-        Mix_HaltChannel(i);
+   if ( !isinit ) return;
+   if (Mix_Playing(i))
+       Mix_HaltChannel(i);
 }
-
+ 
 void Sounds::play(int i, bool looped, int volume) {
-    /* frequency used to be a parameter here until switching to sdl
-     * we might want to reenable that functionality sometime */
-
-    if ( !isinit ) return;
-    if (!on) return;
-
-    if (Mix_Playing(i))
-        Mix_HaltChannel(i);
-
-    int loop = 0;
-    if ( looped )
-        loop = -1;
-
-    Mix_Volume(i,volume);
-    Mix_PlayChannel(i,sounds[i],loop);
+   /* frequency used to be a parameter here until switching to sdl
+    * we might want to reenable that functionality sometime */
+ 
+   if ( !isinit ) return;
+   if (!on) return;
+ 
+   if (Mix_Playing(i))
+       Mix_HaltChannel(i);
+ 
+   int loop = 0;
+   if ( looped )
+       loop = -1;
+ 
+   Mix_Volume(i,volume);
+   Mix_PlayChannel(i,sounds[i],loop);
 }
 bool Sounds::init() {
-
-    if ( isinit)
-        return true;
-
-    try {
-        //initialize SDL mixer
-        int audio_rate = 44100;
-        Uint16 audio_format = AUDIO_S16SYS;
-        int audio_channels = 2;
-        int audio_buffers = 512;
-
-        if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0)
-            throw "Error while initializing SDL";
-
-        Mix_AllocateChannels(NUMOFSOUNDS);
-
-        //load wav files
-        int i;
-        for (i=0;i<NUMOFSOUNDS;i++) {
-            std::string path = "/" + soundpaths[i];
-            sounds[i] = Mix_LoadWAV(path.c_str());
-            if ( sounds[i] == NULL )
-                throw Mix_GetError();
-        }
-
-        isinit = true;
-    }
-    catch(const char * s){
-        std::cout<<s<<'\n';
-    }
-    catch ( ... ) {
-        std::cerr << "Unexpected exception\n";
-    }
-    return true;
+ 
+   if ( isinit)
+       return true;
+ 
+   try {
+       //initialize SDL mixer
+       int audio_rate = 44100;
+       Uint16 audio_format = AUDIO_S16SYS;
+       int audio_channels = 2;
+       int audio_buffers = 512;
+ 
+       if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0)
+           throw "Error while initializing SDL";
+ 
+       Mix_AllocateChannels(NUMOFSOUNDS);
+ 
+       //load wav files
+       int i;
+       for (i=0;i<NUMOFSOUNDS;i++) {
+           std::string path = "/" + soundpaths[i];
+           sounds[i] = Mix_LoadWAV(path.c_str());
+           if ( sounds[i] == NULL )
+               throw Mix_GetError();
+       }
+ 
+       isinit = true;
+   }
+   catch(const char * s){
+       std::cout<<s<<'\n';
+   }
+   catch ( ... ) {
+       std::cerr << "Unexpected exception\n";
+   }
+   return true;
 }
-
+ 
 Sounds::Sounds() :
-        on(true), isinit(false)
+       on(true), isinit(false)
 {
-    //set sound paths
-    soundpaths[0] = "sounds/intro.wav";
-    soundpaths[1] = "sounds/update.wav";
-    soundpaths[2] = "sounds/coin_eat.wav";
-    soundpaths[3] = "sounds/time_eat.wav";
-    soundpaths[4] = "sounds/death.wav";
-    // soundpaths[5] = "sounds/fruit.wav";
-    // soundpaths[6] = "sounds/extra_man.wav";
-    // soundpaths[7] = "sounds/vuln.wav";
-    // soundpaths[8] = "sounds/death.wav";
-    // soundpaths[9] = "sounds/newgame.wav";
-    // soundpaths[10] = "sound/siren.wav";
-    // soundpaths[11] = "sound/intermission.wav";
-    // soundpaths[12] = "sound/booster.wav";
+   //set sound paths
+   soundpaths[0] = "sounds/intro.wav";
+   soundpaths[1] = "sounds/update.wav";
+   soundpaths[2] = "sounds/coin_eat.wav";
+   soundpaths[3] = "sounds/time_eat.wav";
+   soundpaths[4] = "sounds/death.wav";
+   // soundpaths[5] = "sounds/fruit.wav";
+   // soundpaths[6] = "sounds/extra_man.wav";
+   // soundpaths[7] = "sounds/vuln.wav";
+   // soundpaths[8] = "sounds/death.wav";
+   // soundpaths[9] = "sounds/newgame.wav";
+   // soundpaths[10] = "sound/siren.wav";
+   // soundpaths[11] = "sound/intermission.wav";
+   // soundpaths[12] = "sound/booster.wav";
 }
-
+ 
 Sounds::~Sounds()
 {
-    Mix_CloseAudio();
+   Mix_CloseAudio();
 }
+ 

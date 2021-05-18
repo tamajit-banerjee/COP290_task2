@@ -157,9 +157,6 @@ void Game:: maze_gen(){
 //
 //    dfs(x,y);
 //
-
-    sounds.play(0, false);
-
     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
     std::vector<std::pair<std::pair<int,int>,std::pair<int,int> > > store;
 
@@ -311,12 +308,91 @@ void Game::mazeInit(){
             maze[i][j].update(15);
             maze[i][j].hascoin = false;
             maze[i][j].hastime = false;
+            for(int k=0;k<MAZEROWS*MAZECOLS;k++)
+                maze[i][j].to_go[k] = -1;
         }
     }
     coinCycle = 0;
     timeCycle = 0;
     placeCoins();
     placeTimes();
+}
+
+
+void Game::maze_dist_update(){
+
+        //std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
+
+        for(int i =0; i<MAZEROWS; i++){
+        for(int j = 0; j<MAZECOLS; j++){
+            //do bfs 
+            std::queue<int> q;
+            std::vector<bool> used(MAZECOLS*MAZEROWS);
+            std::vector<int> d(MAZECOLS*MAZEROWS), p(MAZECOLS*MAZEROWS);
+
+            int s = i*MAZECOLS+j;
+
+            q.push(s);
+            used[s] = true;
+            p[s] = -1;
+            d[s] = 0;
+            
+            while (!q.empty()) {
+
+                int v = q.front();
+                q.pop();
+
+                int row = v/MAZECOLS;
+                int col = v%MAZECOLS;
+                int id = maze[row][col].id;
+                if((id>>0)%2 == 0){
+                    int u = (row)*MAZECOLS + col - 1;
+                    if (!used[u]) {
+                        used[u] = true;
+                        q.push(u);
+                        d[u] = d[v] + 1;
+                        p[u] = v;
+                        maze[row][col-1].to_go[s] = 1;
+                    }
+                }
+
+                if((id>>1)%2 == 0){
+                    int u = (row)*MAZECOLS + col + 1;
+                    if (!used[u]) {
+                        used[u] = true;
+                        q.push(u);
+                        d[u] = d[v] + 1;
+                        p[u] = v;
+                        maze[row][col+1].to_go[s] = 0;
+                    }
+                }
+
+                if((id>>2)%2 == 0){
+                    int u = (row-1)*MAZECOLS + col;
+                    if (!used[u]) {
+                        used[u] = true;
+                        q.push(u);
+                        d[u] = d[v] + 1;
+                        p[u] = v;
+                        maze[row-1][col].to_go[s] = 3;
+                    }
+                }
+
+                if((id>>3)%2 == 0){
+                    int u = (row+1)*MAZECOLS + col;
+                    if (!used[u]) {
+                        used[u] = true;
+                        q.push(u);
+                        d[u] = d[v] + 1;
+                        p[u] = v;
+                        maze[row+1][col].to_go[s] = 2;
+                    }
+                }
+            }
+
+        }
+    }
+
 }
 
 
@@ -381,6 +457,7 @@ bool isOnPower(int x, int y, int w, int h, SDL_Rect & rect){
 }
 
 bool playerOnCoin(Player & p, MazeCell & m){
+
     if(m.hascoin && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
         m.hascoin = false;
         p.score += COIN_SCORE;
@@ -389,19 +466,22 @@ bool playerOnCoin(Player & p, MazeCell & m){
     return false;
 }
 bool playerOnTime(Player & p, MazeCell & m){
+
+
     if(m.hastime && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
         m.hastime = false;
         p.time += TIME_INCREASE;
         return true;
     }
     return false;
+
 }
 
 void Game::updateCoinTime(Player & p, MazeCell & m){
     int random_i = std::rand() % MAZEROWS;
     int random_j = std::rand() % MAZECOLS;
     if(playerOnCoin(p, m)){
-        sounds.play(2, false);
+            sounds.play(2, false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = std::rand() % MAZEROWS;
             random_j = std::rand() % MAZECOLS;

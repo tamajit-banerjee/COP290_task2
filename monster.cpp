@@ -23,9 +23,13 @@ void Monster::setPosCenter(int i, int j){
 void Game::initMonsters(){
     srand(10*level);
     monsters[0].setPosCenter(0 + rand()%5, 0 + rand()%5);
+    monsters[0].dest = rand()%(MAZECOLS*MAZEROWS);
     monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
+    monsters[1].dest = rand()%(MAZECOLS*MAZEROWS);
     monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
+    monsters[2].dest = rand()%(MAZECOLS*MAZEROWS);
     monsters[3].setPosCenter(5 + rand()%5, 5 + rand()%5);
+    monsters[3].dest = rand()%(MAZECOLS*MAZEROWS);
 }
 
 void Monster::move(int s){
@@ -127,6 +131,8 @@ void Game::handleMonsterCollisions(){
             cPlayer.freeze = false;
     }
 }
+
+
 std::pair<int, int> Monster::getMazeCoordinates(SDL_Rect &r){
     int i = 0;
     int j = 0;
@@ -180,17 +186,19 @@ void Game::updateMonsters(){
         
         if(centre(monsters[i])){
             SDL_Rect rect;
+            
             rect.x = 0; rect.y = 0;
             rect.w = CELL_SIZE; rect.h = CELL_SIZE;
             std::pair<int, int> i_j = monsters[i].getMazeCoordinates(rect);
             resetDirections(monsters[i]);
             if(maze[i_j.first][i_j.second].id == 15)
                 continue;
+
+        while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second){
+            monsters[i].dest = rand()%(MAZEROWS*MAZECOLS);
+        }
             
-            int random = std::rand()%4;
-            while(checkIfWall(random, maze[i_j.first][i_j.second])){
-                random = std::rand()%4;
-            }
+            int random = maze[i_j.first][i_j.second].to_go[monsters[i].dest];
             switch(random){
                 case 0:
                     monsters[i].left = 1; break;
