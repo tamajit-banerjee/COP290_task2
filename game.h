@@ -190,6 +190,7 @@ public:
 
 	void renderMaze();
 	void maze_dist_update();
+	void random_wall_removal();
     bool ok(int x, int y);
     void dfs(int x, int y);
     void maze_gen();

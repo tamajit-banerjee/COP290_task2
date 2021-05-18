@@ -121,6 +121,44 @@ void Game::dfs(int x, int y){
     
 }
 
+void Game:: random_wall_removal(){
+
+      std::pair<int,int> dir[] = {std::make_pair(0,1),std::make_pair(0,-1),std::make_pair(-1,0),std::make_pair(1,0)};
+
+    int i = rand()%MAZEROWS;
+    int j = rand()%MAZECOLS;
+    while(maze[i][j].id == 0){
+    i = rand()%MAZEROWS;
+    j = rand()%MAZECOLS;
+    }
+    int x = i;
+    int y = j;
+    int random = rand()%4;
+    while(! ok(x+dir[random].first,y+dir[random].second) && ((maze[i][j].id)>>random)%2 )
+            random = rand()%4;
+
+            switch (random) {
+                case 2:
+                    maze[x][y].removeWall("top");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+                    break;
+                case 3:
+                    maze[x][y].removeWall("bottom");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+                    break;
+                case 1:
+                    maze[x][y].removeWall("right");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+                    break;
+                case 0:
+                    maze[x][y].removeWall("left");
+                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+                    break;
+                default:
+                    break;
+        }
+}
+
 int parent[MAZECOLS*MAZEROWS];
 int size[MAZECOLS*MAZEROWS];
 
@@ -182,6 +220,8 @@ void Game:: maze_gen(){
         std::pair<int,int> p2 = store[i].second;
         int l1 = p1.first*MAZECOLS + p1.second ;
         int l2 = p2.first*MAZECOLS + p2.second ;
+
+
         if(union_sets(l1,l2)){
             int k =0;
             for( ;k<4 ; k++){
@@ -314,6 +354,7 @@ void Game::mazeInit(){
     placeCoins();
     placeTimes();
 }
+
 
 
 void Game::maze_dist_update(){

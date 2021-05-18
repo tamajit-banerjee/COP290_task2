@@ -134,6 +134,11 @@ void Game::update(){
 
     srand( seedi);
 
+    if(counter%50 == 0){
+        random_wall_removal();
+        maze_dist_update();
+    }
+
     updateMonsters();
 
     handleMonsterCollisions();
