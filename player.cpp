@@ -91,6 +91,14 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         disp_text(renderer,  "1", font, xpos + width, ypos+20);
     else
         disp_text(renderer,  "2", font, xpos + width, ypos+20);
+
+    if(freeze){
+        destR.h = 2*width;
+        destR.w = 2*width;
+        destR.x = xpos + width/2 - destR.w/2;
+        destR.y = ypos + height/2 - destR.h/2;
+        SDL_RenderCopyEx(renderer, freezeTex,  NULL, &destR, 0.0, NULL, SDL_FLIP_NONE);
+    }
     
 }
 

@@ -29,7 +29,7 @@
 
 #define SEPARATOR '|'
 #define FREEZE_LIMIT 20
-#define WALL_RATIO 8
+#define WALL_RATIO 20
 
 
 
@@ -65,6 +65,7 @@ public:
 	std::vector<Bullet> bullets;
 
 	SDL_Texture *Tex;
+	SDL_Texture *freezeTex;
 	int playerId;
 	int renderCycle;
 

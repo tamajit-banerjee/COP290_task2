@@ -23,6 +23,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("time", "resources/time.bmp");
     loadTexture("bullet", "resources/bullet.bmp");
     loadTexture("periscope", "resources/periscope.bmp");
+    loadTexture("freeze", "resources/freeze.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
@@ -234,6 +235,12 @@ void Game::loadTexture(char *textName, char *path){
     else if(strcmp(textName, "periscope") == 0){
         tmpSurface = SDL_LoadBMP(path);
         periTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+    }
+    else if(strcmp(textName, "freeze") == 0){
+        tmpSurface = SDL_LoadBMP(path);
+        sPlayer.freezeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        cPlayer.freezeTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
         SDL_FreeSurface(tmpSurface);
     }
 
