@@ -26,12 +26,13 @@
 #define MONSTERS_DIR_CHANGE 30
 #define MONSTER_SIZE 131
 #define MONSTER_DELAY 8
+#define FREEZE_LIMIT 20
 
 #define SEPARATOR '|'
-#define FREEZE_LIMIT 20
 #define WALL_RATIO 20
 
-
+#define BULLET_WIDTH 8
+#define BULLET_HEIGHT 8
 
 #include "Header.h"
 #include "constans.h"

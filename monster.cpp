@@ -21,6 +21,7 @@ void Monster::setPosCenter(int i, int j){
 }
 
 void Game::initMonsters(){
+    srand(10*level);
     monsters[0].setPosCenter(0 + rand()%5, 0 + rand()%5);
     monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
     monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
@@ -174,7 +175,6 @@ bool centre(Monster & m ){
 }
     
 void Game::updateMonsters(){
-    
     for(int i = 0 ; i<MONSTERS; i++){
        // bool tochange = false;
         

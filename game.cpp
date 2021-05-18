@@ -16,6 +16,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
     isRunning = true;
 
+    // loadTexture("player", "resources/player.bmp");
     loadTexture("player", "resources/players_combined.bmp");
     loadTexture("monster", "resources/monster.bmp");
     loadTexture("maze", "resources/maze.bmp");
@@ -126,12 +127,15 @@ void Game::update(){
     updateBullets(cPlayer);
 
     std::pair<int, int> s_p = sPlayer.move(SPEED); 
-    if(!checkWallCollisions(s_p.first, s_p.second, sPlayer.width, sPlayer.height)){
-        sPlayer.xpos = s_p.first; sPlayer.ypos = s_p.second;
+    if(!checkWallCollisions(s_p.first, sPlayer.ypos, sPlayer.width, sPlayer.height)){
+        sPlayer.xpos = s_p.first;
+    }
+    if(!checkWallCollisions(sPlayer.xpos, s_p.second, sPlayer.width, sPlayer.height)){
+        sPlayer.ypos = s_p.second;
     }
 
     if(sPlayer.attack && sPlayer.attack_counter%1000 == 0 ){
-        Bullet b(sPlayer.xpos + sPlayer.width/2,sPlayer.ypos + sPlayer.height/2 ,sPlayer.attack_dir);
+        Bullet b(sPlayer.xpos + sPlayer.width/2 - BULLET_WIDTH/2,sPlayer.ypos + sPlayer.height/2 - BULLET_HEIGHT/2  ,sPlayer.attack_dir);
         sPlayer.bullets.push_back(b);
     }
 
@@ -139,20 +143,21 @@ void Game::update(){
         ++sPlayer.attack_counter;
 
 
-    Bullet_hit_Player();
-
     std::pair<int, int> c_p = cPlayer.move(SPEED);
-    if(!checkWallCollisions(c_p.first, c_p.second, cPlayer.width, cPlayer.height)){
-        cPlayer.xpos = c_p.first; cPlayer.ypos = c_p.second;
+    if(!checkWallCollisions(c_p.first, cPlayer.ypos, cPlayer.width, cPlayer.height)){
+        cPlayer.xpos = c_p.first;
     }
-
+    if(!checkWallCollisions(cPlayer.xpos, c_p.second, cPlayer.width, cPlayer.height)){
+        cPlayer.ypos = c_p.second;
+    }
     if(cPlayer.attack && cPlayer.attack_counter%1000 == 0 ){
-        Bullet b(cPlayer.xpos + cPlayer.width/2,cPlayer.ypos + cPlayer.height/2 ,cPlayer.attack_dir);
+        Bullet b(cPlayer.xpos + cPlayer.width/2 - BULLET_WIDTH/2, cPlayer.ypos + cPlayer.height/2 - BULLET_HEIGHT/2 , cPlayer.attack_dir);
         cPlayer.bullets.push_back(b);
     }
-
     if(cPlayer.attack)
         ++cPlayer.attack_counter;
+
+    Bullet_hit_Player();
 
     checkCoinTimeEat();
 

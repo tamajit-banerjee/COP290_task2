@@ -1,8 +1,5 @@
 #include "game.h"
 
-#define BULLET_WIDTH 8
-#define BULLET_HEIGHT 8
-
 Bullet:: Bullet(int x, int y, int direction ) {
     position.x = x;
     position.y = y;
@@ -37,7 +34,7 @@ std::pair<int,int> Bullet::move(int s){
 void Game:: updateBullets(Player &p){
     std::vector<Bullet> new_bullets;
     for(int i=0;i<p.bullets.size();i++){
-       std::pair<int, int> pa =  p.bullets[i].move(SPEED*4);
+       std::pair<int, int> pa =  p.bullets[i].move(SPEED*2);
     if(!checkWallCollisions(pa.first, pa.second, p.bullets[i].position.w, p.bullets[i].position.h)){
         p.bullets[i].position.x = pa.first; p.bullets[i].position.y = pa.second;
         new_bullets.push_back(p.bullets[i]);

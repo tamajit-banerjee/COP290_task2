@@ -79,7 +79,7 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
     }
     srcR.x = (3*playerId + int(renderCycle/RENDER_PLAYER_DELAY)) * PLAYER_WIDTH_SRC;
 
-    // SDL_RenderCopy(renderer, Tex,  srcR, &destR);
+    // SDL_RenderCopy(renderer, Tex,  NULL, &destR);
     if(SDL_RenderCopyEx(renderer, Tex,  &srcR, &destR, 0.0, NULL, SDL_FLIP_NONE) < 0){
         std::cout<<"Players not rendered properly\n";
         std::cout<<SDL_GetError()<<"\n";
@@ -93,8 +93,8 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         disp_text(renderer,  "2", font, xpos + width, ypos+20);
 
     if(freeze){
-        destR.h = 2*width;
-        destR.w = 2*width;
+        destR.h = 2*width + width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
+        destR.w = 2*width+ width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
         destR.x = xpos + width/2 - destR.w/2;
         destR.y = ypos + height/2 - destR.h/2;
         SDL_RenderCopyEx(renderer, freezeTex,  NULL, &destR, 0.0, NULL, SDL_FLIP_NONE);
@@ -247,7 +247,7 @@ void Game::askPlayerAvatar(){
     while (!ok) {
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_KEYDOWN) {
-                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9)) {
+                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_7)) {
                     if (position > 0) {
                         position = 0;
                     }

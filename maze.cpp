@@ -172,7 +172,8 @@ void Game:: maze_gen(){
         }
     }
 
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); 
+    unsigned seed = 5;
+    // std::chrono::system_clock::now().time_since_epoch().count(); 
 
     std::shuffle(store.begin(),store.end(),std::default_random_engine(seed));
 
@@ -215,9 +216,9 @@ void Game:: maze_gen(){
             }
             SDL_RenderClear(renderer);
             renderMaze();
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            coinCycle+=4;
-            timeCycle+=4;
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            coinCycle+=2;
+            timeCycle+=2;
             SDL_RenderPresent(renderer);
             
         }
@@ -366,22 +367,17 @@ bool Game::checkWallCollisions(int x, int y, int w, int h){
 }
 
 bool isOnPower(int x, int y, int w, int h, SDL_Rect & rect){
-    // std::cout<<"width "<<w<<"x: "<<x<<"y: "<<y<<'\n';
-    // std::cout<<"r width "<<rect.w<<"r x: "<<rect.x<<"r y: "<<rect.y<<'\n';
-    int threshold = COIN_SIZE;
-    int count = 0;
-    if((x - rect.x + w/2 - int(rect.w/2))*(x - rect.x + w/2 - int(rect.w/2)) < threshold*threshold)
-        count ++;
-    if((y - rect.y + h/2 - int(rect.h/2))*(y - rect.y + h/2 - int(rect.h/2)) < threshold*threshold)
-        count ++;
-    if (count == 2)
-        return true;
-    else    
-        return false;
+    SDL_Rect play_temp;
+    play_temp.x = x; play_temp.y = y; play_temp.w = PLAYER_WIDTH; play_temp.h = PLAYER_HEIGHT;
+
+    SDL_Rect temp_pow;
+    temp_pow.x = rect.x + (CELL_SIZE - COIN_SIZE)/2; 
+    temp_pow.y = rect.y + (CELL_SIZE - COIN_SIZE)/2; 
+    temp_pow.w = COIN_SIZE; temp_pow.h = COIN_SIZE;
+    return SDL_HasIntersection(&play_temp, &temp_pow);
 }
 
 bool playerOnCoin(Player & p, MazeCell & m){
-    // std::cout<<m.hascoin<<isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR);
     if(m.hascoin && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
         m.hascoin = false;
         p.score += COIN_SCORE;
@@ -390,7 +386,6 @@ bool playerOnCoin(Player & p, MazeCell & m){
     return false;
 }
 bool playerOnTime(Player & p, MazeCell & m){
-    // std::cout<<m.hascoin<<isOnCoin(p.xpos, p.ypos, p.width, p.height, m.dstR);
     if(m.hastime && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
         m.hastime = false;
         p.time += TIME_INCREASE;
@@ -424,6 +419,14 @@ void Game::checkCoinTimeEat(){
     std::pair<int, int> c_co = cPlayer.getMazeCoordinates(maze[0][0].dstR);
     
     updateCoinTime(sPlayer, maze[s_co.first][s_co.second]);
+    updateCoinTime(sPlayer, maze[s_co.first + 1][s_co.second]);
+    updateCoinTime(sPlayer, maze[s_co.first - 1][s_co.second]);
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second + 1]);
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second -1]);
     updateCoinTime(cPlayer, maze[c_co.first][c_co.second]);
+    updateCoinTime(cPlayer, maze[c_co.first + 1][c_co.second]);
+    updateCoinTime(cPlayer, maze[c_co.first - 1][c_co.second]);
+    updateCoinTime(cPlayer, maze[c_co.first][c_co.second + 1]);
+    updateCoinTime(cPlayer, maze[c_co.first][c_co.second -1]);
 
 }
