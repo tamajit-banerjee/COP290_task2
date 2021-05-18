@@ -101,12 +101,19 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     int splayerInfo[5];
     int cplayerInfo[5];
 
+
+
     for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
             break;
         }
-        game->levelStart(level);
+
+        int seedi;
+
+        bytes_recvd = recv(sockfd, &seedi, sizeof(seedi), 0);
+        
+        game->levelStart(level,seedi);
         
         while (game->running() && game->isLevelRunning) {
 
@@ -124,7 +131,7 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
             
 
-            if(game->sPlayer.time<=0 && game->cPlayer.time<=0){
+            if(game->sPlayer.get_time()<=0 && game->cPlayer.get_time()<=0){
                 game->isLevelRunning = false;
             }
         }

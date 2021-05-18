@@ -172,10 +172,7 @@ void Game:: maze_gen(){
         }
     }
 
-    unsigned seed = 5;
-    // std::chrono::system_clock::now().time_since_epoch().count(); 
-
-    std::shuffle(store.begin(),store.end(),std::default_random_engine(seed));
+    std::shuffle(store.begin(),store.end(),std::default_random_engine(seedi));
 
     for(int i=0;i<MAZECOLS*MAZEROWS;i++)
         make_set(i);
@@ -459,7 +456,7 @@ bool isOnPower(int x, int y, int w, int h, SDL_Rect & rect){
 bool playerOnCoin(Player & p, MazeCell & m){
 
     if(m.hascoin && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
-        m.hascoin = false;
+      // m.hascoin = false;
         p.score += COIN_SCORE;
         return true;
     }
@@ -469,8 +466,8 @@ bool playerOnTime(Player & p, MazeCell & m){
 
 
     if(m.hastime && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
-        m.hastime = false;
-        p.time += TIME_INCREASE;
+       // m.hastime = false;
+        p.set_time(p.get_time()+TIME_INCREASE);
         return true;
     }
     return false;
@@ -478,25 +475,28 @@ bool playerOnTime(Player & p, MazeCell & m){
 }
 
 void Game::updateCoinTime(Player & p, MazeCell & m){
-    int random_i = std::rand() % MAZEROWS;
-    int random_j = std::rand() % MAZECOLS;
+    srand(seedi);
+    int random_i = rand() % MAZEROWS;
+    int random_j = rand() % MAZECOLS;
     if(playerOnCoin(p, m)){
             sounds.play(2, false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
-            random_i = std::rand() % MAZEROWS;
-            random_j = std::rand() % MAZECOLS;
+            random_i = rand() % MAZEROWS;
+            random_j = rand() % MAZECOLS;
         }
         maze[random_i][random_j].hascoin = true;
+        m.hascoin = false;
     }
-    random_i = std::rand() % MAZEROWS;
-    random_j = std::rand() % MAZECOLS;
+    random_i = rand() % MAZEROWS;
+    random_j = rand() % MAZECOLS;
     if(playerOnTime(p, m)){
         sounds.play(3, false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
-            random_i = std::rand() % MAZEROWS;
-            random_j = std::rand() % MAZECOLS;
+            random_i = rand() % MAZEROWS;
+            random_j = rand() % MAZECOLS;
         }
         maze[random_i][random_j].hastime = true;
+        m.hastime = false;
     }
 }
 void Game::checkCoinTimeEat(){

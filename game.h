@@ -22,7 +22,7 @@
 #define PLAYER_WIDTH 32
 #define PLAYER_HEIGHT 48
 
-#define MONSTERS 1
+#define MONSTERS 4
 #define MONSTERS_DIR_CHANGE 30
 #define MONSTER_SIZE 131
 #define MONSTER_DELAY 8
@@ -37,6 +37,7 @@
 #define CHASE_TIME 1000
 
 #define LEVEL_TIME 5000
+
 
 
 #include "Header.h"
@@ -56,11 +57,13 @@ class Bullet {
 
 
 class Player{
+private:
+	int time;
 public:
 	char* name;
 	int player_no;
 	int score;
-	int time;
+	//int time;
 	int xpos, ypos, old_xpos, old_ypos;
 	int right, left, up, down;
 	int width, height;
@@ -84,6 +87,8 @@ public:
 
     void encode(int x[]);
     void decode(int y[]);
+	void set_time(int t);
+	int get_time();
 
 	void draw(SDL_Renderer *renderer, TTF_Font *font);
 	void dispName(SDL_Renderer *renderer, TTF_Font *font, int xpos, int ypos);
@@ -149,7 +154,7 @@ public:
 	void update();
 	bool running() { return isRunning; }
 	void render();
-	void levelStart(int level);
+	void levelStart(int level, int seedi);
 	void levelEnd();
 
 	Sounds sounds;
@@ -165,6 +170,7 @@ public:
 	bool isRunning;
 	bool isLevelRunning;
 	int level;
+	int seedi;
 
 	void render_bullets();
 

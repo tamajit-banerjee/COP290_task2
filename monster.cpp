@@ -28,24 +28,24 @@ void Game::initMonsters(){
     monsters[0].mode_chase = true;
     monsters[0].chase_time = 0;
     monsters[0].not_chase_time = 0;
-    // monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
-    // monsters[1].dest = rand()%(MAZECOLS*MAZEROWS);
-    // monsters[1].chase_which_player = 0;
-    // monsters[1].mode_chase = false;
-    // monsters[1].chase_time = 0;
-    // monsters[1].not_chase_time = 0;
-    // monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
-    // monsters[2].dest = rand()%(MAZECOLS*MAZEROWS);
-    // monsters[2].chase_which_player = 1;
-    // monsters[2].mode_chase = false;
-    // monsters[2].chase_time = 0;
-    // monsters[2].not_chase_time = 0;
-    // monsters[3].setPosCenter(5 + rand()%5, 5 + rand()%5);
-    // monsters[3].dest = rand()%(MAZECOLS*MAZEROWS);
-    // monsters[3].chase_which_player = 0;
-    // monsters[3].mode_chase = true;
-    // monsters[3].chase_time = 0;
-    // monsters[3].not_chase_time = 0;
+    monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
+    monsters[1].dest = rand()%(MAZECOLS*MAZEROWS);
+    monsters[1].chase_which_player = 0;
+    monsters[1].mode_chase = false;
+    monsters[1].chase_time = 0;
+    monsters[1].not_chase_time = 0;
+    monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
+    monsters[2].dest = rand()%(MAZECOLS*MAZEROWS);
+    monsters[2].chase_which_player = 1;
+    monsters[2].mode_chase = false;
+    monsters[2].chase_time = 0;
+    monsters[2].not_chase_time = 0;
+    monsters[3].setPosCenter(5 + rand()%5, 5 + rand()%5);
+    monsters[3].dest = rand()%(MAZECOLS*MAZEROWS);
+    monsters[3].chase_which_player = 0;
+    monsters[3].mode_chase = true;
+    monsters[3].chase_time = 0;
+    monsters[3].not_chase_time = 0;
 }
 
 void Monster::move(int s){

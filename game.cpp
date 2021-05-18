@@ -36,11 +36,13 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 
 }
 
-void Game::levelStart(int arg_level){
+void Game::levelStart(int arg_level , int seedx ){
 
-    sounds.play(1, true);
+   // sounds.play(1, true);
 
     level = arg_level;
+
+    seedi = seedx;
 
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -56,13 +58,14 @@ void Game::levelStart(int arg_level){
     mazeInit();
     maze_gen();
     maze_dist_update();
-    cPlayer.time = 5000;
-    sPlayer.time = 5000;
+    cPlayer.set_time(2000);
+    sPlayer.set_time(2000);
     cPlayer.freeze = false;
     cPlayer.final_freeze = false;
     sPlayer.freeze = false;
     sPlayer.final_freeze = false;
 
+    srand(17);
     int random_i = std::rand() % int(MAZEROWS/3);
     int random_j = std::rand() % int(MAZECOLS/3);
     
@@ -92,7 +95,7 @@ void Game::levelEnd()
 
     SDL_RenderPresent(renderer);
 
-    sounds.stop(1);
+   // sounds.stop(1);
     
 }
 
@@ -128,6 +131,8 @@ void Game::handleEvents()
 void Game::update(){
 
     counter++;
+
+    srand( seedi);
 
     updateMonsters();
 
@@ -171,12 +176,13 @@ void Game::update(){
 
     checkCoinTimeEat();
 
-    if(sPlayer.time>0)
-        sPlayer.time -= 1;
+    if(sPlayer.get_time()>0)
+        sPlayer.set_time(sPlayer.get_time() - 1);
     else    
         sPlayer.final_freeze = true;
-    if(cPlayer.time>0)
-        cPlayer.time -= 1;
+
+    if(cPlayer.get_time()>0)
+        cPlayer.set_time(cPlayer.get_time() - 1);
     else    
         cPlayer.final_freeze = true;
 

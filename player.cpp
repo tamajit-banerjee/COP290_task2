@@ -17,6 +17,7 @@ Player::Player(){
 
 
 Player::Player(const Player &p){
+
     name = p.name;
     xpos = p.xpos, ypos = p.ypos;
     score = p.score;
@@ -29,14 +30,17 @@ Player::Player(const Player &p){
     attack_counter=p.attack_counter;
     attack = false;
     attack_dir = p.attack_dir;
+    
 }
 
 void Player::encode(int x[]){
+
     x[0] = xpos;
     x[1] = ypos;
     x[2] = score;
     x[3] = time;
     x[4] = playerId;
+
 }
 
 void Player::decode(int y[]){
@@ -44,10 +48,17 @@ void Player::decode(int y[]){
     old_ypos = ypos;
     xpos = y[0];
     ypos = y[1];
-    score = y[2];
-    time = y[3];
+  //  score = y[2];
+    //   time = y[3];
     playerId = y[4];
 }
+
+void Player::set_time(int t){
+    time = t;
+}
+	int Player::get_time(){
+        return time;
+    }
 
 void Player::setPosCenter(int i, int j){
     xpos = i*CELL_SIZE + CELL_SIZE/2 - width/2;

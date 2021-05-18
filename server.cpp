@@ -124,7 +124,14 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         if(!game->running()){
             break;
         }
-        game->levelStart(level);
+
+        srand(std::chrono::system_clock::now().time_since_epoch().count());
+
+        int seedi = rand();
+
+        bytes_sent = send(newsockfd, &seedi, sizeof(seedi), 0);
+
+        game->levelStart(level,seedi);
         
         while (game->running() && game->isLevelRunning) {
 
@@ -142,7 +149,7 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
             game->render();
 
-            if(game->sPlayer.time<=0 && game->cPlayer.time<=0){
+            if(game->sPlayer.get_time()<=0 && game->cPlayer.get_time()<=0){
                 game->isLevelRunning = false;
             }
         }
