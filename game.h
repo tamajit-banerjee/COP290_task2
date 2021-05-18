@@ -22,7 +22,7 @@
 #define PLAYER_WIDTH 32
 #define PLAYER_HEIGHT 48
 
-#define MONSTERS 4
+#define MONSTERS 1
 #define MONSTERS_DIR_CHANGE 30
 #define MONSTER_SIZE 131
 #define MONSTER_DELAY 8
@@ -33,6 +33,11 @@
 
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 8
+
+#define CHASE_TIME 1000
+
+#define LEVEL_TIME 5000
+
 
 #include "Header.h"
 #include "constans.h"
@@ -103,9 +108,11 @@ public:
 
 	int changeDirectionCounter;
 
-	bool mode_chase = false;
+	bool mode_chase;
 	int dest;
 	int chase_which_player;
+	int chase_time;
+	int not_chase_time;
 
 	Monster();
 
@@ -170,6 +177,8 @@ public:
 	Monster monsters[MONSTERS];
 	void initMonsters();
 	void checkMonsterCollisions(Player &p);
+	bool checkoneMonsterCollisions(Player &p, Monster &m);
+
 	void handleMonsterCollisions();
 	void updateMonsters();
 

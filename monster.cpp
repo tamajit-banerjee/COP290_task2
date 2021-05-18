@@ -24,12 +24,28 @@ void Game::initMonsters(){
     srand(10*level);
     monsters[0].setPosCenter(0 + rand()%5, 0 + rand()%5);
     monsters[0].dest = rand()%(MAZECOLS*MAZEROWS);
-    monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
-    monsters[1].dest = rand()%(MAZECOLS*MAZEROWS);
-    monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
-    monsters[2].dest = rand()%(MAZECOLS*MAZEROWS);
-    monsters[3].setPosCenter(5 + rand()%5, 5 + rand()%5);
-    monsters[3].dest = rand()%(MAZECOLS*MAZEROWS);
+    monsters[0].chase_which_player = 0;
+    monsters[0].mode_chase = true;
+    monsters[0].chase_time = 0;
+    monsters[0].not_chase_time = 0;
+    // monsters[1].setPosCenter(5 + rand()%5, 0 + rand()%5);
+    // monsters[1].dest = rand()%(MAZECOLS*MAZEROWS);
+    // monsters[1].chase_which_player = 0;
+    // monsters[1].mode_chase = false;
+    // monsters[1].chase_time = 0;
+    // monsters[1].not_chase_time = 0;
+    // monsters[2].setPosCenter(0 + rand()%5, 5 + rand()%5);
+    // monsters[2].dest = rand()%(MAZECOLS*MAZEROWS);
+    // monsters[2].chase_which_player = 1;
+    // monsters[2].mode_chase = false;
+    // monsters[2].chase_time = 0;
+    // monsters[2].not_chase_time = 0;
+    // monsters[3].setPosCenter(5 + rand()%5, 5 + rand()%5);
+    // monsters[3].dest = rand()%(MAZECOLS*MAZEROWS);
+    // monsters[3].chase_which_player = 0;
+    // monsters[3].mode_chase = true;
+    // monsters[3].chase_time = 0;
+    // monsters[3].not_chase_time = 0;
 }
 
 void Monster::move(int s){
@@ -114,6 +130,7 @@ void Game::checkMonsterCollisions(Player &p){
     }
 }
 
+
 void Game::handleMonsterCollisions(){
     checkMonsterCollisions(sPlayer);
     checkMonsterCollisions(cPlayer);
@@ -180,10 +197,34 @@ bool centre(Monster & m ){
     return (m.xpos + m.width/2 - CELL_SIZE/2)%CELL_SIZE == 0 && (m.ypos + m.height/2 - CELL_SIZE/2)%CELL_SIZE == 0 ;
 }
     
+
+
+bool Game::checkoneMonsterCollisions(Player &p, Monster &m){
+        SDL_Rect destR , srcR;
+        destR.h = p.height;
+        destR.w = p.width;
+        destR.x = p.xpos;
+        destR.y = p.ypos;
+        srcR.h = m.height;
+        srcR.w = m.width;
+        srcR.x = m.xpos;
+        srcR.y = m.ypos;
+        SDL_Rect *d = &destR;
+        SDL_Rect *b = &srcR;
+        if(SDL_HasIntersection(d,b)){
+            return true;
+        }else{
+            return false;
+        }
+}
+
 void Game::updateMonsters(){
     for(int i = 0 ; i<MONSTERS; i++){
        // bool tochange = false;
         
+
+      //   std::cout<<monsters[i].mode_chase<<" "<<monsters[i].chase_time<<" "<<monsters[i].not_chase_time<<"\n";
+
         if(centre(monsters[i])){
             SDL_Rect rect;
             
@@ -193,9 +234,40 @@ void Game::updateMonsters(){
             resetDirections(monsters[i]);
             if(maze[i_j.first][i_j.second].id == 15)
                 continue;
+            
+        if(monsters[i].mode_chase){
+               ++monsters[i].chase_time;
+                if( monsters[i].chase_which_player ==  0 ){
+                    std::pair<int, int> pos = sPlayer.getMazeCoordinates(rect);
+                    int s = pos.first * MAZECOLS + pos.second;
+                    monsters[i].dest = s;
+                    if(checkoneMonsterCollisions(sPlayer,monsters[i]) || monsters[i].chase_time ==  MAZECOLS*MAZEROWS ){
+                        monsters[i].mode_chase = false;
+                        monsters[i].not_chase_time = 0;
+                    }
+
+                }else{
+                    std::pair<int, int> pos = cPlayer.getMazeCoordinates(rect);
+                    int s = pos.first * MAZECOLS + pos.second;
+                    monsters[i].dest = s;
+                    if(checkoneMonsterCollisions(cPlayer,monsters[i]) || monsters[i].chase_time ==  MAZECOLS*MAZEROWS ){
+                        monsters[i].mode_chase = false;
+                        monsters[i].not_chase_time = 0;
+                    }
+                }
+        }
+        
+        if(!monsters[i].mode_chase){
 
         while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second){
             monsters[i].dest = rand()%(MAZEROWS*MAZECOLS);
+        }
+            
+            ++monsters[i].not_chase_time;
+            if(monsters[i].not_chase_time == 20 ){
+                monsters[i].mode_chase = true;
+                monsters[i].chase_time = 0 ;
+            }
         }
             
             int random = maze[i_j.first][i_j.second].to_go[monsters[i].dest];
