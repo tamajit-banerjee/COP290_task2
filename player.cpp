@@ -39,7 +39,8 @@ void Player::encode(int x[]){
     x[1] = ypos;
     x[2] = attack;
     x[3] = attack_dir;
-    x[4] = playerId;
+    x[4] = attack_counter;
+    x[5] = playerId;
 
 }
 
@@ -50,7 +51,8 @@ void Player::decode(int y[]){
     ypos = y[1];
     attack = y[2];
     attack_dir = y[3];
-    playerId = y[4];
+    attack_counter = y[4];
+    playerId = y[5];
 }
 
 void Player::set_time(int t){

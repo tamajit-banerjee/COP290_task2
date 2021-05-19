@@ -35,7 +35,7 @@ void Game:: updateBullets(Player &p){
     std::vector<Bullet> new_bullets;
     for(int i=0;i<p.bullets.size();i++){
        std::pair<int, int> pa =  p.bullets[i].move(SPEED*2);
-    if(!checkWallCollisions(pa.first, pa.second, p.bullets[i].position.w, p.bullets[i].position.h)){
+    if(!checkWallCollisions(pa.first, pa.second, p.bullets[i].position.w, p.bullets[i].position.h) && !checkMonsterCollisions_Bullet(p.bullets[i])){
         p.bullets[i].position.x = pa.first; p.bullets[i].position.y = pa.second;
         new_bullets.push_back(p.bullets[i]);
     }

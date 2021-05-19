@@ -186,7 +186,8 @@ public:
 
 	Monster monsters[MONSTERS];
 	void initMonsters();
-	void checkMonsterCollisions(Player &p);
+	void checkMonsterCollisions_Player(Player &p);
+	bool checkMonsterCollisions_Bullet(Bullet &b);
 	bool checkoneMonsterCollisions(Player &p, Monster &m);
 
 	void handleMonsterCollisions();

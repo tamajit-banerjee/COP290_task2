@@ -108,7 +108,7 @@ bool iscolliding(Player p, Monster m){
     
 }
 
-void Game::checkMonsterCollisions(Player &p){
+void Game::checkMonsterCollisions_Player(Player &p){
     for(int i = 0; i< MONSTERS; i++){
         // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
         // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
@@ -130,10 +130,30 @@ void Game::checkMonsterCollisions(Player &p){
     }
 }
 
+bool Game::checkMonsterCollisions_Bullet(Bullet &b){
+    for(int i = 0; i< MONSTERS; i++){
+        // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
+        // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
+        SDL_Rect destR , srcR;
+        destR = b.position;
+        srcR.h = monsters[i].height;
+        srcR.w = monsters[i].width;
+        srcR.x = monsters[i].xpos;
+        srcR.y = monsters[i].ypos;
+        SDL_Rect *d = &destR;
+        SDL_Rect *b = &srcR;
+        if(SDL_HasIntersection(d,b)){
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 void Game::handleMonsterCollisions(){
-    checkMonsterCollisions(sPlayer);
-    checkMonsterCollisions(cPlayer);
+    checkMonsterCollisions_Player(sPlayer);
+    checkMonsterCollisions_Player(cPlayer);
 
     sPlayer.freeze_counter++;
     cPlayer.freeze_counter++;
