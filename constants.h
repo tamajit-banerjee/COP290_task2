@@ -52,6 +52,8 @@
 
 #define COIN_DIST 2
 
+#define MONSTER_DIST 4
+
 #define PERISCOPE 1
 
 #endif

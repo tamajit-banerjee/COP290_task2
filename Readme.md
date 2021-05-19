@@ -17,7 +17,7 @@ As the players move about collecting coins, they have to carefully weigh their o
 # Algorithmic Details
 
 ### The Player
-
+    
 ### The monster
 
 ### The maze cell

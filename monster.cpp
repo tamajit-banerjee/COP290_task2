@@ -280,7 +280,7 @@ void Game::updateMonsters(){
         
         if(!monsters[i].mode_chase){
 
-        while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second){
+        while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second || abs(i_j.first - monsters[i].dest/MAZECOLS) + abs(i_j.second - monsters[i].dest%MAZECOLS) <= MONSTER_DIST ){
             monsters[i].dest = rand()%(MAZEROWS*MAZECOLS);
         }
             
@@ -312,6 +312,8 @@ void Game::updateMonsters(){
                     monsters[i].down = 1; break;
             }
         }
+
+        
 //        if(monsters[i].changeDirectionCounter == 0){
 //            tochange = true;
 //        }
