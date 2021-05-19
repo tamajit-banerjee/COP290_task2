@@ -246,6 +246,11 @@ void Game::renderPeriscope(){
     dstR.x = 0; dstR.y = 0;
     dstR.w = 2*SCREEN_WIDTH; 
     dstR.h = 2*SCREEN_HEIGHT;
+
+    if(level == 3){
+        dstR.w = 1.5*dstR.w; 
+        dstR.h = 1.5*dstR.h;
+    }
     if(isServer){
         dstR.x = sPlayer.xpos + sPlayer.width/2 - dstR.w/2;
         dstR.y = sPlayer.ypos + sPlayer.height/2 - dstR.h/2 + SCORE_DISPLAY_HEIGHT;

@@ -247,7 +247,8 @@ void Game::render(){
     sPlayer.draw(renderer, font);
     cPlayer.draw(renderer, font);
 
-    renderPeriscope();
+    if(level >= 3)
+        renderPeriscope();
 
     sPlayer.dispName(renderer, font, 100, -SCORE_DISPLAY_HEIGHT + SCORE_DISPLAY_HEIGHT/4);
     sPlayer.dispScore(renderer, font, 50, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);

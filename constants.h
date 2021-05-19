@@ -52,4 +52,6 @@
 
 #define COIN_DIST 2
 
+#define PERISCOPE 1
+
 #endif
