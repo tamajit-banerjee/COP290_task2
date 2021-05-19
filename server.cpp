@@ -40,9 +40,11 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     ask_for_name(renderer, font, sname, true);
 
     game->sPlayer.name = sname;
-    game->cPlayer.name = cname;
     game->isServer = true;
     game->askPlayerAvatar();
+    
+
+
 
     SDL_RenderClear(renderer);
     disp_text_center(renderer, "Waiting for Player 2 to join" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
@@ -62,7 +64,10 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     {
         perror("Failed to accept from client!");
     }
-        
+
+    // Sending Player id
+    bytes_sent = send(newsockfd, &game->sPlayer.playerId, sizeof(game->sPlayer.playerId), 0);
+     
     ptr_cli_ip = inet_ntop(AF_INET, &cli_addr.sin_addr, cli_ip, cli_size);
     std::cout<<"Server received connections from "<<cli_ip<<std::endl;
     SDL_RenderClear(renderer);
@@ -70,6 +75,7 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
     static int flag = 0;
     bytes_recvd = recv(newsockfd, &cname, sizeof(cname), 0);
+    game->cPlayer.name = cname;
     if (bytes_recvd == -1 && flag == 0)
     {
         memset(&cname, 0, sizeof(cname));

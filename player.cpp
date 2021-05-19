@@ -257,10 +257,17 @@ void Game::askPlayerAvatar(){
     SDL_Event e;
     int position = 0;
     int ok = false;
+    bool showError = false;
+    int SDL_keys[] = {SDLK_0, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6, SDLK_7};
     while (!ok) {
+
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_KEYDOWN) {
-                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_7)) {
+                if ((e.key.keysym.sym >= SDL_keys[0] && e.key.keysym.sym <= SDL_keys[7])) {
+                    if(!isServer && e.key.keysym.sym == SDL_keys[sPlayer.playerId]){
+                        showError = true;
+                        continue;
+                    }
                     if (position > 0) {
                         position = 0;
                     }
@@ -298,10 +305,25 @@ void Game::askPlayerAvatar(){
 
         usleep(200);
         SDL_RenderClear(renderer);
+
+        if(showError){
+            char * intChars[] = {"0", "1", "2", "3", "4", "5", "6", "7"};
+            char * splayerAvatar = intChars[sPlayer.playerId];
+            const char* c = "Player 1 has chosen Avatar ";
+            char* full_text;
+            full_text=static_cast<char *>(malloc(strlen(c)+strlen(splayerAvatar)));
+            strcpy(full_text,c);
+            strcat(full_text,splayerAvatar);
+            disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+145);
+            disp_text_center(renderer, "Please Chose a different avatar!", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+165);
+        }
+            
         if(isServer)
             disp_text_center(renderer, "Player 1" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
-        else    
+        else{
             disp_text_center(renderer, "Player 2" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+        }    
+            
         char c[] = "Please chose Your Avatar";
         disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2)+10, int(SCREEN_HEIGHT/2)-20);
         disp_text_center(renderer, id , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+120);

@@ -48,9 +48,13 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         
     ask_for_name(renderer, font, cname, false);
     game->cPlayer.name = cname;
-    game->sPlayer.name = sname;
     game->isServer = false;
+    int playerId;
+    // Receiving Player id
+    bytes_recvd = recv(sockfd, &playerId, sizeof(playerId), 0);
+    game->sPlayer.playerId = playerId;
     game->askPlayerAvatar();
+
     
     static int flag = 0;
     bytes_sent = send(sockfd, &cname, sizeof(cname), 0);
@@ -63,9 +67,11 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         flag = 1;
         memset(&sname, 0, sizeof(sname));
         bytes_recvd = recv(sockfd, &sname, sizeof(sname), 0);
+        
         if (bytes_recvd == -1)
             std::cout<<"COULD NOT ACQUIRE PLAYER INFORMATION!"<<std::endl<<"Trying Again..."<<std::endl;
         else{
+                game->sPlayer.name = sname;
                 const char* c = "You have joined  ";
                 const char* last = " for a game ";
                 char* full_text;
