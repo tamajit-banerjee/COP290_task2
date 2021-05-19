@@ -116,10 +116,10 @@ void Game::checkMonsterCollisions_Player(Player &p, bool playerIsServer){
         destR.w = p.width;
         destR.x = p.xpos;
         destR.y = p.ypos;
-        srcR.h = monsters[i].height;
-        srcR.w = monsters[i].width;
-        srcR.x = monsters[i].xpos;
-        srcR.y = monsters[i].ypos;
+        srcR.h = monsters[i].height / 1.5;
+        srcR.w = monsters[i].width  / 1.5;
+        srcR.x = monsters[i].xpos + monsters[i].width / 2 - srcR.w/2;
+        srcR.y = monsters[i].ypos + monsters[i].height / 2 - srcR.h/2;
         SDL_Rect *d = &destR;
         SDL_Rect *b = &srcR;
         if(SDL_HasIntersection(d,b)){
@@ -137,10 +137,10 @@ bool Game::checkMonsterCollisions_Bullet(Bullet &b){
         // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
         SDL_Rect destR , srcR;
         destR = b.position;
-        srcR.h = monsters[i].height;
-        srcR.w = monsters[i].width;
-        srcR.x = monsters[i].xpos;
-        srcR.y = monsters[i].ypos;
+        srcR.h = monsters[i].height / 1.5;
+        srcR.w = monsters[i].width  / 1.5;
+        srcR.x = monsters[i].xpos + monsters[i].width / 2 - srcR.w/2;
+        srcR.y = monsters[i].ypos + monsters[i].height / 2 - srcR.h/2;
         SDL_Rect *d = &destR;
         SDL_Rect *b = &srcR;
         if(SDL_HasIntersection(d,b)){
@@ -280,7 +280,7 @@ void Game::updateMonsters(){
         
         if(!monsters[i].mode_chase){
 
-        while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second || abs(i_j.first - monsters[i].dest/MAZECOLS) + abs(i_j.second - monsters[i].dest%MAZECOLS) <= MONSTER_DIST ){
+        while(monsters[i].dest == i_j.first*MAZECOLS + i_j.second){
             monsters[i].dest = rand()%(MAZEROWS*MAZECOLS);
         }
             
@@ -312,8 +312,6 @@ void Game::updateMonsters(){
                     monsters[i].down = 1; break;
             }
         }
-
-        
 //        if(monsters[i].changeDirectionCounter == 0){
 //            tochange = true;
 //        }

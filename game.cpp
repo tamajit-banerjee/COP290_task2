@@ -16,7 +16,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     loadTexture("time", "resources/time.bmp");
     loadTexture("bullet", "resources/bullet.bmp");
     loadTexture("periscope", "resources/periscope.bmp");
-    loadTexture("freeze", "resources/freeze.bmp");
+    loadTexture("freeze", "resources/players_freeze.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;

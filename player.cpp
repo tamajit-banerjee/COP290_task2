@@ -115,11 +115,7 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         disp_text(renderer,  "2", font, xpos + width, ypos+20);
 
     if(freeze){
-        destR.h = 2*width + width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
-        destR.w = 2*width+ width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
-        destR.x = xpos + width/2 - destR.w/2;
-        destR.y = ypos + height/2 - destR.h/2 + SCORE_DISPLAY_HEIGHT;
-        SDL_RenderCopyEx(renderer, freezeTex,  NULL, &destR, 0.0, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, freezeTex,  &srcR, &destR, 0.0, NULL, SDL_FLIP_NONE);
     }
     
 }
