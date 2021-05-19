@@ -286,7 +286,7 @@ void Game::updateMonsters(){
         }
             
             ++monsters[i].not_chase_time;
-            if(monsters[i].not_chase_time == NON_CHASE_TIME/level){
+            if(monsters[i].not_chase_time == NON_CHASE_TIME/level && i!= 1 && i!= 2){
                 monsters[i].mode_chase = true;
                 monsters[i].chase_time = 0 ;
             }

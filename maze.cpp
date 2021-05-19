@@ -555,10 +555,15 @@ void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
     
     int random_i = rand() % MAZEROWS;
     int random_j = rand() % MAZECOLS;
+    SDL_Rect rect;
+    rect.x = 0; rect.y = 0;
+    rect.w = CELL_SIZE; rect.h = CELL_SIZE;
+    std::pair<int, int> s_i_j = sPlayer.getMazeCoordinates(rect);
+    std::pair<int, int> c_i_j = cPlayer.getMazeCoordinates(rect);
     if(playerOnCoin(p, m)){
         if((playerIsServer && isServer) || (!playerIsServer && !isServer))
             sounds.play("coin", false);
-        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
+        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true || abs(random_i - s_i_j.first) + abs(random_j - s_i_j.second) <= COIN_DIST || abs(random_i - c_i_j.first) + abs(random_j - c_i_j.second) <= COIN_DIST ){
             random_i = rand() % MAZEROWS;
             random_j = rand() % MAZECOLS;
         }
@@ -570,7 +575,9 @@ void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
     if(playerOnTime(p, m)){
         if((playerIsServer && isServer) || (!playerIsServer && !isServer))
             sounds.play("time", false);
-        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
+
+        
+        while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true || abs(random_i - s_i_j.first) + abs(random_j - s_i_j.second) <= COIN_DIST || abs(random_i - c_i_j.first) + abs(random_j - c_i_j.second) <= COIN_DIST ){
             random_i = rand() % MAZEROWS;
             random_j = rand() % MAZECOLS;
         }

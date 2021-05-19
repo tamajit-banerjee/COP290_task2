@@ -50,4 +50,6 @@
 #define SCORE_DISPLAY_HEIGHT 100
 #define SLEEP_UNIT 100
 
+#define COIN_DIST 2
+
 #endif
