@@ -13,7 +13,8 @@ int main(){
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
     TTF_Font *font;
-    font = TTF_OpenFont("resources/m5x7.ttf", 24);
+    font = TTF_OpenFont("assets/resources/m5x7.ttf", 24);
+
     window = SDL_CreateWindow(
             "game",
             SDL_WINDOWPOS_UNDEFINED,

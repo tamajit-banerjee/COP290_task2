@@ -89,21 +89,21 @@ Sounds::Sounds() :
 {
     
    //set sound paths
-   soundpaths[0] = "sounds/intro.wav";
+   soundpaths[0] = "assets/sounds/intro.wav";
    soundnames[0] = "start";
-   soundpaths[1] = "sounds/clock.wav";
+   soundpaths[1] = "assets/sounds/clock.wav";
    soundnames[1] = "clock";
-   soundpaths[2] = "sounds/coin_eat.wav";
+   soundpaths[2] = "assets/sounds/coin_eat.wav";
    soundnames[2] = "coin";
-   soundpaths[3] = "sounds/time_eat.wav";
+   soundpaths[3] = "assets/sounds/time_eat.wav";
    soundnames[3] = "time";
-   soundpaths[4] = "sounds/death.wav";
+   soundpaths[4] = "assets/sounds/death.wav";
    soundnames[4] = "death";
-   soundpaths[5] = "sounds/freeze.wav";
+   soundpaths[5] = "assets/sounds/freeze.wav";
    soundnames[5] = "freeze";
-   soundpaths[6] = "sounds/shoot.wav";
+   soundpaths[6] = "assets/sounds/shoot.wav";
    soundnames[6] = "shoot";
-   soundpaths[7] = "sounds/level_end.wav";
+   soundpaths[7] = "assets/sounds/level_end.wav";
    soundnames[7] = "level_end";
    
 }

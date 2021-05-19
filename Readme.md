@@ -19,7 +19,7 @@ The primary directive in the game is to increase score. The player with the high
 Finally, a level ends when both players' time runs out. 
 
 <p align="center">
-  <img src="images/ss1.jpeg" width="400"/><br>
+  <img src="assets/images/ss1.jpeg" width="400"/><br>
   Screen of the game
 </p>
 
@@ -53,7 +53,7 @@ We start wil a maze where each cell has all of its walls intact. Gradually, usin
 The players are given an option to chose from 8 different avatars (gender-inclusive). 
 
 <p align="center">
-  <img src="images/avatars.jpeg" width="400"/><br>
+  <img src="assets/images/avatars.jpeg" width="400"/><br>
   The different Avatars
 </p>
 
@@ -62,7 +62,7 @@ The players are given an option to chose from 8 different avatars (gender-inclus
 Our maze is generated every time a level starts. We display this process of maze generation to the player.
 
 <p align="center">
-    <img src="images/maze_animations.gif" width="400"/> <br>
+    <img src="assets/images/maze_animations.gif" width="400"/> <br>
   This is a gif of when the maze is being generated using the Kruskal's algorithm
 </p>
 
@@ -70,6 +70,6 @@ Our maze is generated every time a level starts. We display this process of maze
 
 We have added a feature where each player cannot see the entire maze, but only some neighbouring region around their current location. 
 <p align="center">
-  <img src="images/ss2.jpeg" width="800"/><br>
+  <img src="assets/images/ss2.jpeg" width="800"/><br>
   Partial Visibility
 </p>

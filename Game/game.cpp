@@ -9,14 +9,14 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     isRunning = true;
 
     // loadTexture("player", "resources/player.bmp");
-    loadTexture("player", "resources/players_combined.bmp");
-    loadTexture("monster", "resources/monster.bmp");
-    loadTexture("maze", "resources/maze.bmp");
-    loadTexture("coin", "resources/coins.bmp");
-    loadTexture("time", "resources/time.bmp");
-    loadTexture("bullet", "resources/bullet.bmp");
-    loadTexture("periscope", "resources/periscope.bmp");
-    loadTexture("freeze", "resources/players_freeze.bmp");
+    loadTexture("player", "assets/resources/players_combined.bmp");
+    loadTexture("monster", "assets/resources/monster.bmp");
+    loadTexture("maze", "assets/resources/maze.bmp");
+    loadTexture("coin", "assets/resources/coins.bmp");
+    loadTexture("time", "assets/resources/time.bmp");
+    loadTexture("bullet", "assets/resources/bullet.bmp");
+    loadTexture("periscope", "assets/resources/periscope.bmp");
+    loadTexture("freeze", "assets/resources/players_freeze.bmp");
 
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
