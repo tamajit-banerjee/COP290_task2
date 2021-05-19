@@ -2,7 +2,9 @@
 #define menu_hpp
 
 #include <unistd.h>
-#include "game.h"
+#include "constants.h"
+#include "Header.h"
+#include "font.hpp"
 
 void server_or_client(SDL_Renderer *renderer, char *menu, TTF_Font *font);
 void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char* ip);

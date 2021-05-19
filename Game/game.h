@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Header.h"
-#include "constants.h"
-#include "font.hpp"
-#include "menu.hpp"
-#include "sounds.h"
+#include "../Helper/Header.h"
+#include "../Helper/constants.h"
+#include "../Helper/font.hpp"
+#include "../Helper/menu.hpp"
+#include "../Helper/sounds.h"
 
 #include <chrono>
 #include <thread>

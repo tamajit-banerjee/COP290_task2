@@ -1,10 +1,10 @@
-#include "Header.h"
-#include "client.hpp"
-#include "server.hpp"
-#include "constants.h"
-#include "font.hpp"
-#include "menu.hpp"
-#include "game.h"
+#include "Helper/Header.h"
+#include "Network/client.hpp"
+#include "Network/server.hpp"
+#include "Helper/constants.h"
+#include "Helper/font.hpp"
+#include "Helper/menu.hpp"
+#include "Game/game.h"
 
 int main(){
     // char menu = 's';
