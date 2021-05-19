@@ -44,9 +44,10 @@ void Game::levelStart(int arg_level , int seedx ){
         SDL_RenderPresent(renderer);
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
         if(toQuit()){
-            isServer = false;
+            isRunning = false;
             return;
         }
+        
     }
 
     sounds.play("clock", true, 20);
@@ -98,7 +99,7 @@ void Game::levelEnd()
 
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
         if(toQuit()){
-            isServer = false;
+            isRunning = false;
             return;
         }
     }

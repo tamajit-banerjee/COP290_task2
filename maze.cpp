@@ -551,7 +551,7 @@ bool playerOnTime(Player & p, MazeCell & m){
 }
 
 void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
-    srand(seedi + sPlayer.get_time() + cPlayer.get_time()  );
+   // srand(seedi + sPlayer.get_time() + cPlayer.get_time()  );
     
     int random_i = rand() % MAZEROWS;
     int random_j = rand() % MAZECOLS;

@@ -126,6 +126,12 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
         bytes_recvd = recv(sockfd, &seedi, sizeof(seedi), 0);
         
         game->levelStart(level,seedi);
+
+            isClientRunning = game->running();
+            bytes_sent = send(sockfd, &isClientRunning, sizeof(isClientRunning), 0);
+            bytes_recvd = recv(sockfd, &isServerRunning, sizeof(isServerRunning), 0);
+            game->isRunning = isServerRunning && isClientRunning;
+
         
         while (game->running() && game->isLevelRunning) {
 
@@ -155,6 +161,12 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         }
         game->levelEnd();
+
+            isClientRunning = game->running();
+            bytes_sent = send(sockfd, &isClientRunning, sizeof(isClientRunning), 0);
+            bytes_recvd = recv(sockfd, &isServerRunning, sizeof(isServerRunning), 0);
+            game->isRunning = isServerRunning && isClientRunning;
+
     }
     
     close(sockfd);
