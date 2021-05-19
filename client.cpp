@@ -115,6 +115,8 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     int isClientRunning;
     int isServerRunning;
 
+    int badNetworkCounter = 0;
+
     for (int level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
@@ -140,9 +142,29 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
             
             game->cPlayer.encode(cplayerInfo);
-            
+
+            int time1 = std::chrono::system_clock::now().time_since_epoch().count(); 
                 bytes_sent = send(sockfd, &cplayerInfo, sizeof(cplayerInfo), 0);
+            int time2 = std::chrono::system_clock::now().time_since_epoch().count(); 
                 bytes_recvd = recv(sockfd, &splayerInfo, sizeof(splayerInfo), 0);
+            int time3 = std::chrono::system_clock::now().time_since_epoch().count(); 
+            
+            if(time2 - time1 > 1000*NETWORK_THRESHOLD || time3 - time2 > 1000*NETWORK_THRESHOLD){
+                badNetworkCounter++;
+                if(badNetworkCounter > 0){
+                    for(int i = 0; i< SLEEP_UNIT; i++){
+                        SDL_RenderClear(renderer);
+                        disp_text_center(renderer, "Slow Network. Taking too long to connect!" , font, int(SCREEN_WIDTH/2) , int(SCREEN_HEIGHT/3));
+                        SDL_RenderPresent(renderer);
+                        if(game->toQuit()){
+                            close(sockfd);
+                            return 0;
+                        }
+                        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                    }
+
+                }
+            }
 
             game->sPlayer.decode(splayerInfo);
 
@@ -174,6 +196,35 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     for(int i = 0; i< SLEEP_UNIT; i++){
         SDL_RenderClear(renderer);
         disp_text_center(renderer, "Thank You for playing", font, int(SCREEN_WIDTH/2) , int(SCREEN_HEIGHT/3));
+        SDL_RenderPresent(renderer);
+        if(game->toQuit()){
+            return 0;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+
+
+    for(int i = 0; i< SLEEP_UNIT; i++){
+        
+        const char* c = "The winner is: ";
+        char* full_text;
+        if(game->sPlayer.score > game->cPlayer.score){
+            full_text=static_cast<char *>(malloc(strlen(c)+strlen(game->sPlayer.name)));
+            strcpy(full_text,c);
+            strcat(full_text,game->sPlayer.name);
+        }
+        else if(game->sPlayer.score < game->cPlayer.score){
+            full_text=static_cast<char *>(malloc(strlen(c)+strlen(game->cPlayer.name)));
+            strcpy(full_text,c);
+            strcat(full_text,game->cPlayer.name);
+        }
+        else{
+            full_text = "Its a Tie!";
+        }
+
+        SDL_RenderClear(renderer);
+        disp_text_center(renderer, "RESULTS", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
+        disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)+50);
         SDL_RenderPresent(renderer);
         if(game->toQuit()){
             return 0;

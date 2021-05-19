@@ -15,6 +15,7 @@
 
 #define CLIENT_FRAME_TIME 15
 #define SERVER_FRAME_TIME 15
+#define NETWORK_THRESHOLD 100
 
 #define COIN_SIZE (CELL_SIZE / 2)
 #define COIN_SCORE 10
@@ -38,6 +39,7 @@
 #define SEPARATOR '|'
 #define WALL_RATIO 20
 
+#define BULLET_COST 5
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 8
 

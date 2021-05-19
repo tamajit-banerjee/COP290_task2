@@ -77,6 +77,10 @@ void Player::setPosCenter(int i, int j){
 }
 
 void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
+    if(final_freeze){
+        disp_text(renderer,  "OUT", font, xpos + width, ypos+20);
+        return;
+    }
     SDL_Rect destR;
     destR.h = height;
     destR.w = width;

@@ -201,11 +201,12 @@ void Game::update(){
         sPlayer.ypos = s_p.second;
     }
 
-    if(sPlayer.attack && sPlayer.attack_counter%1000 == 1 ){
+    if(sPlayer.attack && sPlayer.attack_counter%1000 == 1 && sPlayer.score >= BULLET_COST){
         if(isServer)
             sounds.play("shoot", false, 50);
         Bullet b(sPlayer.xpos + sPlayer.width/2 - BULLET_WIDTH/2,sPlayer.ypos + sPlayer.height/2 - BULLET_HEIGHT/2  ,sPlayer.attack_dir);
         sPlayer.bullets.push_back(b);
+        sPlayer.score -= BULLET_COST;
     }
 
     if(sPlayer.attack)
@@ -219,11 +220,12 @@ void Game::update(){
     if(!checkWallCollisions(cPlayer.xpos, c_p.second, cPlayer.width, cPlayer.height)){
         cPlayer.ypos = c_p.second;
     }
-    if(cPlayer.attack && cPlayer.attack_counter%1000 == 1 ){
+    if(cPlayer.attack && cPlayer.attack_counter%1000 == 1 && cPlayer.score >= BULLET_COST){
         if(!isServer)
             sounds.play("shoot", false, 50);
         Bullet b(cPlayer.xpos + cPlayer.width/2 - BULLET_WIDTH/2, cPlayer.ypos + cPlayer.height/2 - BULLET_HEIGHT/2 , cPlayer.attack_dir);
         cPlayer.bullets.push_back(b);
+        cPlayer.score -= BULLET_COST;
     }
 
     if(cPlayer.attack)

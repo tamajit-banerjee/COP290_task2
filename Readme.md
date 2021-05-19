@@ -1,24 +1,75 @@
-# 
+# A Game of Time
 
-A simple maze-based two-player game written in C++, using SDL and socket programming!
+A maze-based two-player game written in C++, using SDL and socket programming!
 
 ## Basic Outline of Game
 
-As a player roams around in a randomly generated maze, each of the two players tries to collect coins to increase their score. As with life, their time in the game is limited, and a constant stop-watch tells them how long they have left. The players also have the option of eating a 'clock' that grants them extra time (thus extending their life).
+As a player roams around in a randomly generated maze, he/she tries to collect coins to increase his/her score. As with life, their time in the game is limited, and a constant stop-watch tells them how long they have left. The players also have the option of eating a 'clock' (time booster) that grants them extra time (thus extending their life).
 
-The players cannot move freely in the maze though. Randomly located in the maze are four monsters! Two of the monsters chase the players (one each), and can randomly stop chasing them and again randomlty start chasing them. The players constantly need to take care that they are not eaten by a monster. We believe in second chances, and all players are given quite a few chances. On being hit by a monster, the player does not simply die, and merely loses some time (shortening their life).
+The players cannot move freely in the maze though. Randomly located in the maze are four monsters! Two of the monsters chase the players (one each), and can randomly stop chasing them and again randomly start chasing them. The players constantly need to take care that they are not eaten by a monster. We believe in second chances, and all players are given quite a few chances. On being hit by a monster, the player does not simply die, and loses some time (shortening their life).
 
-As the players move about collecting coins, they have to carefully weigh their options. Being eaten by a monster is not the end of the world, so they may sometimes chose to go right through a monster. Again they have to decide whether to go towards coins or times.
+As the players move about collecting coins, they have to carefully weigh their options. Being eaten by a monster is not the end of the world, so they may sometimes chose to go right through a monster. Again they have to decide whether to collect coins or times. Getting coins to increase the score is the ultimate objective, but having more time will also eventually help in increasing score. The time boosters on the maze eventually reduce and after some point, new time boosters are no longer respawn. (we have not cracked immortality, yet)
+
+The amount of randomness involved in the game is sufficient to keep the player guessing for a sure shot winning strategy. To make it even harder to guess the outcome of a game, random walls from the maze are removed at regular intervals, so that the players can have more options to escape the monsters, and also more paths to reach to the coin or time they have in sight.
+
+As the game progresses, multiple levels are introduced with harder obstacles. With subsequent levels, the monsters become more aggressive, chasing their dream player more often than before. At the third level, we introduce partial visibility (modelling realistic light-outs). As the players go to the final level, the visibility reduces further, with only just a few neighbouring cells visible.
+
+The primary directive in the game is to increase score. The player with the higher score wins! Aside from increasing one's own score, a player can also chose to reduce their fellow player's score. We facilitate such evil intentions by allowing players to shoot bullets to each other. The bullets again freeze players and waste their precious, score-giving time. To promote fairness, we introduce a cost to each bullet, and shooting your fellow players will reduce your score.
+
+Finally, a level ends when both players' time runs out. 
+
+<p align="center">
+  <img src="images/ss1.jpeg" width="400"/>
+  Screen of the game
+</p>
 
 ## Some rules
 
-## How to win
+1) Players can collect coins and time boosters. Players can move with the arrow keys (up, down, right left)
+2) Players can shoot bullets to other players with w, a, s, and d keys
+3) The maze gets generated randomly in each level and in each run of the game. 
+4) Two monsters chase after players (one for each player) and two more monsters move about randomly.
 
 # Algorithmic Details
 
-### The Player
+### The player
+
+The player on-screen responds to the human player's key press movements and changes its location accordingly. While the game is going on, the server keeps sending its player's information (position, id, bullets etc) and receives the info of the client player. This is how the two games are being synchronised. Appropriate error messages are displayed when a receive was expected but absent or when a send failed. Again, information about whether the player has quit or is still playing is also exchanged here. 
     
 ### The monster
 
+The monsters demonstrate intelligennt movements in addition to their random nature. At the center of every maze cell, a monster will either decide to chase a player or go to some other cell location in a different quadrant (quarter portion of the maze). The monster keeps doing this movement for some random amount of time and after it has travelled for some number of cells, it again decides to chase or move randomly. 
+
+
 ### The maze cell
 
+We start wil a maze where each cell has all of its walls intact. Gradually, using Kruskal's algorithm, we chose walls and remove them to eventually create our maze. The maze uses random number generators so that different mazes can be generated across levels. Also, its seed is set by the global time the game starts running. Now, this seed is assigned only in the server and this seed is sent to the client via our sockets. Thus, with the same seed, we obtain a random, yet deterministic (same for both players) game. 
+
+
+# Special Features
+
+#### Mupltiple Avatars
+
+The players are given an option to chose from 8 different avatars (gender-inclusive). 
+
+<p align="center">
+  <img src="images/avatars.jpeg" width="400"/>
+  The different Avatars
+</p>
+
+#### Maze Generation Animations
+
+Our maze is generated every time a level starts. We display this process of maze generation to the player.
+
+<p align="center">
+    <img src="images/maze_animations.gif" width="400"/> 
+  This is a gif of when the maze is being generated using the Kruskal's algorithm
+</p>
+
+#### Partial Visibility
+
+We have added a feature where each player cannot see the entire maze, but only some neighbouring region around their current location. 
+<p align="center">
+  <img src="images/ss2.jpeg" width="800"/>
+  Partial Visibility
+</p>
