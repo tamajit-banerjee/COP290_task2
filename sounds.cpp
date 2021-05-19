@@ -21,6 +21,14 @@ void Sounds::stop(int i) {
    if (Mix_Playing(i))
        Mix_HaltChannel(i);
 }
+
+void Sounds::play(char *soundName, bool looped, int volume){
+    for(int i = 0; i<NUMOFSOUNDS; i++){
+        if(strcmp(soundName, soundnames[i]) == 0)
+            return play(i, looped, volume);
+    }
+    std::cout<<"Error: sound trying to play does not exist\n";
+}
  
 void Sounds::play(int i, bool looped, int volume) {
    /* frequency used to be a parameter here until switching to sdl
@@ -79,20 +87,25 @@ bool Sounds::init() {
 Sounds::Sounds() :
        on(true), isinit(false)
 {
+    
    //set sound paths
    soundpaths[0] = "sounds/intro.wav";
-   soundpaths[1] = "sounds/update.wav";
+   soundnames[0] = "start";
+   soundpaths[1] = "sounds/clock.wav";
+   soundnames[1] = "clock";
    soundpaths[2] = "sounds/coin_eat.wav";
+   soundnames[2] = "coin";
    soundpaths[3] = "sounds/time_eat.wav";
+   soundnames[3] = "time";
    soundpaths[4] = "sounds/death.wav";
-   // soundpaths[5] = "sounds/fruit.wav";
-   // soundpaths[6] = "sounds/extra_man.wav";
-   // soundpaths[7] = "sounds/vuln.wav";
-   // soundpaths[8] = "sounds/death.wav";
-   // soundpaths[9] = "sounds/newgame.wav";
-   // soundpaths[10] = "sound/siren.wav";
-   // soundpaths[11] = "sound/intermission.wav";
-   // soundpaths[12] = "sound/booster.wav";
+   soundnames[4] = "death";
+   soundpaths[5] = "sounds/freeze.wav";
+   soundnames[5] = "freeze";
+   soundpaths[6] = "sounds/shoot.wav";
+   soundnames[6] = "shoot";
+   soundpaths[7] = "sounds/level_end.wav";
+   soundnames[7] = "level_end";
+   
 }
  
 Sounds::~Sounds()

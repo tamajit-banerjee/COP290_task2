@@ -29,7 +29,7 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
     sPlayer.playerId = 1;
     sPlayer.player_no = 1;
 
-    cPlayer.playerId = 4;
+    cPlayer.playerId = 1;
     cPlayer.player_no = 2;
 
     sounds.init();
@@ -37,8 +37,6 @@ void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
 }
 
 void Game::levelStart(int arg_level , int seedx ){
-
-   // sounds.play(1, true);
 
     level = arg_level;
 
@@ -53,6 +51,8 @@ void Game::levelStart(int arg_level , int seedx ){
     SDL_RenderPresent(renderer);
 
     sleep(2);
+
+    sounds.play("clock", true, 20);
 
     counter = 0;
     mazeInit();
@@ -82,6 +82,9 @@ void Game::levelStart(int arg_level , int seedx ){
 
 void Game::levelEnd()
 {
+    sounds.stop();
+    sounds.play("level_end");
+
 	SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -95,8 +98,7 @@ void Game::levelEnd()
 
     SDL_RenderPresent(renderer);
 
-   // sounds.stop(1);
-    
+    sleep(4);
 }
 
 void Game::handleEvents()
@@ -134,9 +136,6 @@ void Game::update(){
 
     srand( seedi + sPlayer.get_time() + cPlayer.get_time() );
 
-    // if(counter%100 == 0){
-    //     std::cout<<rand()<<" "<<sPlayer.get_time() + cPlayer.get_time()<<"\n";
-    // }
     if(counter%WALL_TIME == 0){
         random_wall_removal();
         maze_dist_update();
@@ -155,13 +154,18 @@ void Game::update(){
 
     if(sPlayer.get_time()>0)
         sPlayer.set_time(sPlayer.get_time() - 1);
-    else    
+    else { 
+        if(!sPlayer.final_freeze && isServer)
+            sounds.play("death", false, 8);
         sPlayer.final_freeze = true;
-
+    }
     if(cPlayer.get_time()>0)
         cPlayer.set_time(cPlayer.get_time() - 1);
-    else    
+    else { 
+        if(!cPlayer.final_freeze && !isServer)
+            sounds.play("death", false, 8);
         cPlayer.final_freeze = true;
+    }
 
         std::pair<int, int> s_p = sPlayer.move(SPEED); 
     if(!checkWallCollisions(s_p.first, sPlayer.ypos, sPlayer.width, sPlayer.height)){
@@ -172,6 +176,8 @@ void Game::update(){
     }
 
     if(sPlayer.attack && sPlayer.attack_counter%1000 == 1 ){
+        if(isServer)
+            sounds.play("shoot", false, 50);
         Bullet b(sPlayer.xpos + sPlayer.width/2 - BULLET_WIDTH/2,sPlayer.ypos + sPlayer.height/2 - BULLET_HEIGHT/2  ,sPlayer.attack_dir);
         sPlayer.bullets.push_back(b);
     }
@@ -188,6 +194,8 @@ void Game::update(){
         cPlayer.ypos = c_p.second;
     }
     if(cPlayer.attack && cPlayer.attack_counter%1000 == 1 ){
+        if(!isServer)
+            sounds.play("shoot", false, 50);
         Bullet b(cPlayer.xpos + cPlayer.width/2 - BULLET_WIDTH/2, cPlayer.ypos + cPlayer.height/2 - BULLET_HEIGHT/2 , cPlayer.attack_dir);
         cPlayer.bullets.push_back(b);
     }

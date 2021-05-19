@@ -546,13 +546,14 @@ bool playerOnTime(Player & p, MazeCell & m){
 
 }
 
-void Game::updateCoinTime(Player & p, MazeCell & m){
+void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
     srand(seedi + sPlayer.get_time() + cPlayer.get_time()  );
     
     int random_i = rand() % MAZEROWS;
     int random_j = rand() % MAZECOLS;
     if(playerOnCoin(p, m)){
-            sounds.play(2, false);
+        if((playerIsServer && isServer) || (!playerIsServer && !isServer))
+            sounds.play("coin", false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = rand() % MAZEROWS;
             random_j = rand() % MAZECOLS;
@@ -563,7 +564,8 @@ void Game::updateCoinTime(Player & p, MazeCell & m){
     random_i = rand() % MAZEROWS;
     random_j = rand() % MAZECOLS;
     if(playerOnTime(p, m)){
-        sounds.play(3, false);
+        if((playerIsServer && isServer) || (!playerIsServer && !isServer))
+            sounds.play("time", false);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true){
             random_i = rand() % MAZEROWS;
             random_j = rand() % MAZECOLS;
@@ -576,11 +578,11 @@ void Game::checkCoinTimeEat(){
     std::pair<int, int> s_co = sPlayer.getMazeCoordinates(maze[0][0].dstR);
     std::pair<int, int> c_co = cPlayer.getMazeCoordinates(maze[0][0].dstR);
     
-    updateCoinTime(sPlayer, maze[s_co.first][s_co.second]);
-    updateCoinTime(sPlayer, maze[s_co.first + 1][s_co.second]);
-    updateCoinTime(sPlayer, maze[s_co.first - 1][s_co.second]);
-    updateCoinTime(sPlayer, maze[s_co.first][s_co.second + 1]);
-    updateCoinTime(sPlayer, maze[s_co.first][s_co.second -1]);
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second], true);
+    updateCoinTime(sPlayer, maze[s_co.first + 1][s_co.second], true);
+    updateCoinTime(sPlayer, maze[s_co.first - 1][s_co.second], true);
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second + 1], true);
+    updateCoinTime(sPlayer, maze[s_co.first][s_co.second -1], true);
     updateCoinTime(cPlayer, maze[c_co.first][c_co.second]);
     updateCoinTime(cPlayer, maze[c_co.first + 1][c_co.second]);
     updateCoinTime(cPlayer, maze[c_co.first - 1][c_co.second]);

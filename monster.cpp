@@ -108,7 +108,7 @@ bool iscolliding(Player p, Monster m){
     
 }
 
-void Game::checkMonsterCollisions_Player(Player &p){
+void Game::checkMonsterCollisions_Player(Player &p, bool playerIsServer){
     for(int i = 0; i< MONSTERS; i++){
         // std::cout<<p.xpos<<p.ypos<<p.width<<p.height<<'\n';
         // std::cout<<monsters[i].xpos<<monsters[i].ypos<<monsters[i].width<<monsters[i].height<<'\n';
@@ -125,6 +125,8 @@ void Game::checkMonsterCollisions_Player(Player &p){
         SDL_Rect *b = &srcR;
         if(SDL_HasIntersection(d,b)){
             p.freeze_counter = 0;
+            if(!p.freeze && ((isServer && playerIsServer) || (!isServer && !playerIsServer)))
+                sounds.play("freeze");
             p.freeze = true;
         }
     }
@@ -152,8 +154,8 @@ bool Game::checkMonsterCollisions_Bullet(Bullet &b){
 
 
 void Game::handleMonsterCollisions(){
-    checkMonsterCollisions_Player(sPlayer);
-    checkMonsterCollisions_Player(cPlayer);
+    checkMonsterCollisions_Player(sPlayer, true);
+    checkMonsterCollisions_Player(cPlayer, true);
 
     sPlayer.freeze_counter++;
     cPlayer.freeze_counter++;

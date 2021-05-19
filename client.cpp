@@ -144,7 +144,6 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         }
         game->levelEnd();
-        sleep(2);
     }
     
     close(sockfd);

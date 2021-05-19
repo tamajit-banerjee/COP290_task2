@@ -186,7 +186,7 @@ public:
 
 	Monster monsters[MONSTERS];
 	void initMonsters();
-	void checkMonsterCollisions_Player(Player &p);
+	void checkMonsterCollisions_Player(Player &p, bool playerIsServer);
 	bool checkMonsterCollisions_Bullet(Bullet &b);
 	bool checkoneMonsterCollisions(Player &p, Monster &m);
 
@@ -214,7 +214,7 @@ public:
 	int coinCycle, timeCycle;
 	void placeCoins();
 	void checkCoinTimeEat();
-	void updateCoinTime(Player & p, MazeCell & m);
+	void updateCoinTime(Player & p, MazeCell & m, bool playerIsServer = false);
 
 	SDL_Texture *timeTex;
 	void placeTimes();
