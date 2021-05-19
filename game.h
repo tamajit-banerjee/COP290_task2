@@ -48,6 +48,8 @@ public:
 	Player();
 	Player(const Player &p);
 
+	void init();
+
     void encode(int x[]);
     void decode(int y[]);
 	void set_time(int t);

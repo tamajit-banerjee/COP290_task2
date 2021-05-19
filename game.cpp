@@ -47,33 +47,35 @@ void Game::levelStart(int arg_level , int seedx ){
             isRunning = false;
             return;
         }
-        
+
     }
 
     sounds.play("clock", true, 20);
 
+    srand(seedi);
     gameTime = 0;
-    mazeInit();
-    maze_gen();
-    maze_dist_update();
+    cPlayer.init();
+    sPlayer.init();
     cPlayer.set_time(LEVEL_TIME);
     sPlayer.set_time(LEVEL_TIME);
     cPlayer.freeze = false;
     cPlayer.final_freeze = false;
     sPlayer.freeze = false;
     sPlayer.final_freeze = false;
-
-    srand(17);
     int random_i = std::rand() % int(MAZEROWS/3);
     int random_j = std::rand() % int(MAZECOLS/3);
     
     sPlayer.setPosCenter(random_i, random_j);
     cPlayer.setPosCenter(MAZEROWS - 1 - random_i, MAZECOLS - 1 - random_j);
 
+    mazeInit();
+    maze_gen();
+    maze_dist_update();
+
+
     initMonsters();
 
     isLevelRunning = true;
-    
     
 
 }
@@ -238,21 +240,24 @@ void Game::render(){
 
     render_bullets();
 
+    for(int i = 0 ; i<MONSTERS; i++){
+        monsters[i].draw(renderer, font);
+    }
+
     sPlayer.draw(renderer, font);
     cPlayer.draw(renderer, font);
+
+    renderPeriscope();
+
     sPlayer.dispName(renderer, font, 100, -SCORE_DISPLAY_HEIGHT + SCORE_DISPLAY_HEIGHT/4);
     sPlayer.dispScore(renderer, font, 50, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
     sPlayer.dispTime(renderer, font, 150, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
+
 
     cPlayer.dispName(renderer, font, SCREEN_WIDTH - 100 - 80, -SCORE_DISPLAY_HEIGHT + SCORE_DISPLAY_HEIGHT/4);
     cPlayer.dispScore(renderer, font, SCREEN_WIDTH - 150 - 80, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
     cPlayer.dispTime(renderer, font, SCREEN_WIDTH - 50 - 80, -SCORE_DISPLAY_HEIGHT + 2* SCORE_DISPLAY_HEIGHT/4);
 
-    for(int i = 0 ; i<MONSTERS; i++){
-        monsters[i].draw(renderer, font);
-    }
-
-   // renderPeriscope();
     SDL_RenderPresent(renderer);
 }
 

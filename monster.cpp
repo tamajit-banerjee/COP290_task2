@@ -21,7 +21,6 @@ void Monster::setPosCenter(int i, int j){
 }
 
 void Game::initMonsters(){
-    srand(10*level);
     monsters[0].setPosCenter(0 + rand()%5, 0 + rand()%5);
     monsters[0].dest = rand()%(MAZECOLS*MAZEROWS);
     monsters[0].chase_which_player = 1;
@@ -263,7 +262,7 @@ void Game::updateMonsters(){
                     std::pair<int, int> pos = sPlayer.getMazeCoordinates(rect);
                     int s = pos.first * MAZECOLS + pos.second;
                     monsters[i].dest = s;
-                    if(checkoneMonsterCollisions(sPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME ){
+                    if(checkoneMonsterCollisions(sPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME || sPlayer.freeze ){
                         monsters[i].mode_chase = false;
                         monsters[i].not_chase_time = 0;
                     }
@@ -272,7 +271,7 @@ void Game::updateMonsters(){
                     std::pair<int, int> pos = cPlayer.getMazeCoordinates(rect);
                     int s = pos.first * MAZECOLS + pos.second;
                     monsters[i].dest = s;
-                    if(checkoneMonsterCollisions(cPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME ){
+                    if(checkoneMonsterCollisions(cPlayer,monsters[i]) || monsters[i].chase_time ==  CHASE_TIME || cPlayer.freeze ){
                         monsters[i].mode_chase = false;
                         monsters[i].not_chase_time = 0;
                     }
@@ -286,9 +285,18 @@ void Game::updateMonsters(){
         }
             
             ++monsters[i].not_chase_time;
-            if(monsters[i].not_chase_time == NON_CHASE_TIME/level && i!= 1 && i!= 2){
-                monsters[i].mode_chase = true;
-                monsters[i].chase_time = 0 ;
+            if(monsters[i].not_chase_time >=  NON_CHASE_TIME/level && i!= 1 && i!= 2){
+
+                if(monsters[i].chase_which_player == 0 && !sPlayer.freeze){
+                    monsters[i].mode_chase = true;
+                    monsters[i].chase_time = 0 ;
+                }
+                
+                if(monsters[i].chase_which_player == 1 && !cPlayer.freeze){
+                    monsters[i].mode_chase = true;
+                    monsters[i].chase_time = 0 ;
+                }
+
             }
         }
             

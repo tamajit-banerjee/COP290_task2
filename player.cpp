@@ -58,9 +58,18 @@ void Player::decode(int y[]){
 void Player::set_time(int t){
     time = t;
 }
-	int Player::get_time(){
-        return time;
-    }
+
+void Player:: init(){
+    right = 0, left = 0, up = 0, down = 0;
+    attack_counter=0;
+    attack = false;
+    attack_dir =-1;
+    bullets.clear();
+}
+
+int Player::get_time(){
+    return time;
+}
 
 void Player::setPosCenter(int i, int j){
     xpos = i*CELL_SIZE + CELL_SIZE/2 - width/2;
@@ -235,14 +244,15 @@ std::pair<int, int> Player::getMazeCoordinates(SDL_Rect &r){
 void Game::renderPeriscope(){
     SDL_Rect dstR;
     dstR.x = 0; dstR.y = 0;
-    dstR.w = 2*SCREEN_WIDTH; dstR.h = 2*SCREEN_HEIGHT;
+    dstR.w = 2*SCREEN_WIDTH; 
+    dstR.h = 2*SCREEN_HEIGHT;
     if(isServer){
         dstR.x = sPlayer.xpos + sPlayer.width/2 - dstR.w/2;
-        dstR.y = sPlayer.ypos + sPlayer.height/2 - dstR.h/2;
+        dstR.y = sPlayer.ypos + sPlayer.height/2 - dstR.h/2 + SCORE_DISPLAY_HEIGHT;
     }
     else{
         dstR.x = cPlayer.xpos + cPlayer.width/2 - dstR.w/2;
-        dstR.y = cPlayer.ypos + cPlayer.height/2 - dstR.h/2;
+        dstR.y = cPlayer.ypos + cPlayer.height/2 - dstR.h/2 + SCORE_DISPLAY_HEIGHT;
     }
     if(SDL_RenderCopyEx(renderer, periTex,  NULL, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
         std::cout<<"Periscope view not rendered properly\n";

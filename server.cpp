@@ -150,8 +150,8 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
 
         game->levelStart(level,seedi);
 
-         isServerRunning = game->running();
-        bytes_recvd = recv(newsockfd, &isClientRunning, sizeof(isClientRunning), 0);
+            isServerRunning = game->running();
+            bytes_recvd = recv(newsockfd, &isClientRunning, sizeof(isClientRunning), 0);
             bytes_sent = send(newsockfd, &isServerRunning, sizeof(isServerRunning), 0);
             game->isRunning = isServerRunning && isClientRunning;
         
@@ -187,6 +187,7 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
             bytes_sent = send(newsockfd, &isServerRunning, sizeof(isServerRunning), 0);
             game->isRunning = isServerRunning && isClientRunning;
     }
+    
     close(newsockfd);
     //close(sockfd);
 
