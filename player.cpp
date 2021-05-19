@@ -72,7 +72,7 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
     destR.h = height;
     destR.w = width;
     destR.x = xpos;
-    destR.y = ypos;
+    destR.y = ypos + SCORE_DISPLAY_HEIGHT;
 
     SDL_Rect srcR;
     srcR.h = PLAYER_HEIGHT_SRC;
@@ -109,7 +109,7 @@ void Player::draw(SDL_Renderer *renderer, TTF_Font *font){
         destR.h = 2*width + width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
         destR.w = 2*width+ width/2 * int((FREEZE_LIMIT - freeze_counter)/10);
         destR.x = xpos + width/2 - destR.w/2;
-        destR.y = ypos + height/2 - destR.h/2;
+        destR.y = ypos + height/2 - destR.h/2 + SCORE_DISPLAY_HEIGHT;
         SDL_RenderCopyEx(renderer, freezeTex,  NULL, &destR, 0.0, NULL, SDL_FLIP_NONE);
     }
     
@@ -251,7 +251,7 @@ void Game::renderPeriscope(){
     }
 }
 
-void Game::askPlayerAvatar(){
+int Game::askPlayerAvatar(){
     char id[1];
     memset(id, ' ', 1);
     SDL_Event e;
@@ -262,7 +262,12 @@ void Game::askPlayerAvatar(){
     while (!ok) {
 
         if (SDL_PollEvent(&e)) {
+            if(e.type == SDL_QUIT){
+                return -1;
+            }
             if (e.type == SDL_KEYDOWN) {
+                if(e.key.keysym.sym == SDLK_ESCAPE)
+                    return -1;
                 if ((e.key.keysym.sym >= SDL_keys[0] && e.key.keysym.sym <= SDL_keys[7])) {
                     if(!isServer && e.key.keysym.sym == SDL_keys[sPlayer.playerId]){
                         showError = true;
@@ -298,7 +303,7 @@ void Game::askPlayerAvatar(){
         SDL_Rect dstR[8];
         for(int i = 0; i<8; i++){
             dstR[i].w = PLAYER_WIDTH; dstR[i].h = PLAYER_HEIGHT;
-            dstR[i].y = SCREEN_HEIGHT/2+20;
+            dstR[i].y = SCREEN_HEIGHT/3+20 + SCORE_DISPLAY_HEIGHT;
             dstR[i].x = 10 + SCREEN_WIDTH/2 + (i-4)*(PLAYER_WIDTH + 10);
         }
 
@@ -314,19 +319,19 @@ void Game::askPlayerAvatar(){
             full_text=static_cast<char *>(malloc(strlen(c)+strlen(splayerAvatar)));
             strcpy(full_text,c);
             strcat(full_text,splayerAvatar);
-            disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+145);
-            disp_text_center(renderer, "Please Chose a different avatar!", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+165);
+            disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)+145);
+            disp_text_center(renderer, "Please Chose a different avatar!", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)+165);
         }
             
         if(isServer)
-            disp_text_center(renderer, "Player 1" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+            disp_text_center(renderer, "Player 1" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)-45);
         else{
-            disp_text_center(renderer, "Player 2" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)-45);
+            disp_text_center(renderer, "Player 2" , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)-45);
         }    
             
         char c[] = "Please chose Your Avatar";
-        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2)+10, int(SCREEN_HEIGHT/2)-20);
-        disp_text_center(renderer, id , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)+120);
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2)+10, int(SCREEN_HEIGHT/3)-20);
+        disp_text_center(renderer, id , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)+120);
 
         for(int i = 0; i<8; i++){
             if(SDL_RenderCopyEx(renderer, sPlayer.Tex,  &srcR[i], &dstR[i], 0.0, NULL, SDL_FLIP_NONE) < 0){
@@ -337,7 +342,7 @@ void Game::askPlayerAvatar(){
             char * digits[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
             char * p_id = digits[i]; 
             
-            disp_text_center(renderer, p_id , font, dstR[i].x+dstR[i].w/2 , int(SCREEN_HEIGHT/2)+80);
+            disp_text_center(renderer, p_id , font, dstR[i].x+dstR[i].w/2 , int(SCREEN_HEIGHT/3)+80);
         }
 
         SDL_RenderPresent(renderer);
@@ -346,4 +351,6 @@ void Game::askPlayerAvatar(){
         sPlayer.playerId = std::stoi(id);
     else    
         cPlayer.playerId = std::stoi(id);
+
+    return 1;
 }

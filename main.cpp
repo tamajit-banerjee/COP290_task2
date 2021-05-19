@@ -1,7 +1,7 @@
 #include "Header.h"
 #include "client.hpp"
 #include "server.hpp"
-#include "constans.h"
+#include "constants.h"
 #include "font.hpp"
 #include "menu.hpp"
 #include "game.h"
@@ -19,7 +19,7 @@ int main(){
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             SCREEN_WIDTH,
-            SCREEN_HEIGHT,
+            SCREEN_HEIGHT + SCORE_DISPLAY_HEIGHT,
             0);
 
     if (window == NULL) {

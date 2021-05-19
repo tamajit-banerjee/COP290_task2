@@ -1,11 +1,3 @@
-#include "Header.h"
-#include "constans.h"
-#include "font.hpp"
-#include "menu.hpp"
-
-#include <chrono>
-#include <thread>
-
 #include "game.h"
 
 void Game::init(SDL_Renderer *arg_renderer, TTF_Font *arg_font )
@@ -42,19 +34,24 @@ void Game::levelStart(int arg_level , int seedx ){
 
     seedi = seedx;
 
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    disp_text(renderer, "Level: ", font, 290, 220);
-    std::string temp_str = std::to_string(level);
-    char* char_type = (char*) temp_str.c_str();
-    disp_text(renderer, char_type, font, 340, 220);
-    SDL_RenderPresent(renderer);
-
-    sleep(2);
+    for(int i = 0; i<SLEEP_UNIT; i++){
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        disp_text(renderer, "Level: ", font, 290, 220);
+        std::string temp_str = std::to_string(level);
+        char* char_type = (char*) temp_str.c_str();
+        disp_text(renderer, char_type, font, 340, 220);
+        SDL_RenderPresent(renderer);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        if(toQuit()){
+            isServer = false;
+            return;
+        }
+    }
 
     sounds.play("clock", true, 20);
 
-    counter = 0;
+    gameTime = 0;
     mazeInit();
     maze_gen();
     maze_dist_update();
@@ -85,20 +82,27 @@ void Game::levelEnd()
     sounds.stop();
     sounds.play("level_end");
 
-	SDL_RenderClear(renderer);
+    for(int i = 0; i<SLEEP_UNIT; i++){
+        SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    disp_text(renderer, "Results", font, 300, 140);
-    
-    sPlayer.dispName(renderer, font, 250, 200);
-    sPlayer.dispScore(renderer, font, 350, 200);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        disp_text(renderer, "Results", font, 300, 140);
+        
+        sPlayer.dispName(renderer, font, 250, 200);
+        sPlayer.dispScore(renderer, font, 350, 200);
 
-    cPlayer.dispName(renderer, font, 250, 250);
-    cPlayer.dispScore(renderer, font, 350, 250);
+        cPlayer.dispName(renderer, font, 250, 250);
+        cPlayer.dispScore(renderer, font, 350, 250);
 
-    SDL_RenderPresent(renderer);
+        SDL_RenderPresent(renderer);
 
-    sleep(4);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        if(toQuit()){
+            isServer = false;
+            return;
+        }
+    }
+
 }
 
 void Game::handleEvents()
@@ -130,13 +134,28 @@ void Game::handleEvents()
 	}
 }
 
+bool Game::toQuit(){
+    SDL_Event e;
+    if (SDL_PollEvent(&e)) {
+        switch (e.type){
+            case SDL_QUIT :
+                return true;
+            case SDL_KEYDOWN:
+                if(e.key.keysym.sym == SDLK_ESCAPE)
+                    return true;
+            default:
+                return false;
+        }
+    }
+    return false;
+}
 void Game::update(){
 
-    counter++;
+    gameTime++;
 
     srand( seedi + sPlayer.get_time() + cPlayer.get_time() );
 
-    if(counter%WALL_TIME == 0){
+    if(gameTime%WALL_TIME == 0){
         random_wall_removal();
         maze_dist_update();
     }
@@ -152,20 +171,24 @@ void Game::update(){
 
     checkCoinTimeEat();
 
-    if(sPlayer.get_time()>0)
-        sPlayer.set_time(sPlayer.get_time() - 1);
-    else { 
-        if(!sPlayer.final_freeze && isServer)
-            sounds.play("death", false, 8);
-        sPlayer.final_freeze = true;
+    if(gameTime % TIME_STEP == 0){
+        if(sPlayer.get_time()>0)
+            sPlayer.set_time(sPlayer.get_time() - TIME_STEP);
+        else { 
+            if(!sPlayer.final_freeze && isServer)
+                sounds.play("death", false, 8);
+            sPlayer.final_freeze = true;
+        }
+        if(cPlayer.get_time()>0)
+            cPlayer.set_time(cPlayer.get_time() - TIME_STEP);
+        else { 
+            if(!cPlayer.final_freeze && !isServer)
+                sounds.play("death", false, 8);
+            cPlayer.final_freeze = true;
+        }
+
     }
-    if(cPlayer.get_time()>0)
-        cPlayer.set_time(cPlayer.get_time() - 1);
-    else { 
-        if(!cPlayer.final_freeze && !isServer)
-            sounds.play("death", false, 8);
-        cPlayer.final_freeze = true;
-    }
+    
 
         std::pair<int, int> s_p = sPlayer.move(SPEED); 
     if(!checkWallCollisions(s_p.first, sPlayer.ypos, sPlayer.width, sPlayer.height)){
@@ -216,13 +239,13 @@ void Game::render(){
 
     sPlayer.draw(renderer, font);
     cPlayer.draw(renderer, font);
-    sPlayer.dispName(renderer, font, 300, 20);
-    sPlayer.dispScore(renderer, font, 400, 20);
-    sPlayer.dispTime(renderer, font, 500, 20);
+    sPlayer.dispName(renderer, font, 100, -SCORE_DISPLAY_HEIGHT + SCORE_DISPLAY_HEIGHT/4);
+    sPlayer.dispScore(renderer, font, 50, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
+    sPlayer.dispTime(renderer, font, 150, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
 
-    cPlayer.dispName(renderer, font, 300, 40);
-    cPlayer.dispScore(renderer, font, 400, 40);
-    cPlayer.dispTime(renderer, font, 500, 40);
+    cPlayer.dispName(renderer, font, SCREEN_WIDTH - 100 - 80, -SCORE_DISPLAY_HEIGHT + SCORE_DISPLAY_HEIGHT/4);
+    cPlayer.dispScore(renderer, font, SCREEN_WIDTH - 150 - 80, -SCORE_DISPLAY_HEIGHT + 2 * SCORE_DISPLAY_HEIGHT/4);
+    cPlayer.dispTime(renderer, font, SCREEN_WIDTH - 50 - 80, -SCORE_DISPLAY_HEIGHT + 2* SCORE_DISPLAY_HEIGHT/4);
 
     for(int i = 0 ; i<MONSTERS; i++){
         monsters[i].draw(renderer, font);

@@ -94,8 +94,11 @@ void Game::render_bullets(){
 
 
 void Bullet::draw(SDL_Renderer *renderer, SDL_Texture *bullet ){
-
-    if(SDL_RenderCopyEx(renderer, bullet,  NULL , &position, 0.0, NULL, SDL_FLIP_NONE) < 0){
+    SDL_Rect temp;
+    temp.x = position.x;
+    temp.y = position.y + SCORE_DISPLAY_HEIGHT;
+    temp.w = position.w; temp.h = position.h;
+    if(SDL_RenderCopyEx(renderer, bullet,  NULL , &temp, 0.0, NULL, SDL_FLIP_NONE) < 0){
         std::cout<<"Bullet not rendered properly\n";
         std::cout<<SDL_GetError()<<"\n";
         exit(EXIT_FAILURE);

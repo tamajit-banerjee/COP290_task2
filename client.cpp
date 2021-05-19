@@ -39,14 +39,17 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
     {
             char c[] = "Sorry. Could not connect to server.";
             SDL_RenderClear(renderer);
-            disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
+            disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
             SDL_RenderPresent(renderer);
             sleep(3);
         close(sockfd);
         return -1;
     }
         
-    ask_for_name(renderer, font, cname, false);
+    if(ask_for_name(renderer, font, cname, false)== -1){
+        close(sockfd);
+        return 0;
+    }
     game->cPlayer.name = cname;
     game->isServer = false;
     int playerId;
@@ -79,35 +82,38 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
                 strcpy(full_text,c);
                 strcat(full_text,sname);
                 strcat(full_text,last);
-                SDL_RenderClear(renderer);
-                disp_text_center(renderer, full_text , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
-                SDL_RenderPresent(renderer);
+                for(int i = 0; i<SLEEP_UNIT; i++){
+                    SDL_RenderClear(renderer);
+                    disp_text_center(renderer, full_text , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
+                    SDL_RenderPresent(renderer);
+                    if(game->toQuit()){
+                        close(sockfd);
+                        return 0;
+                    }
+                    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                }
         }
     }
 
-    
-    sleep(2);
-    
+    for(int i = 0; i<SLEEP_UNIT; i++){
         char* c = "Creating Game Please wait ";
         SDL_RenderClear(renderer);
-        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
+        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
         SDL_RenderPresent(renderer);
-
+        if(game->toQuit()){
+            close(sockfd);
+            return 0;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
     
-    
-    sleep(2);
-        
-        c = "Thank You for playing";
-        SDL_RenderClear(renderer);
-        disp_text_center(renderer, c , font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2));
-        SDL_RenderPresent(renderer);
-    
-    sleep(2);
 
     int splayerInfo[6];
     int cplayerInfo[6];
 
 
+    int isClientRunning;
+    int isServerRunning;
 
     for (int level = 1; level<=LEVELS; level++){
 
@@ -141,11 +147,28 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             if(game->sPlayer.get_time()<=0 && game->cPlayer.get_time()<=0){
                 game->isLevelRunning = false;
             }
+            
+            isClientRunning = game->running();
+            bytes_sent = send(sockfd, &isClientRunning, sizeof(isClientRunning), 0);
+            bytes_recvd = recv(sockfd, &isServerRunning, sizeof(isServerRunning), 0);
+            game->isRunning = isServerRunning && isClientRunning;
 
         }
         game->levelEnd();
     }
     
     close(sockfd);
+
+    for(int i = 0; i< SLEEP_UNIT; i++){
+        SDL_RenderClear(renderer);
+        disp_text_center(renderer, "Thank You for playing", font, int(SCREEN_WIDTH/2) , int(SCREEN_HEIGHT/3));
+        SDL_RenderPresent(renderer);
+        if(game->toQuit()){
+            return 0;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+
+
     return 1;
 }

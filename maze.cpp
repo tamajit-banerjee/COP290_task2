@@ -307,8 +307,12 @@ void Game::renderMaze(){
             maze[i][j].dstR.w = cell_width;
             maze[i][j].dstR.h = cell_height;
             maze[i][j].dstR.x = maze[i][j].dstR.w * j;
-            maze[i][j].dstR.y = maze[i][j].dstR.h * i;
-            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &maze[i][j].dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){
+            maze[i][j].dstR.y = maze[i][j].dstR.h * i ;
+
+            SDL_Rect temp;
+            temp.w =  maze[i][j].dstR.w; temp.h =  maze[i][j].dstR.h;
+            temp.x =  maze[i][j].dstR.x; temp.y =  maze[i][j].dstR.y + SCORE_DISPLAY_HEIGHT;
+            if(SDL_RenderCopyEx(renderer, mazeTex,  &maze[i][j].srcR, &temp, 0.0, NULL, SDL_FLIP_NONE) < 0){
                 std::cout<<"Maze cell"<<i<<", "<<j<<" not rendered properly\n";
                 std::cout<<SDL_GetError()<<"\n";
                 exit(EXIT_FAILURE);
@@ -323,7 +327,7 @@ void Game::renderMaze(){
             dstR.w = coin_width;
             dstR.h = coin_height;
             dstR.x = cell_width * j + (cell_width - coin_width)/2;
-            dstR.y = cell_height * i + (cell_height - coin_height)/2;
+            dstR.y = cell_height * i + (cell_height - coin_height)/2 + SCORE_DISPLAY_HEIGHT;
             
             if(maze[i][j].hascoin){
                 if(SDL_RenderCopyEx(renderer, coinTex,  &srcR, &dstR, 0.0, NULL, SDL_FLIP_NONE) < 0){

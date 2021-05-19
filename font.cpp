@@ -10,7 +10,7 @@ void disp_text(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y)
     pos.w = surface->w;
     pos.h = surface->h;
     pos.x = x;
-    pos.y = y;
+    pos.y = y + SCORE_DISPLAY_HEIGHT;
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, NULL, &pos);
 }

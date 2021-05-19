@@ -1,54 +1,13 @@
 #pragma once
 
-#define CELL_SIZE 64
-#define MAZECOLS 10
-#define MAZEROWS 10
-
-#define SCREEN_WIDTH (MAZECOLS * CELL_SIZE)
-#define SCREEN_HEIGHT (MAZECOLS * CELL_SIZE)
-
-#define COIN_SIZE (CELL_SIZE / 2)
-#define COIN_SCORE 10
-
-#define TIME_SIZE (COIN_SIZE)
-#define TIME_INCREASE 100
-
-#define SPEED 2
-#define LEVELS 4
-
-#define PLAYER_WIDTH_SRC 48
-#define PLAYER_HEIGHT_SRC 72
-#define RENDER_PLAYER_DELAY 10
-#define PLAYER_WIDTH 32
-#define PLAYER_HEIGHT 48
-
-#define MONSTERS 4
-#define MONSTERS_DIR_CHANGE 30
-#define MONSTER_SIZE 131
-#define MONSTER_DELAY 8
-#define FREEZE_LIMIT 20
-
-#define SEPARATOR '|'
-#define WALL_RATIO 20
-
-#define BULLET_WIDTH 8
-#define BULLET_HEIGHT 8
-
-#define CHASE_TIME 10
-
-#define LEVEL_TIME 2000
-
-#define NON_CHASE_TIME 24
-
-#define WALL_TIME 100
-
-
-
 #include "Header.h"
-#include "constans.h"
+#include "constants.h"
 #include "font.hpp"
 #include "menu.hpp"
 #include "sounds.h"
+
+#include <chrono>
+#include <thread>
 
 class Bullet {
 	public:
@@ -155,6 +114,7 @@ public:
 	void init(SDL_Renderer *arg_renderer, TTF_Font *arg_font);
 
 	void handleEvents();
+	bool toQuit();
 	void update();
 	bool running() { return isRunning; }
 	void render();
@@ -180,7 +140,7 @@ public:
 
 	Player sPlayer, cPlayer;
 	bool isServer;
-	void askPlayerAvatar();
+	int askPlayerAvatar();
 
 	void updateBullets(Player &p);
 
@@ -224,5 +184,5 @@ public:
 	Game(){}
 	~Game(){}
 
-	int counter;
+	int gameTime;
 };

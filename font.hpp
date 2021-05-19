@@ -2,6 +2,7 @@
 #define font_hpp
 
 #include "Header.h"
+#include "constants.h"
 
 
 void disp_text(SDL_Renderer *renderer, char *text, TTF_Font *font, int x, int y);

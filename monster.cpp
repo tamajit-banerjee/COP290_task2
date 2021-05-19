@@ -67,7 +67,7 @@ void Monster::draw(SDL_Renderer *renderer, TTF_Font *font){
     destR.h = height;
     destR.w = width;
     destR.x = xpos;
-    destR.y = ypos;
+    destR.y = ypos + SCORE_DISPLAY_HEIGHT;
 
     SDL_Rect srcR;
     srcR.h = MONSTER_SIZE;
