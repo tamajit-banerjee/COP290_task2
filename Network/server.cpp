@@ -135,8 +135,8 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     int isServerRunning = 1;
 
     int badNetworkCounter = 0;
-    
-    for (int level = 1; level<=LEVELS; level++){
+    int level;
+    for (level = 1; level<=LEVELS; level++){
 
         if(!game->running()){
             break;
@@ -218,17 +218,6 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
     close(newsockfd);
     //close(sockfd);
 
-
-    for(int i = 0; i< SLEEP_UNIT; i++){
-        SDL_RenderClear(renderer);
-        disp_text_center(renderer, "Thank You for playing" , font, int(SCREEN_WIDTH/2) , int(SCREEN_HEIGHT/3));
-        SDL_RenderPresent(renderer);
-        if(game->toQuit()){
-            return 0;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    }
-
     for(int i = 0; i< SLEEP_UNIT; i++){
         
         const char* c = "The winner is: ";
@@ -248,8 +237,13 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         }
 
         SDL_RenderClear(renderer);
-        disp_text_center(renderer, "RESULTS", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
-        disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2) + 10, int(SCREEN_HEIGHT/3)+50);
+        if(level < LEVELS + 1){
+            disp_text_center(renderer, "Game Disconnected!", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
+        }
+        else{
+            disp_text_center(renderer, "RESULTS", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
+            disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2) + 10, int(SCREEN_HEIGHT/3)+50);
+        }
         SDL_RenderPresent(renderer);
         if(game->toQuit()){
             return 0;
@@ -257,6 +251,16 @@ int run_server(SDL_Renderer *renderer,TTF_Font *font , Game *game){
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 
+    for(int i = 0; i< SLEEP_UNIT; i++){
+        SDL_RenderClear(renderer);
+        disp_text_center(renderer, "Thank You for playing" , font, int(SCREEN_WIDTH/2) , int(SCREEN_HEIGHT/3));
+        SDL_RenderPresent(renderer);
+        if(game->toQuit()){
+            return 0;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+    
     return 1;
 
 }
