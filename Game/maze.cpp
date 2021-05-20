@@ -176,18 +176,18 @@ void Game:: random_wall_removal(){
 int parent[MAZECOLS*MAZEROWS];
 int size[MAZECOLS*MAZEROWS];
 
-int Game::find_set(int v) {
+int find_set(int v) {
     if (v == parent[v])
         return v;
     return parent[v] = find_set(parent[v]);
 }
 
-void Game::make_set(int v) {
+void make_set(int v) {
     parent[v] = v;
     size[v] = 1;
 }
 
-bool Game::union_sets(int a, int b) {
+bool union_sets(int a, int b) {
     a = find_set(a);
     b = find_set(b);
     if (a != b) {
@@ -201,14 +201,6 @@ bool Game::union_sets(int a, int b) {
 }
 
 void Game:: maze_gen(){
-    
-//    srand(1);
-//
-//    int x = std::rand()%10;
-//    int y = std::rand()%10;
-//
-//    dfs(x,y);
-//
     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
     std::vector<std::pair<std::pair<int,int>,std::pair<int,int> > > store;
 
@@ -353,10 +345,6 @@ void Game::placeCoins(){
         }
         maze[random_i][random_j].hascoin = true;
     }
-}
-
-void updateTimes(){
-    
 }
 
 void Game::placeTimes(){
@@ -545,8 +533,6 @@ bool playerOnCoin(Player & p, MazeCell & m){
     return false;
 }
 bool playerOnTime(Player & p, MazeCell & m){
-
-
     if(m.hastime && isOnPower(p.xpos, p.ypos, p.width, p.height, m.dstR)){
        // m.hastime = false;
         p.set_time(p.get_time()+TIME_INCREASE);
@@ -589,7 +575,7 @@ void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
         }
         int random = rand()%10;
         if(random < 8  )
-        maze[random_i][random_j].hastime = true;
+            maze[random_i][random_j].hastime = true;
         m.hastime = false;
     }
 }

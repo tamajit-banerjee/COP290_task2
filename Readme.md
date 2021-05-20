@@ -81,14 +81,14 @@ Detailed rules of the game, along with description of the different stages can b
 The game was built and tested on macOS Big Sur (ver 11.3 onwards). To install dependencies using [homebrew](https://brew.sh), run:
 
 ~~~
-    brew install sdl2
-    brew install sdl2_ttf
-    brew install sdl2_mixer
-    brew install sdl2_gfx
+brew install sdl
+brew install sdl_ttf
+brew install sdl_mixer
+brew install sdl_gfx
 ~~~
 or simply run 
 ~~~
-    make setup
+make setup
 ~~~
 
 ## Some Resources Used

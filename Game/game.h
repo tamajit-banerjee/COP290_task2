@@ -170,9 +170,6 @@ private:
     bool ok(int x, int y);
     void dfs(int x, int y);
     void maze_gen();
-    int find_set(int v);
-    void make_set(int v);
-    bool union_sets(int a, int b);
 
 	SDL_Texture *coinTex;
 	void placeCoins();
