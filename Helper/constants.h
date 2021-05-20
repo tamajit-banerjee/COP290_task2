@@ -24,7 +24,7 @@
 #define COIN_SCORE 10
 
 #define TIME_SIZE (COIN_SIZE)
-#define TIME_INCREASE 100
+#define TIME_INCREASE 200
 
 // dimensions of the player avatars
 #define PLAYER_WIDTH_SRC 48

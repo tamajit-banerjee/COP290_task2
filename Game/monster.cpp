@@ -122,9 +122,9 @@ void Game::checkMonsterCollisions_Player(Player &p, bool playerIsServer){
         srcR.y = monsters[i].ypos + monsters[i].height / 2 - srcR.h/2;
         SDL_Rect *d = &destR;
         SDL_Rect *b = &srcR;
-        if(SDL_HasIntersection(d,b)){
+        if(SDL_HasIntersection(d,b) && !p.freeze){
             p.freeze_counter = 0;
-            if(!p.freeze && ((isServer && playerIsServer) || (!isServer && !playerIsServer)))
+            if(!p.freeze && !p.final_freeze && ((isServer && playerIsServer) || (!isServer && !playerIsServer)))
                 sounds.play("freeze");
             p.freeze = true;
         }

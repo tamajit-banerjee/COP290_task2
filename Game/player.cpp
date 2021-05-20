@@ -399,7 +399,7 @@ void Game::handlePlayerActivities(Player & p){
         p.ypos = s_p.second;
     }
 
-    if(p.attack && p.attack_counter%1000 == 1 && p.score >= BULLET_COST){
+    if( p.attack && p.attack_counter%1000 == 1 && p.score >= BULLET_COST && !p.final_freeze && !p.freeze ){
         if(isServer)
             sounds.play("shoot", false, 50);
         Bullet b(p.xpos + p.width/2 - BULLET_WIDTH/2,p.ypos + p.height/2 - BULLET_HEIGHT/2  ,p.attack_dir);

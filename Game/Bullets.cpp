@@ -52,7 +52,7 @@ void Game:: Bullet_hit_Player(){
         destR.x = cPlayer.xpos;
         destR.y = cPlayer.ypos;
         SDL_Rect *d = &destR;
-        if(SDL_HasIntersection(d,&sPlayer.bullets[i].position)){
+        if(SDL_HasIntersection(d,&sPlayer.bullets[i].position) && !cPlayer.final_freeze ){
             cPlayer.freeze_counter = 0;
             if(!cPlayer.freeze && !isServer)
                 sounds.play("freeze");
@@ -71,7 +71,7 @@ void Game:: Bullet_hit_Player(){
         destR.x = sPlayer.xpos;
         destR.y = sPlayer.ypos;
         SDL_Rect *d = &destR;
-        if(SDL_HasIntersection(d,&cPlayer.bullets[i].position)){
+        if(SDL_HasIntersection(d,&cPlayer.bullets[i].position) && !sPlayer.final_freeze){
             sPlayer.freeze_counter = 0;
             if(!sPlayer.freeze && isServer)
                 sounds.play("freeze");
