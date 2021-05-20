@@ -43,6 +43,20 @@ The monsters demonstrate intelligennt movements in addition to their random natu
 
 We start with a maze where each cell has all of its walls intact. Gradually, using Kruskal's algorithm, we chose walls and remove them to eventually create our maze. The maze uses random number generators so that different mazes can be generated across levels. Also, its seed is set by the global time the game starts running. Now, this seed is assigned only in the server and this seed is sent to the client via our sockets. Thus, with the same seed, we obtain a random, yet deterministic (same for both players) game. 
 
+## Installation Instructions
+
+The game was built and tested on macOS Big Sur (ver 11.3 onwards). To install dependencies using [homebrew](https://brew.sh), run:
+
+~~~
+brew install sdl2
+brew install sdl2_ttf
+brew install sdl2_mixer
+brew install sdl2_gfx
+~~~
+or simply run 
+~~~
+make setup
+~~~
 
 ## Special Features
 
@@ -74,22 +88,7 @@ We have added a feature where each player cannot see the entire maze, but only s
 
 ## Documentation
 
-Detailed rules of the game, along with description of the different stages can be found [here](https://drive.google.com/drive/folders/1H2WBtCfxBOw4zcmwrzM9qh3TLa_TPsj1?usp=sharing).
-
-## Installation Instructions
-
-The game was built and tested on macOS Big Sur (ver 11.3 onwards). To install dependencies using [homebrew](https://brew.sh), run:
-
-~~~
-brew install sdl2
-brew install sdl2_ttf
-brew install sdl2_mixer
-brew install sdl2_gfx
-~~~
-or simply run 
-~~~
-make setup
-~~~
+Detailed rules of the game, along with description of the different stages can be found [here](https://drive.google.com/drive/folders/1H2WBtCfxBOw4zcmwrzM9qh3TLa_TPsj1?usp=sharing) ([pdf](assets/Description_Overview.pdf)).
 
 ## Some Resources Used
 
