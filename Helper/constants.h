@@ -19,8 +19,7 @@
 #define CLIENT_FRAME_TIME 15
 #define SERVER_FRAME_TIME 15
 // If sending or receiving takes linger than this (in ms), display a 'slow network' warning
-#define NETWORK_THRESHOLD 100
-
+#define NETWORK_THRESHOLD 1000
 #define COIN_SIZE (CELL_SIZE / 2)
 #define COIN_SCORE 10
 
@@ -40,10 +39,10 @@
 #define MONSTER_SIZE 131
 #define MONSTER_SIZE_SCALE_TO 95
 #define MONSTER_DELAY 8
-#define FREEZE_LIMIT 20
+#define FREEZE_LIMIT 100
 // After how many cells will a monster stop chasing and start chasing
-#define CHASE_TIME 10
-#define NON_CHASE_TIME 24
+#define CHASE_TIME 15
+#define NON_CHASE_TIME 20
 
 // dimensions of the bullet and its cost
 #define BULLET_COST 5
@@ -61,8 +60,9 @@
 #define SLEEP_UNIT 100
 
 #define COIN_DIST 2
-#define MONSTER_DIST 4
+#define MONSTER_DIST 2
 
 #define PERISCOPE 1
+#define PROBABILITY 9
 
 #endif

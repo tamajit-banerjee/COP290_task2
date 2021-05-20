@@ -163,7 +163,7 @@ void Game::handleMonsterCollisions(){
         if (sPlayer.freeze_counter >= FREEZE_LIMIT)
             sPlayer.freeze = false;
     }
-    cPlayer.freeze_counter++;
+ 
     if(cPlayer.freeze){
         if (cPlayer.freeze_counter >= FREEZE_LIMIT)
             cPlayer.freeze = false;
@@ -285,7 +285,13 @@ void Game::updateMonsters(){
         }
             
             ++monsters[i].not_chase_time;
-            if(monsters[i].not_chase_time >=  NON_CHASE_TIME/level && i!= 1 && i!= 2){
+
+            int non_chae_time;
+            if(level%2==0)
+                non_chae_time = NON_CHASE_TIME/2;
+            else
+                non_chae_time = NON_CHASE_TIME;
+            if(monsters[i].not_chase_time >=  non_chae_time && i!= 1 && i!= 2){
 
                 if(monsters[i].chase_which_player == 0 && !sPlayer.freeze){
                     monsters[i].mode_chase = true;

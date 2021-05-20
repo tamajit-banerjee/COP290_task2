@@ -78,47 +78,47 @@ bool Game::ok(int x, int y){
         return false;
 }
 
-void Game::dfs(int x, int y){
+// void Game::dfs(int x, int y){
     
-    std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
+//     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
 
-    while(true){
-        int random = std::rand();
-        random = random%4;
-        if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
-            switch (random) {
-                case 1:
-                    maze[x][y].removeWall("top");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
-                    break;
-                case 0:
-                    maze[x][y].removeWall("bottom");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("top");
-                    break;
-                case 2:
-                    maze[x][y].removeWall("right");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("left");
-                    break;
-                case 3:
-                    maze[x][y].removeWall("left");
-                    maze[x+dir[random].first][y+dir[random].second].removeWall("right");
-                    break;
-                default:
-                    break;
-            }
-            dfs(x+dir[random].first,y+dir[random].second);
-        }
-        int cnt = 0;
-        for(int i=0;i<4;i++){
-            if(ok(x+dir[i].first,y+dir[i].second) && maze[x+dir[i].first][y+dir[i].second].id == 15  ){
-                ++cnt;
-            }
-        }
-        if(!cnt)
-            break;
-    }
+//     while(true){
+//         int random = std::rand();
+//         random = random%4;
+//         if(ok(x+dir[random].first,y+dir[random].second) && maze[x+dir[random].first][y+dir[random].second].id == 15 ){
+//             switch (random) {
+//                 case 1:
+//                     maze[x][y].removeWall("top");
+//                     maze[x+dir[random].first][y+dir[random].second].removeWall("bottom");
+//                     break;
+//                 case 0:
+//                     maze[x][y].removeWall("bottom");
+//                     maze[x+dir[random].first][y+dir[random].second].removeWall("top");
+//                     break;
+//                 case 2:
+//                     maze[x][y].removeWall("right");
+//                     maze[x+dir[random].first][y+dir[random].second].removeWall("left");
+//                     break;
+//                 case 3:
+//                     maze[x][y].removeWall("left");
+//                     maze[x+dir[random].first][y+dir[random].second].removeWall("right");
+//                     break;
+//                 default:
+//                     break;
+//             }
+//             dfs(x+dir[random].first,y+dir[random].second);
+//         }
+//         int cnt = 0;
+//         for(int i=0;i<4;i++){
+//             if(ok(x+dir[i].first,y+dir[i].second) && maze[x+dir[i].first][y+dir[i].second].id == 15  ){
+//                 ++cnt;
+//             }
+//         }
+//         if(!cnt)
+//             break;
+//     }
     
-}
+// }
 
 void Game:: random_wall_removal(){
 
@@ -574,7 +574,7 @@ void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
             random_j = rand() % MAZECOLS;
         }
         int random = rand()%10;
-        if(random < 8  )
+        if(random < PROBABILITY  )
             maze[random_i][random_j].hastime = true;
         m.hastime = false;
     }

@@ -18,4 +18,4 @@ run:
 
 setup:
 	$(info Installing dependencies...)
-	@brew install sdl && brew install sdl_ttf && brew install sdl_mixer && brew install sdl_gfx
+	@brew install sdl2 && brew install sdl2_ttf && brew install sdl2_mixer && brew install sdl2_gfx
