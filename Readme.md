@@ -4,7 +4,7 @@ A maze-based two-player game written in C++, using SDL and socket programming!
 
 ## Basic Outline of Game
 
-As a player roams around in a randomly generated maze, he/she tries to collect coins to increase his/her score. As with life, their time in the game is limited, and a constant stop-watch tells them how long they have left. The players also have the option of eating a 'clock' (time booster) that grants them extra time (thus extending their life). The time boosters on the maze eventually reduce and after some point, new time boosters are no longer respawn. (we have not cracked immortality, yet).
+As a player roams around in a randomly generated maze, he/she tries to collect coins to increase his/her score. As with life, their time in the game is limited, and a constant stop-watch tells them how long they have left. The players also have the option of eating a 'clock' (time booster) that grants them extra time (thus extending their life). After a time booster is eaten, a new time booster is generated with a probability of 0.9. The time boosters on the maze should eventually reduce to zero (we have not cracked immortality, yet).
 
 The players cannot move freely in the maze though. Randomly located in the maze are four monsters! Two of the monsters chase the players (one each), and can randomly stop chasing them and again randomly start chasing them. The players constantly need to take care that they are not eaten by a monster. We believe in second chances, and all players are given quite a few chances. On being hit by a monster, the player does not simply die, and loses some time being frozen(shortening their life).
 
