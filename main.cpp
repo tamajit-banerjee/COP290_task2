@@ -7,13 +7,17 @@
 #include "Game/game.h"
 
 int main(){
-    // char menu = 's';
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
+
     TTF_Font *font;
     font = TTF_OpenFont("assets/resources/m5x7.ttf", 24);
+    if(font == NULL){
+        printf("Could not create Fonts: %s\n", SDL_GetError());
+        return 1;
+    }
 
     window = SDL_CreateWindow(
             "game",
@@ -28,8 +32,7 @@ int main(){
         return 1;
     }
 
-    renderer = SDL_CreateRenderer(window, -1,
-            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == NULL) {
         SDL_DestroyWindow(window);
@@ -38,12 +41,14 @@ int main(){
         return 1;
     }
     
+    /// MAIN CODE ///
     Game *game = new Game();
     game->init(renderer, font);
     
     if(run_server(renderer,font, game) == -1){
         run_client(renderer,font, game);
     }
+    /// MAIN CODE ENDS ///
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

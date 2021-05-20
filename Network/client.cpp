@@ -136,6 +136,8 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         
         while (game->running() && game->isLevelRunning) {
+            
+            int time_start = std::chrono::system_clock::now().time_since_epoch().count(); 
 
             game->handleEvents();
             game->update();
@@ -181,6 +183,10 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
             bytes_recvd = recv(sockfd, &isServerRunning, sizeof(isServerRunning), 0);
             game->isRunning = isServerRunning && isClientRunning;
 
+
+            int time_end = std::chrono::system_clock::now().time_since_epoch().count(); 
+            if(time_end - time_start < 1000 * 1000 / FRAME_RATE)
+                std::this_thread::sleep_for(std::chrono::milliseconds((time_end - time_start - 1000 * 1000 / FRAME_RATE) / 1000));
         }
         game->levelEnd();
 
@@ -224,7 +230,7 @@ int run_client(SDL_Renderer *renderer, TTF_Font *font , Game *game){
 
         SDL_RenderClear(renderer);
         disp_text_center(renderer, "RESULTS", font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3));
-        disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/3)+50);
+        disp_text_center(renderer, full_text, font, int(SCREEN_WIDTH/2) + 10, int(SCREEN_HEIGHT/3)+50);
         SDL_RenderPresent(renderer);
         if(game->toQuit()){
             return 0;

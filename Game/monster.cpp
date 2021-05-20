@@ -312,6 +312,9 @@ void Game::updateMonsters(){
                     monsters[i].down = 1; break;
             }
         }
+
+        /// EARLIER APPROACH ///
+        /// monsters change random directions and keep moving in the same direction for some time ///
 //        if(monsters[i].changeDirectionCounter == 0){
 //            tochange = true;
 //        }

@@ -8,7 +8,7 @@ public:
     ~Sounds();
     bool init();
     void play(int i, bool looped=0, int volume=20);
-    void play(char *soundName, bool looped = 0, int volume = 5);
+    void play(char *soundName, bool looped = 0, int volume = 20);
     void stop(int i);
     void stop();
     void toggleSounds();

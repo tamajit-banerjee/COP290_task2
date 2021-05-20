@@ -113,37 +113,43 @@ public:
 class Game
 {
 public:
-	void init(SDL_Renderer *arg_renderer, TTF_Font *arg_font);
+	Game(){}
+	~Game(){}
 
+	void init(SDL_Renderer *arg_renderer, TTF_Font *arg_font);
 	void handleEvents();
 	bool toQuit();
 	void update();
-	bool running() { return isRunning; }
 	void render();
 	void levelStart(int level, int seedi);
 	void levelEnd();
+	bool running() { return isRunning; }
 
-	Sounds sounds;
+	Player sPlayer, cPlayer;
+	int askPlayerAvatar();
 
-	SDL_Texture *periTex;
-	void renderPeriscope();
+	bool isServer;
+	bool isRunning, isLevelRunning;
+	
 
-	void Bullet_hit_Player();
-	SDL_Renderer *renderer;
-	TTF_Font *font;
-	SDL_Event event;
+private:
 
-	bool isRunning;
-	bool isLevelRunning;
 	int level;
 	int seedi;
 
+	SDL_Renderer *renderer;
+	TTF_Font *font;
+	SDL_Event event;
+	Sounds sounds;
+	
+	void updateTime();
+	SDL_Texture *periTex;
+	void renderPeriscope();
+	void handlePlayerActivities(Player &p);
+
 	void render_bullets();
-
-	Player sPlayer, cPlayer;
-	bool isServer;
-	int askPlayerAvatar();
-
+	SDL_Texture *bullet;
+	void Bullet_hit_Player();
 	void updateBullets(Player &p);
 
 	Monster monsters[MONSTERS];
@@ -151,10 +157,13 @@ public:
 	void checkMonsterCollisions_Player(Player &p, bool playerIsServer);
 	bool checkMonsterCollisions_Bullet(Bullet &b);
 	bool checkoneMonsterCollisions(Player &p, Monster &m);
-
 	void handleMonsterCollisions();
 	void updateMonsters();
 
+	MazeCell maze[MAZEROWS][MAZECOLS];
+	SDL_Texture *mazeTex;
+	void mazeInit();
+	bool checkWallCollisions(int x, int y, int w, int h);
 	void renderMaze();
 	void maze_dist_update();
 	void random_wall_removal();
@@ -165,26 +174,17 @@ public:
     void make_set(int v);
     bool union_sets(int a, int b);
 
-	MazeCell maze[MAZEROWS][MAZECOLS];
-	SDL_Texture *mazeTex;
-	void mazeInit();
-	bool checkWallCollisions(int x, int y, int w, int h);
-
-	SDL_Texture *bullet;
-
 	SDL_Texture *coinTex;
-	int coinCycle, timeCycle;
 	void placeCoins();
-	void checkCoinTimeEat();
-	void updateCoinTime(Player & p, MazeCell & m, bool playerIsServer = false);
-
+	
 	SDL_Texture *timeTex;
 	void placeTimes();
 
-	void loadTexture(char *textName, char *path);
+	int coinCycle, timeCycle;
+	void checkCoinTimeEat();
+	void updateCoinTime(Player & p, MazeCell & m, bool playerIsServer = false);
 
-	Game(){}
-	~Game(){}
+	void loadTexture(char *textName, char *path);
 
 	int gameTime;
 };

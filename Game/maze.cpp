@@ -81,8 +81,7 @@ bool Game::ok(int x, int y){
 void Game::dfs(int x, int y){
     
     std::pair<int,int> dir[] = {std::make_pair(1,0),std::make_pair(-1,0),std::make_pair(0,1),std::make_pair(0,-1)};
-    
-    // std::cout<<"dfs/n";
+
     while(true){
         int random = std::rand();
         random = random%4;
@@ -135,7 +134,6 @@ void Game:: random_wall_removal(){
         store.push_back(k);
 
     while( store.size() == 0){
- //   std::cout<<"hi MAZE\n";
     i = rand()%MAZEROWS;
     j = rand()%MAZECOLS;
 
@@ -151,21 +149,6 @@ void Game:: random_wall_removal(){
     std::shuffle(store.begin(),store.end(),std::default_random_engine(rand()));
 
     int rom = store[0];
-
-
-
-  //  std::cout<<x<<" "<<y<<" "<<(maze[x][y].id)<<"\n";
-
-    // while( rom < store.size()   &&  ((maze[x][y].id)>>store[rom])%2 == 0  ){
-    //     std::cout<<store[rom]<<"\n";
-    //     ++rom;
-    // }
-
-    // if(rom == store.size())
-    //     return;
-
- //std::cout<<rom<<"\n";
-
 
             switch (rom) {
                 case 2:
@@ -370,11 +353,6 @@ void Game::placeCoins(){
         }
         maze[random_i][random_j].hascoin = true;
     }
-    // maze[0][3].hascoin = true;
-    // maze[1][5].hascoin = true;
-    // maze[3][7].hascoin = true;
-    // maze[4][8].hascoin = true;
-    // maze[9][4].hascoin = true;
 }
 
 void updateTimes(){
@@ -399,13 +377,6 @@ void Game::placeTimes(){
         maze[random_i][random_j].hastime = true;
 
     }
-    
-
-    // maze[3][3].hastime = true;
-    // maze[2][8].hastime = true;
-    // maze[1][0].hastime = true;
-    // maze[8][5].hastime = true;
-    // maze[5][2].hastime = true;
 }
 
 
@@ -597,7 +568,7 @@ void Game::updateCoinTime(Player & p, MazeCell & m, bool playerIsServer){
     std::pair<int, int> c_i_j = cPlayer.getMazeCoordinates(rect);
     if(playerOnCoin(p, m)){
         if((playerIsServer && isServer) || (!playerIsServer && !isServer))
-            sounds.play("coin", false, 40);
+            sounds.play("coin", false, 30);
         while(maze[random_i][random_j].hascoin == true || maze[random_i][random_j].hastime == true || abs(random_i - s_i_j.first) + abs(random_j - s_i_j.second) <= COIN_DIST || abs(random_i - c_i_j.first) + abs(random_j - c_i_j.second) <= COIN_DIST ){
             random_i = rand() % MAZEROWS;
             random_j = rand() % MAZECOLS;

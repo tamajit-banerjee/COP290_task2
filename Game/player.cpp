@@ -369,3 +369,44 @@ int Game::askPlayerAvatar(){
 
     return 1;
 }
+
+void Game::updateTime(){
+    if(gameTime % TIME_STEP == 0){
+        if(sPlayer.get_time()>0)
+            sPlayer.set_time(sPlayer.get_time() - TIME_STEP);
+        else { 
+            if(!sPlayer.final_freeze && isServer)
+                sounds.play("death", false, 8);
+            sPlayer.final_freeze = true;
+        }
+        if(cPlayer.get_time()>0)
+            cPlayer.set_time(cPlayer.get_time() - TIME_STEP);
+        else { 
+            if(!cPlayer.final_freeze && !isServer)
+                sounds.play("death", false, 8);
+            cPlayer.final_freeze = true;
+        }
+
+    }
+}
+
+void Game::handlePlayerActivities(Player & p){
+    std::pair<int, int> s_p = p.move(SPEED); 
+    if(!checkWallCollisions(s_p.first, p.ypos, p.width, p.height)){
+        p.xpos = s_p.first;
+    }
+    if(!checkWallCollisions(p.xpos, s_p.second, p.width, p.height)){
+        p.ypos = s_p.second;
+    }
+
+    if(p.attack && p.attack_counter%1000 == 1 && p.score >= BULLET_COST){
+        if(isServer)
+            sounds.play("shoot", false, 50);
+        Bullet b(p.xpos + p.width/2 - BULLET_WIDTH/2,p.ypos + p.height/2 - BULLET_HEIGHT/2  ,p.attack_dir);
+        p.bullets.push_back(b);
+        p.score -= BULLET_COST;
+    }
+
+    if(p.attack)
+        ++p.attack_counter;
+}
