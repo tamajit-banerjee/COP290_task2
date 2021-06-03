@@ -82,9 +82,19 @@ Our maze is generated every time a level starts. We display this process of maze
 
 We have added a feature where each player cannot see the entire maze, but only some neighbouring region around their current location. 
 <p align="center">
-  <img src="assets/images/ss2.jpeg" width="800"/><br>
+  <img src="assets/images/ss2.jpeg" width="800"/><br> 
   Partial Visibility
 </p>
+
+
+#### TCP Sockets
+
+We have implemented raw sockets using TCP to exchange the information between players. We have tried to minimise the amount of the information exchanged so that we can optimise the speed.
+
+#### Pseudo Random Number Generator
+
+We have used pseudo random number generator to randomise the creation of the maze and movements of the monsters to eliminate the cost of sending these informations across players.  
+
 
 ## Documentation
 
